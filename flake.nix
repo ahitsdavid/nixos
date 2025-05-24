@@ -105,6 +105,30 @@
           }
         ];
       };
+      #VM Configuration
+      vm = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs username; };
+        modules = [
+          # Host configuration
+          ./hosts/vm
+
+          # NUR Overlay
+          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+          # home-manager NixOS module
+          home-manager.nixosModules.home-manager {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "backup";
+            home-manager.extraSpecialArgs = { inherit inputs username system; };
+            home-manager.users.${username} = { imports = [
+              ./home/base.nix
+              #./home/work.nix
+              ./home/gaming.nix
+            ]; };
+          }
+        ];
+      };
     };    
   };
 }
