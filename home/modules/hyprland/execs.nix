@@ -11,7 +11,7 @@ in
     exec-once = [
       # Wayland wallpaper 
       "killall -q swww;sleep .5 && swww init"
-      #"sleep 1.5 && swww img ${wallpaper}"
+      "sleep 1.5 && swww img ${config.home.homeDirectory}/${wallpaper}"
       # AGS (Aylur's GTK Shell)
       #"ags run --gtk4 &" 
     ];

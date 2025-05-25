@@ -4,7 +4,7 @@
   wayland.windowManager.hyprland = {
     settings = {
       monitor = [
-        ",preferred,auto,1.6"
+        ",preferred,auto,1"
         # Uncomment the following line to enable HDMI mirroring
         # "HDMI-A-1,1920x1080@60,1920x0,1,mirror,eDP-1"
       ];

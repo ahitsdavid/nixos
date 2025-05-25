@@ -1,3 +1,4 @@
+
 {
   # Git Configuration 
   gitUsername = "David Thach";
@@ -14,6 +15,6 @@
   consoleKeyMap = "us";
 
   #Wallpaper
-  wallpaper = ./../../../wallpapers/yosemite.jpg;
+  wallpaper = "Pictures/Wallpapers/yosemite.png";
 
 }

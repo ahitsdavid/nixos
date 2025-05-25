@@ -9,7 +9,6 @@
       vimAlias = true;
       viAlias = true;
       withNodeJs = true;
-      useSystemClipboard = true;
       lsp.enable = true;
       
       languages = {

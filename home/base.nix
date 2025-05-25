@@ -23,14 +23,14 @@
   ];
 
   # Place Files Inside Home Directory
-  #home.file = {
-  #  "Pictures/Wallpapers" = {
-  #    source = ../../../wallpapers;
-  #    recursive = true;
-  #  };
-    #".face.icon".source = ./face.jpg;
-    #".config/face.jpg".source = ./face.jpg;
-  #};
+  home.file = {
+    "Pictures/Wallpapers" = {
+      source = ../wallpapers;
+      recursive = true;
+    };
+    ".face.icon".source = ./users/${username}/face.png;
+    ".config/face.jpg".source = ./users/${username}/face.png;
+  };
 
   home.sessionVariables = {
     EDITOR = "nvim";

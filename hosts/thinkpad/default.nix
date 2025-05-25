@@ -14,8 +14,15 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Lidswitch set to ignore
+  services.logind = {
+    lidSwitch = "ignore";
+    lidSwitchExternalPower = "ignore";
+    lidSwitchDocked = "ignore";
+  };
+
   networking.hostName = "thinkpad";
 
-  system.stateVersion = "24.11";
+  system.stateVersion = "25.05";
 
 }
