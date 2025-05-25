@@ -28,7 +28,7 @@
       source = ../wallpapers;
       recursive = true;
     };
-    ".face.icon".source = ./users/${username}/face.png;
+    ".face".source = ./users/${username}/face.png;
     ".config/face.jpg".source = ./users/${username}/face.png;
   };
 

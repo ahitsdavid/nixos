@@ -14,6 +14,30 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
+  # Enable VMWare/QEMU guest support
+  # virtualisation.vmware.guest = true;
+  services.qemuGuest.enable = true;
+  services.spice-vdagentd.enable = true;
+
+  services.xserver.videoDrivers = [ "qxl" ];
+  #boot.initrd.kernelModules = [ "virtio_pci" "virtio_blk" "virtio_gpu" ];
+  #boot.kernelModules = [ "virtio_console" "virtio_gpu" "drm" ];
+
+  # Enable SPICE guest tools
+  environment.systemPackages = with pkgs; [
+    spice-vdagent
+    spice-gtk
+  ];
+
+  # Improve input and pointer in SPICE/QXL
+  services.xserver.inputClassSections = [
+    ''
+      Identifier "Spice Mouse"
+      MatchIsPointer "on"
+      Driver "evdev"
+    ''
+  ];
+  
   # Use latest kernel.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
