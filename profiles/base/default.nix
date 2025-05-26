@@ -128,6 +128,7 @@
   # Fonts
   fonts = {
     packages = with pkgs; [
+      accountsservice
       source-code-pro
       noto-fonts
       noto-fonts-cjk-sans
@@ -143,8 +144,16 @@
 
   # Desktop Environment 
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
-  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.displayManager.gdm = {
+    enable = true;
+    wayland = true;
+    # This enables user icons in GDM
+    autoSuspend = false;
+  };
+
+  # Configure AccountsService which handles user icons
+  services.accounts-daemon.enable = true;
+
   services.xserver.desktopManager.gnome.enable = true;
 
     # Enable GNOME extensions service

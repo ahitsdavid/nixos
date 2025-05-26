@@ -68,6 +68,18 @@
 
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+
+          # GDM Profile Picture Module
+          ./home/modules/gdm.nix
+          
+          # Enable and configure the GDM face module
+          {
+            services.gdm-face = {
+              enable = true;
+              session = "hyprland"; # Default Session for user
+            };
+          }
+
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
@@ -91,17 +103,29 @@
 
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+          
+          # GDM Profile Picture Module
+          ./home/modules/gdm.nix
+          
+          # Enable and configure the GDM face module
+          {
+            services.gdm-face = {
+              enable = true;
+              session = "hyprland"; # Default Session for user
+            };
+          }
+          
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
-            #home-manager.backupFileExtension = "backup";
             home-manager.extraSpecialArgs = { inherit inputs username system; };
-            home-manager.users.${username} = { imports = [
-              ./home/base.nix
-              #./home/work.nix
-              ./home/gaming.nix
-            ]; };
+            home-manager.users.${username} = { 
+              imports = [
+                ./home/base.nix
+                ./home/gaming.nix
+              ];
+            };
           }
         ];
       };
@@ -115,6 +139,18 @@
 
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+
+          # GDM Profile Picture Module
+          ./home/modules/gdm.nix
+          
+          # Enable and configure the GDM face module
+          {
+            services.gdm-face = {
+              enable = true;
+              session = "hyprland"; # Default Session for user
+            };
+          }
+
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
