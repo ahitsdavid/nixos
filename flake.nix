@@ -55,16 +55,14 @@
     system = "x86_64-linux";
     username = "davidthach";
     
-  in 
-  {
-    nixosConfigurations = {
-      #SB Configuration
-      sb1 = nixpkgs.lib.nixosSystem {
+    # Create a function to make a NixOS configuration with common modules
+    mkNixosConfiguration = { hostname, extraModules ? [] }: 
+      nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
         modules = [
-          # Host configuration
-          ./hosts/sb1
+          # Host-specific configuration
+          ./hosts/${hostname}
 
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
@@ -80,41 +78,6 @@
             };
           }
 
-          # home-manager NixOS module
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs username system; };
-            home-manager.users.${username} = { imports = [
-              ./home/base.nix
-              #./home/work.nix
-              ./home/gaming.nix
-            ]; };
-          }
-        ];
-      };
-      #Thinkpad Configuration
-      thinkpad = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs username; };
-        modules = [
-          # Host configuration
-          ./hosts/thinkpad
-
-          # NUR Overlay
-          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
-          
-          # GDM Profile Picture Module
-          ./home/modules/gdm
-          
-          # Enable and configure the GDM face module
-          {
-            services.gdm-face = {
-              enable = true;
-              session = "hyprland"; # Default Session for user
-            };
-          }
-          
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
@@ -124,46 +87,36 @@
               imports = [
                 ./home/base.nix
                 ./home/gaming.nix
-              ];
+                # Add any extra home-manager modules
+              ] ++ (extraModules.homeModules or []);
             };
           }
-        ];
+        ] ++ (extraModules.systemModules or []);
       };
-      #VM Configuration
-      vm = nixpkgs.lib.nixosSystem {
-        inherit system;
-        specialArgs = { inherit inputs username; };
-        modules = [
-          # Host configuration
-          ./hosts/vm
-
-          # NUR Overlay
-          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
-
-          # GDM Profile Picture Module
-          ./home/modules/gdm
-          
-          # Enable and configure the GDM face module
-          {
-            services.gdm-face = {
-              enable = true;
-              session = "hyprland"; # Default Session for user
-            };
-          }
-
-          # home-manager NixOS module
-          home-manager.nixosModules.home-manager {
-            home-manager.useGlobalPkgs = true;
-            home-manager.useUserPackages = true;
-            home-manager.backupFileExtension = "backup";
-            home-manager.extraSpecialArgs = { inherit inputs username system; };
-            home-manager.users.${username} = { imports = [
-              ./home/base.nix
-              #./home/work.nix
-              ./home/gaming.nix
-            ]; };
-          }
+  in 
+  {
+    nixosConfigurations = {
+      # SB Configuration
+      sb1 = mkNixosConfiguration {
+        hostname = "sb1";
+        # If you need specific modules for this host:
+        # extraModules.homeModules = [ ./home/work.nix ];
+      };
+      
+      # Thinkpad Configuration
+      thinkpad = mkNixosConfiguration {
+        hostname = "thinkpad";
+      };
+      
+      # VM Configuration
+      vm = mkNixosConfiguration {
+        hostname = "vm";
+        extraModules.systemModules = [
+          # VM-specific system modules
+          { home-manager.backupFileExtension = "backup"; }
         ];
+        # If you need VM-specific home modules:
+        # extraModules.homeModules = [ ./home/vm-specific.nix ];
       };
     };    
   };

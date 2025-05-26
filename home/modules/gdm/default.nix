@@ -5,8 +5,16 @@ with lib;
 let
   cfg = config.services.gdm-face;
   
-  # Package the script
-  gdmFaceScript = pkgs.writeScriptBin "setup-gdm-face" (builtins.readFile ./scripts/setup-face.sh);
+  # Package the script properly with bash dependency
+  gdmFaceScript = pkgs.runCommand "setup-gdm-face" {
+    script = ./scripts/setup-face.sh;
+    buildInputs = [ pkgs.makeWrapper ];
+  } ''
+    mkdir -p $out/bin
+    cp $script $out/bin/setup-gdm-face
+    chmod +x $out/bin/setup-gdm-face
+    wrapProgram $out/bin/setup-gdm-face --prefix PATH : ${lib.makeBinPath [ pkgs.bash pkgs.coreutils ]}
+  '';
 in {
   options.services.gdm-face = {
     enable = mkEnableOption "GDM profile picture support";
@@ -21,13 +29,11 @@ in {
   config = mkIf cfg.enable {
     services.accounts-daemon.enable = true;
     
-    # Add the script to the system packages
-    environment.systemPackages = [ gdmFaceScript ];
-    
     systemd.services.setup-gdm-face = {
       description = "Setup GDM face icon";
       wantedBy = [ "multi-user.target" ];
       after = [ "accounts-daemon.service" ];
+      path = with pkgs; [ bash coreutils ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${gdmFaceScript}/bin/setup-gdm-face ${username} ${cfg.session}";
