@@ -70,7 +70,7 @@
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
 
           # GDM Profile Picture Module
-          ./home/modules/gdm.nix
+          ./home/modules/gdm
           
           # Enable and configure the GDM face module
           {
@@ -105,7 +105,7 @@
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
           
           # GDM Profile Picture Module
-          ./home/modules/gdm.nix
+          ./home/modules/gdm
           
           # Enable and configure the GDM face module
           {
@@ -141,7 +141,7 @@
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
 
           # GDM Profile Picture Module
-          ./home/modules/gdm.nix
+          ./home/modules/gdm
           
           # Enable and configure the GDM face module
           {
