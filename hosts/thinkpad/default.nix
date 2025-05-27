@@ -8,7 +8,23 @@
       (import ../../profiles/development { inherit inputs username; })
       (import ../../profiles/work { inherit inputs username; })
       (import ../../drivers/intel.nix )
+
+      # Import the GDM customization module
+      (import ../../modules/gdm-customization { inherit username; })
+
     ];
+  # Configure GDM customization
+  services.gdm-customization = {
+    enable = true;
+    session = "hyprland";
+    
+    face.enable = true;
+    
+    wallpaper = {
+      enable = true;
+      path = "login.jpg";
+      copyToStore = true;
+    };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;

@@ -67,17 +67,6 @@
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
 
-          # GDM Profile Picture Module
-          ./home/modules/gdm
-          
-          # Enable and configure the GDM face module
-          {
-            services.gdm-face = {
-              enable = true;
-              session = "hyprland"; # Default Session for user
-            };
-          }
-
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
