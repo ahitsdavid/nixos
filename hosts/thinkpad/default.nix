@@ -1,4 +1,4 @@
-{ config, pkgs, inputs, username, ... }: {
+{ config, pkgs, inputs, username, lib, ... }: {
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
@@ -10,21 +10,15 @@
       (import ../../drivers/intel.nix )
 
       # Import the GDM customization module
-      (import ../../modules/gdm-customization { inherit username; })
+      (import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
   # Configure GDM customization
   services.gdm-customization = {
     enable = true;
     session = "hyprland";
-    
     face.enable = true;
-    
-    wallpaper = {
-      enable = true;
-      path = "login.jpg";
-      copyToStore = true;
-    };
+  };
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
