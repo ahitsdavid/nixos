@@ -27,6 +27,10 @@ in
       # Rofi
       "$mod, Space, exec, pkill -x rofi || rofi -show drun"
       
+      # Session management
+      "$modifier,L,exec,loginctl lock-session"
+      "$modifier SHIFT,L,exec,loginctl lock-session"
+
       # Window management
       "$mod, Left, movefocus, l"
       "$mod, Right, movefocus, r"
