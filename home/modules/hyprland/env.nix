@@ -20,27 +20,14 @@
         # "QT_STYLE_OVERRIDE, kvantum"
         "WLR_NO_HARDWARE_CURSORS, 1"
         
+        # HYPRCURSOR
+        "HYPRCURSOR_THEME, rose-pine-hyprcursor"
+        "HYPRCURSOR_SIZE, 40"
+
         # Screen tearing
         # "WLR_DRM_NO_ATOMIC, 1"
         
       ];
     };
   };
-
-  # Optional: Install related packages
-  #home.packages = with pkgs; [
-  #  fcitx5
-  #  fcitx5-with-addons
-  #  qt6ct
-  #  # libsForQt5.qtstyleplugin-kvantum  # Uncomment if you need Kvantum
-  #];
-  
-  # Optional: Configure input method properly in Home Manager
-  #i18n.inputMethod = {
-  #  enabled = "fcitx5";
-  #  fcitx5.addons = with pkgs; [
-  #    # fcitx5-chinese-addons
-  #    # Add other fcitx5 addons you need
-  #  ];
-  #};
 }

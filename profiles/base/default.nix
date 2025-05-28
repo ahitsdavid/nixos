@@ -36,6 +36,7 @@
     gptfdisk
     sbctl
     tree
+    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
   ];
   # Bluetooth
   services.blueman.enable = true; 
