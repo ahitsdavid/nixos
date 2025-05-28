@@ -19,6 +19,7 @@
     unzip         # .zip file tool
     usbutils      # USB Device tool
     wget
+    greetd.tuigreet
     curl
     git
     htop
@@ -34,6 +35,7 @@
     parted
     gptfdisk
     sbctl
+    tree
   ];
   # Bluetooth
   services.blueman.enable = true; 
@@ -144,11 +146,21 @@
 
   # Desktop Environment 
   services.xserver.enable = true;
-  services.xserver.displayManager.gdm = {
+  #services.xserver.displayManager.gdm = {
+  #  enable = true;
+  #  wayland = true;
+  #  # This enables user icons in GDM
+  #  autoSuspend = false;
+  #};
+  services.greetd = {
     enable = true;
-    wayland = true;
-    # This enables user icons in GDM
-    autoSuspend = false;
+    vt = 3;
+    settings = {
+      default_session = {
+        user = username;
+        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland"; # start Hyprland with a TUI login manager
+      };
+    };
   };
 
   # Configure AccountsService which handles user icons

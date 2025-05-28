@@ -29,6 +29,7 @@
       recursive = true;
     };
     ".face".source = ./users/${username}/face.png;
+    ".face.icon".source = ./users/${username}/face.png;
     ".config/face.jpg".source = ./users/${username}/face.png;
   };
 

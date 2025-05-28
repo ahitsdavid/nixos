@@ -10,15 +10,15 @@
       (import ../../drivers/intel.nix )
 
       # Import the GDM customization module
-      (import ../../home/modules/gdm { inherit username lib config pkgs; })
+      #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
   # Configure GDM customization
-  services.gdm-customization = {
-    enable = true;
-    session = "hyprland";
-    face.enable = true;
-  };
+  #services.gdm-customization = {
+  #  enable = true;
+  #  session = "hyprland";
+  #  face.enable = true;
+  #};
 
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
