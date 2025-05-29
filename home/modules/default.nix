@@ -8,6 +8,7 @@
     (import ./yazi.nix )
     (import ./btop.nix )
     (import ./zen-browser.nix )
+    (import ./catpppuccin.nix )
     #(import ./virtualization.nix )
   ];
 }

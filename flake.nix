@@ -44,9 +44,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
+    catppuccin-nix = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     sops-nix.url = "github:Mic92/sops-nix";
-    stylix.url = "github:danth/stylix";
   };
 
   outputs = { 
