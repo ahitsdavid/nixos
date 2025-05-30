@@ -44,7 +44,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.hyprlang.follows = "hyprland/hyprlang";
     };
-    catppuccin-nix = {
+    catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
@@ -57,6 +57,8 @@
     nixpkgs, 
     home-manager,
     nurpkgs,
+    catppuccin,
+    quickshell,
     ... 
     } @ inputs: 
   let 
@@ -72,14 +74,17 @@
           # Host-specific configuration
           ./hosts/${hostname}
 
+          # Catpuccin theming
+          catppuccin.nixosModules.catppuccin
           # NUR Overlay
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
 
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
+            home-manager.backupFileExtension = "backup";
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs username system; };
+            home-manager.extraSpecialArgs = { inherit inputs username system quickshell; };
             home-manager.users.${username} = { 
               imports = [
                 ./home/base.nix
@@ -103,6 +108,7 @@
       # Thinkpad Configuration
       thinkpad = mkNixosConfiguration {
         hostname = "thinkpad";
+        extraModules.homeModules = [ catppuccin.homeModules.catppuccin ];
       };
       
       # VM Configuration

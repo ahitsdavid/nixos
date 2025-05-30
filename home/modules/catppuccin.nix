@@ -1,20 +1,21 @@
 { config, pkgs, ... }:
 
+
 {
   # Enable the Catppuccin module
   catppuccin = {
     enable = true;
-    flavour = "mocha";  # Options: latte, frappe, macchiato, mocha
+    flavor = "mocha";  # Options: latte, frappe, macchiato, mocha
     accent = "mauve";   # Options: rosewater, flamingo, pink, mauve, red, maroon, peach, yellow, green, teal, sky, sapphire, blue, lavender
     
     # Enable specific application themes
-    programs = {
-      kitty.enable = true;
-      neovim.enable = true;
-      rofi.enable = true;
-      vscode.enable = true;
-      firefox.enable = true;
-      discord.enable = true;
-    };
+    gtk.enable = true;
+    hyprland.enable = true;
+    hyprlock.enable = true;
+    kitty.enable = true;
+    nvim.enable = true;
+    rofi.enable = true;
+    spotify-player.enable = true;
+    yazi.enable = true;
   };
 }

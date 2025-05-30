@@ -1,7 +1,5 @@
-{ config, lib, pkgs, inputs, ... }:
-
+{ config, lib, pkgs, quickshell, ... }:
 with lib;
-
 let
   cfg = config.programs.quickshell;
 in
@@ -10,47 +8,76 @@ in
     enable = mkOption {
       type = types.bool;
       default = true;
-      description = "Whether to enable quickshell";
+      description = "Whether to enable QuickShell";
     };
-
-    configFile = mkOption {
-      type = types.path;
-      default = ./config/quickshell.qml;
-      description = "Path to quickshell configuration file";
-    };
-
     package = mkOption {
       type = types.package;
-      default = inputs.quickshell.packages.${pkgs.system}.default;
-      description = "The quickshell package to use";
+      default = quickshell.packages.${pkgs.system}.default;
+      description = "The QuickShell package to use";
     };
-
-    extraArgs = mkOption {
-      type = types.listOf types.str;
-      default = [];
-      description = "Extra arguments to pass to quickshell";
+    config = mkOption {
+      type = types.nullOr types.path;
+      default = null;
+      description = "Path to QuickShell configuration directory";
+    };
+    autostart = mkOption {
+      type = types.bool;
+      default = true;
+      description = "Whether to autostart QuickShell";
     };
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ cfg.package ];
+    # Install QuickShell with Qt5 compatibility modules
+    home.packages = [ 
+      cfg.package 
+      pkgs.libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
+      pkgs.qt6.qt5compat  # Qt6 Qt5 compatibility layer
+    ];
 
-    xdg.configFile."quickshell/config.qml".source = cfg.configFile;
+    # Alternatively, you can wrap QuickShell with the required Qt modules
+    # home.packages = [ 
+    #   (pkgs.symlinkJoin {
+    #     name = "quickshell-wrapped";
+    #     paths = [ cfg.package ];
+    #     buildInputs = [ pkgs.makeWrapper ];
+    #     postBuild = ''
+    #       wrapProgram $out/bin/quickshell \
+    #         --prefix QML2_IMPORT_PATH : ${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix} \
+    #         --prefix QML2_IMPORT_PATH : ${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}
+    #     '';
+    #   })
+    # ];
 
-    systemd.user.services.quickshell = {
+    # Create config symlink if config path is provided
+    home.file = mkIf (cfg.config != null) {
+      ".config/quickshell".source = cfg.config;
+    };
+
+    # Set environment variables for Qt modules
+    home.sessionVariables = {
+      QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+        "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+        "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      ];
+    };
+
+    # Autostart QuickShell if enabled
+    systemd.user.services.quickshell = mkIf cfg.autostart {
       Unit = {
-        Description = "Quickshell";
+        Description = "QuickShell";
         After = [ "graphical-session-pre.target" ];
         PartOf = [ "graphical-session.target" ];
       };
-
       Service = {
-        ExecStart = "${cfg.package}/bin/quickshell ${concatStringsSep " " cfg.extraArgs}";
+        ExecStart = "${cfg.package}/bin/quickshell";
         Restart = "on-failure";
         RestartSec = 1;
         TimeoutStopSec = 10;
+        Environment = [
+          "QML2_IMPORT_PATH=${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}:${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+        ];
       };
-
       Install = {
         WantedBy = [ "graphical-session.target" ];
       };

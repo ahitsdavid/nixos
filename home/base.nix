@@ -50,7 +50,6 @@
         init.defaultBranch = "main";
       };
     };
-
     vscode = {
       enable = true;
       profiles = {
@@ -66,12 +65,12 @@
             ];
           userSettings = {
             "editor.fontSize" = 14;
-            #"editor.fontFamily" = "Fira Code, monospace";
-            #"editor.fontLigatures" = true;
+            "editor.fontFamily" = "Fira Code, monospace";
+            "editor.fontLigatures" = true;
             "editor.defaultFormatter" = "esbenp.prettier-vscode";
             # Workbench settings
             "workbench.colorTheme" = "Catppuccin Mocha";
-
+    
             # Language-specific settings
             "[nix]" = {
               "edtior.tabSize" = 2;

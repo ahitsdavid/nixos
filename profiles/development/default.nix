@@ -8,7 +8,6 @@
 
   # Common development packages
   environment.systemPackages = with pkgs; [
-    vscode
     docker-compose
     insomnia
     git-lfs

@@ -54,7 +54,7 @@
         "type": "github"
       }
     },
-    "catppuccin-nix": {
+    "catppuccin": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
@@ -801,7 +801,7 @@
     "root": {
       "inputs": {
         "aagl": "aagl",
-        "catppuccin-nix": "catppuccin-nix",
+        "catppuccin": "catppuccin",
         "home-manager": "home-manager",
         "hypr-dynamic-cursors": "hypr-dynamic-cursors",
         "hyprland": "hyprland",
