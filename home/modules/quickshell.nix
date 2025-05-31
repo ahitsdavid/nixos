@@ -31,6 +31,7 @@ in
     # Install QuickShell with Qt5 compatibility modules
     home.packages = [ 
       cfg.package 
+      pkgs.material-symbols
       pkgs.libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
       pkgs.qt6.qt5compat  # Qt6 Qt5 compatibility layer
     ];

@@ -77,6 +77,7 @@
     thinkfan
     
     # ThinkPad utilities
+    throttled
     tpacpi-bat
     acpi
     
@@ -90,6 +91,7 @@
     v4l-utils  
   ];
 
+  services.throttled.enable = true;
 
   # boot = {
   #   kernelModules = [ "thinkpad_acpi" ];
