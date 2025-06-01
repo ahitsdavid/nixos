@@ -28,7 +28,6 @@ in
   };
 
   config = mkIf cfg.enable {
-    # Install QuickShell with Qt5 compatibility modules
     home.packages = [ 
       cfg.package 
       pkgs.material-symbols

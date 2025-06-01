@@ -6,7 +6,7 @@
   catppuccin = {
     enable = true;
     flavor = "mocha";  # Options: latte, frappe, macchiato, mocha
-    accent = "mauve";   # Options: rosewater, flamingo, pink, mauve, red, maroon, peach, yellow, green, teal, sky, sapphire, blue, lavender
+    accent = "blue";   # Options: rosewater, flamingo, pink, mauve, red, maroon, peach, yellow, green, teal, sky, sapphire, blue, lavender
     
     # Enable specific application themes
     gtk.enable = true;

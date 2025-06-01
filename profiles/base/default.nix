@@ -28,8 +28,6 @@
     unzip
     gnupg
     vlc
-    gnome-tweaks
-    gnomeExtensions.caffeine
     efibootmgr
     os-prober
     parted
@@ -167,8 +165,4 @@
   # Configure AccountsService which handles user icons
   services.accounts-daemon.enable = true;
 
-  services.xserver.desktopManager.gnome.enable = true;
-
-    # Enable GNOME extensions service
-  services.gnome.gnome-browser-connector.enable = true;
 }

@@ -77,12 +77,8 @@
     thinkfan
     
     # ThinkPad utilities
-    throttled
     tpacpi-bat
     acpi
-    
-    # Firmware updates
-    fwupd
     
     # For keyboard backlight control
     acpilight
@@ -92,6 +88,7 @@
   ];
 
   services.throttled.enable = true;
+  services.fwupd.enable = true;
 
   # boot = {
   #   kernelModules = [ "thinkpad_acpi" ];
