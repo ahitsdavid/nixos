@@ -5,6 +5,8 @@
       swww
       wl-clipboard
       brightnessctl
+      grimblast
+      hyprpicker
   ];
   
   wayland.windowManager.hyprland = {
