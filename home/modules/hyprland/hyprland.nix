@@ -5,7 +5,7 @@
       swww
       wl-clipboard
       brightnessctl
-      grimblast
+      hyprshot
       hyprpicker
   ];
   

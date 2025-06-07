@@ -18,6 +18,8 @@
     unrar         # .rar file tool
     unzip         # .zip file tool
     usbutils      # USB Device tool
+    adwaita-icon-theme
+    hicolor-icon-theme
     wget
     greetd.tuigreet
     curl
@@ -136,6 +138,7 @@
       twitter-color-emoji
       font-awesome
       powerline-fonts
+      nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
     ];
     fontconfig = {

@@ -17,7 +17,8 @@
           return-youtube-dislikes
           sponsorblock
           catppuccin-web-file-icons
-          firefox-color
+          catppuccin-mocha-mauve
+          windscribe
         ];
         settings = {
           "browser.startup.homepage" = "https://www.google.com";

@@ -6,6 +6,7 @@
     themeFile = "Catppuccin-Mocha";
     settings = {
       font_size = 12;
+      font = "JetBrainsMono Nerd Font";
       wheel_scroll_min_lines = 1;
       window_padding_width = 4;
       confirm_os_window_close = 0;

@@ -2,6 +2,11 @@
 with lib;
 let
   cfg = config.programs.quickshell;
+  qmlImportPath = lib.concatStringsSep ":" [
+    "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+    "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+    "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+  ];
 in
 {
   options.programs.quickshell = {
@@ -28,26 +33,19 @@ in
   };
 
   config = mkIf cfg.enable {
-    home.packages = [ 
-      cfg.package 
-      pkgs.material-symbols
-      pkgs.libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
-      pkgs.qt6.qt5compat  # Qt6 Qt5 compatibility layer
+    home.packages = with pkgs; [
+      cfg.package
+      gammastep
+      gnome-control-center
+      gnome-usage
+      kdePackages.syntax-highlighting
+      material-symbols
+      libsForQt5.qtgraphicaleffects # Qt5 GraphicalEffects module
+      qt6.qt5compat # Qt6 Qt5 compatibility layer          # Rubik - main font
+      rubik    
+      nerd-fonts.space-mono    
+      better-control
     ];
-
-    # Alternatively, you can wrap QuickShell with the required Qt modules
-    # home.packages = [ 
-    #   (pkgs.symlinkJoin {
-    #     name = "quickshell-wrapped";
-    #     paths = [ cfg.package ];
-    #     buildInputs = [ pkgs.makeWrapper ];
-    #     postBuild = ''
-    #       wrapProgram $out/bin/quickshell \
-    #         --prefix QML2_IMPORT_PATH : ${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix} \
-    #         --prefix QML2_IMPORT_PATH : ${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}
-    #     '';
-    #   })
-    # ];
 
     # Create config symlink if config path is provided
     home.file = mkIf (cfg.config != null) {
@@ -56,10 +54,7 @@ in
 
     # Set environment variables for Qt modules
     home.sessionVariables = {
-      QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-        "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-        "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      ];
+      QML2_IMPORT_PATH = qmlImportPath;
     };
 
     # Autostart QuickShell if enabled
@@ -75,7 +70,7 @@ in
         RestartSec = 1;
         TimeoutStopSec = 10;
         Environment = [
-          "QML2_IMPORT_PATH=${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}:${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+          "QML2_IMPORT_PATH=${qmlImportPath}"
         ];
       };
       Install = {

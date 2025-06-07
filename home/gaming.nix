@@ -2,11 +2,10 @@
 { config, pkgs, inputs, ... }: {
   home.packages = with pkgs; [
     prismlauncher
-    discord
   ];
 
   programs.mangohud = {
-    enable = true;
+    enable = false;
     enableSessionWide = true;
   };
 }

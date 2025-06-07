@@ -20,6 +20,7 @@
     bitwarden
     spotify
     oh-my-posh
+    telegram-desktop
   ];
 
   # Place Files Inside Home Directory
@@ -65,7 +66,7 @@
             ];
           userSettings = {
             "editor.fontSize" = 14;
-            "editor.fontFamily" = "Fira Code, monospace";
+            "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'JetBrains Mono', monospace";
             "editor.fontLigatures" = true;
             "editor.defaultFormatter" = "esbenp.prettier-vscode";
             # Workbench settings
@@ -73,7 +74,7 @@
     
             # Language-specific settings
             "[nix]" = {
-              "edtior.tabSize" = 2;
+              "editor.tabSize" = 2;
             };
           };
         };
