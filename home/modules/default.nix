@@ -10,6 +10,7 @@
     (import ./zen-browser.nix )
     (import ./catppuccin.nix )
     (import ./quickshell.nix )
+    (import ./zed.nix )
     #(import ./virtualization.nix )
   ];
 }

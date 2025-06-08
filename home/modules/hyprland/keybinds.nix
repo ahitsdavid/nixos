@@ -13,10 +13,7 @@ in
     "$mod" = "SUPER";
     
     # QuickShell display bindings
-
-    
     # Essential bindings
-    
     bindd = [
       "$mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle" # Clipboard history >> clipboard
       "$mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle" # Emoji >> clipboard
@@ -44,6 +41,8 @@ in
       "$mod, B, global, quickshell:sidebarLeftToggle" # [hidden]
       "$mod, O, global, quickshell:sidebarLeftToggle" # [hidden]
       
+      # VSCode
+      "$mod, C, exec, code"
       # Terminal
       "$mod, Return, exec, ${terminal}"
       "$mod, T, exec, ${terminal}"
