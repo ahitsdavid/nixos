@@ -1,12 +1,12 @@
 #home/modules/thunar.nix
 { pkgs, ... }:
 {
-  programs.thunar = {
-    enable = true;
-    plugins = with pkgs.xfce; [
-      thunar-archive-plugin
-      thunar-volman
-    ];
-  };
-  programs.xfconf.enable = true;
+  # Add useful Thunar plugins
+  home.packages = with pkgs.xfce; [
+    thunar
+    thunar-volman      # Removable media management
+    thunar-archive-plugin  # Archive support
+    thunar-media-tags-plugin  # Media file tags
+    tumbler
+  ];
 }

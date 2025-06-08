@@ -18,6 +18,7 @@
     unrar         # .rar file tool
     unzip         # .zip file tool
     usbutils      # USB Device tool
+    glxinfo
     adwaita-icon-theme
     hicolor-icon-theme
     wget

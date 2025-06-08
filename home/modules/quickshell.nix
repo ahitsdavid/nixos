@@ -48,9 +48,7 @@ in
     ];
 
     # Create config symlink if config path is provided
-    home.file = mkIf (cfg.config != null) {
-      ".config/quickshell".source = cfg.config;
-    };
+    home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/dotfiles/.config/quickshell";
 
     # Set environment variables for Qt modules
     home.sessionVariables = {

@@ -9,8 +9,6 @@
     (import ./modules/default.nix )
     (import ./modules/hyprland )
     (import ./modules/fastfetch )
-    #(import ./modules/gtk )
-    
     (import ./modules/rofi )
     
   ];

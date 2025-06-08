@@ -14,6 +14,7 @@ in {
   config = mkIf cfg.enable {
     # OpenGL
     hardware.graphics = {
+      enable = true;
       extraPackages = with pkgs; [
         intel-media-driver
         vaapiIntel
