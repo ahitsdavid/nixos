@@ -14,8 +14,11 @@
     hyprlock.enable = true;
     kitty.enable = true;
     nvim.enable = true;
+    obs.enable = true;
     rofi.enable = true;
     spotify-player.enable = true;
     yazi.enable = true;
+    zed.enable = true;
+    zed.icons.enable = true;
   };
 }
