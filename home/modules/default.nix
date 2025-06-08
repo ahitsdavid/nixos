@@ -2,7 +2,8 @@
 
   
   imports = [
-    (import ./bash.nix)
+    (import ./bash.nix )
+    (import ./dolphin.nix )
     (import ./kitty.nix )
     (import ./nvf.nix )
     (import ./yazi.nix )
@@ -15,4 +16,6 @@
     (import ./zed.nix )
     #(import ./virtualization.nix )
   ];
+
+  programs.dolphin.enable = true;
 }

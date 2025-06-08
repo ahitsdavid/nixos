@@ -13,6 +13,7 @@
     hyprland.enable = true;
     hyprlock.enable = true;
     kitty.enable = true;
+    kvantum.enable = true;
     nvim.enable = true;
     obs.enable = true;
     rofi.enable = true;

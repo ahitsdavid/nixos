@@ -41,7 +41,7 @@
         env = {
           TERM = "alacritty";
         };
-        font_family = "FiraCode Nerd Font";
+        font_family = "JetBrainsMono Nerd Font";
         font_features = null;
         font_size = null;
         line_height = "comfortable";
