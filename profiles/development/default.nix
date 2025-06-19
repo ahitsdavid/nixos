@@ -14,9 +14,6 @@
     meld
   ];
 
-  #Development services
-  virtualisation.docker.enable = true;
-
   # Allow unfree packages (for VSCode, etc,)
   nixpkgs.config.allowUnfree = true;
 }

@@ -52,14 +52,18 @@
   # Power profiles daemon (alternative to TLP)
   services.power-profiles-daemon.enable = false; # Disable if using TLP
 
-  # ThinkPad ACPI support
-  hardware.trackpoint = {
-    enable = true;
-    sensitivity = 255;
-    speed = 97;
-    emulateWheel = true;
-  };
-  
+  # Trackpad Settings
+# For your NixOS configuration.nix, you mainly need:
+services.libinput.enable = true;  # Basic libinput support
+
+# Hardware trackpoint config (keep your existing)
+hardware.trackpoint = {
+  enable = true;
+  sensitivity = 255;
+  speed = 120;
+  emulateWheel = true;
+};
+      
   # Fingerprint reader
   services.fprintd.enable = true;
   

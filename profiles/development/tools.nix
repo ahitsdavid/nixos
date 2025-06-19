@@ -12,7 +12,14 @@
     bat
     tmux
     direnv
+    qemu
   ];
+
+  virtualisation = {
+    libvirtd.enable = true;
+    docker.enable = true;
+    podman.enable = false;
+  };
 
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;

@@ -40,7 +40,7 @@
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
   ];
   # Bluetooth
-  services.blueman.enable = true; 
+  services.blueman.enable = true;
   # Flatpak for unity
   services.flatpak.enable = true;
   # Battery status
@@ -48,6 +48,8 @@
   # USB
   services.gvfs.enable = true;
   services.udisks2.enable = true;
+  programs.dconf.enable = true;
+  services.dbus.enable = true;
 
   services.openssh.enable = true;
   # Configure keymap in X11
@@ -70,7 +72,7 @@
       canTouchEfiVariables = true;
       efiSysMountPoint = "/boot";
     };
-    
+
     # boot menu timeout
     timeout = 5;
   };
@@ -88,14 +90,14 @@
     jack.enable = true;
   };
 
-  #Hardware 
+  #Hardware
   hardware = {
     bluetooth = {
       enable = true;
       powerOnBoot = true;
       settings = {
         General.Experimental = true;
-      }; 
+      };
     };
     graphics.enable = true;
   };
@@ -147,7 +149,7 @@
     };
   };
 
-  # Desktop Environment 
+  # Desktop Environment
   services.xserver.enable = true;
   #services.xserver.displayManager.gdm = {
   #  enable = true;

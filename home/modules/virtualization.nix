@@ -1,14 +1,10 @@
 {pkgs, ...}: {
-  # Only enable either docker or podman -- Not both
-  virtualisation = {
-    libvirtd.enable = false;
-    docker.enable = true;
-    podman.enable = false;
-  };
-  programs = {
-    virt-manager.enable = false;
-  };
-  environment.systemPackages = with pkgs; [
-     virt-viewer # View Virtual Machines
+  home.packages = with pkgs; [
+     virt-manager
+     virt-viewer 
   ];
+
+    home.sessionVariables = {
+    LIBVIRT_DEFAULT_URI = "qemu:///system";
+  };
 }

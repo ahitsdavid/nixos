@@ -17,11 +17,20 @@
         repeat_rate = 35;
 
         touchpad = {
-          natural_scroll = true;
+          natural_scroll = false;
           disable_while_typing = true;
-          clickfinger_behavior = true;
-          scroll_factor = 0.5;
-        };
+          tap-to-click = true;
+          tap-and-drag = true;
+          drag_lock = false;
+          scroll_factor = 1.0;
+          middle_button_emulation = false;
+          clickfinger_behavior = false;
+        };   
+        # General input settings that affect trackpad
+        #accel_profile = adaptive;
+        force_no_accel = false;
+        sensitivity = 0.5;  # Adjust for speed (-1.0 to 1.0)
+        #scroll_method = 2fg;  # Two finger scrolling
         special_fallthrough = true;
         follow_mouse = 1;
       };
@@ -34,7 +43,7 @@
       gestures = {
         workspace_swipe = true;
         workspace_swipe_distance = 700;
-        workspace_swipe_fingers = 4;
+        workspace_swipe_fingers = 3;
         workspace_swipe_cancel_ratio = 0.2;
         workspace_swipe_min_speed_to_force = 5;
         workspace_swipe_direction_lock = true;
@@ -132,7 +141,7 @@
           "layersOut, 1, 1.6, menu_accel"
           "fadeLayersIn, 1, 2, menu_decel"
           "fadeLayersOut, 1, 0.5, menu_accel"
-          "workspaces, 1, 7, menu_decel, slide"
+          "workspaces, 1, 7, menu_decel, slidevert"
           "specialWorkspace, 1, 3, md3_decel, slidevert"
         ];
       };
