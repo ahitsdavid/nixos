@@ -4,6 +4,7 @@
   imports = [
     (import ./bash.nix )
     #(import ./dolphin.nix )
+    (import ./fonts.nix )
     (import ./kitty.nix )
     (import ./nvf.nix )
     (import ./yazi.nix )
