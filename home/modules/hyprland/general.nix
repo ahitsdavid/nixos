@@ -75,7 +75,7 @@
       };
 
       decoration = {
-        rounding = 20;
+        rounding = 20; 
         
         blur = {
           enabled = true;
@@ -83,7 +83,7 @@
           special = false;
           new_optimizations = true;
           size = 14;
-          passes = 4;
+          passes = 3;
           brightness = 1;
           noise = 0.01;
           contrast = 1;
@@ -94,10 +94,10 @@
         shadow = {
           enabled = true;
           ignore_window = true;
-          range = 20;
+          range = 30;
           offset = "0 2";
           render_power = 4;
-          color = "rgba(0000002A)";
+          color = "rgba(00000010)";
         };
 
         # active_opacity = 1;
@@ -106,9 +106,9 @@
         
         # screen_shader = "~/.config/hypr/shaders/nothing.frag";
         
-        dim_inactive = false;
-        dim_strength = 0.1;
-        dim_special = 0;
+        dim_inactive = true;
+        dim_strength = 0.025;
+        dim_special = 0.07;
       };
 
       animations = {

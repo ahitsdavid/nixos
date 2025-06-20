@@ -13,15 +13,21 @@
     killall       # Blanket process kill
     lshw          # Detailedhardware information
     nwg-displays  # configure monitor configs via GUI
-    pavucontrol   # Audio device control
+    lxqt.pavucontrol-qt# Audio device control
     pciutils      # PCI Inspection
     unrar         # .rar file tool
     unzip         # .zip file tool
     usbutils      # USB Device tool
+    axel
+    bc
     glxinfo
     adwaita-icon-theme
     hicolor-icon-theme
     wget
+    eza
+    cliphist
+    jq
+    mutagen
     greetd.tuigreet
     curl
     git
@@ -36,6 +42,7 @@
     parted
     gptfdisk
     sbctl
+    rsync
     tree
     inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
   ];
@@ -105,10 +112,6 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  #programs.hyprland = {
-  #  enable = true;
-  #  xwayland.enable = true;
-  #};
   programs = {
     hyprland = {
         enable = true;
@@ -122,13 +125,22 @@
     enable = true;
     xdgOpenUsePortal= true;
     config = {
-        # common.default = ["gtk"];
-        hyprland.default = ["hyprland"];
+        common.default = ["gtk"];
+        hyprland.default = ["hyprland" "gtk"];
     };
-
-    extraPortals = [
-        # pkgs.xdg-desktop-portal-gtk
+    extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
     ];
+  };
+
+  systemd.user.services.xdg-desktop-portal-gtk = {
+    wantedBy = [ "graphical-session.target" ];
+    environment = {
+      WAYLAND_DISPLAY = "wayland-1";
+      DISPLAY = ":0";
+      XDG_SESSION_TYPE = "wayland";
+      XDG_CURRENT_DESKTOP = "Hyprland";
+    };
   };
 
   # Fonts

@@ -33,6 +33,7 @@
   };
 
   home.sessionVariables = {
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
     EDITOR = "nvim";
     BROWSER = "firefox";
     TERMINAL = "kitty";
@@ -49,6 +50,7 @@
         init.defaultBranch = "main";
       };
     };
+
     vscode = {
       enable = true;
       profiles = {

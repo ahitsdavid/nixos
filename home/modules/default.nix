@@ -8,11 +8,12 @@
     (import ./nvf.nix )
     (import ./yazi.nix )
     (import ./btop.nix )
-    #(import ./zen-browser.nix )
+    (import ./zen-browser.nix )
     (import ./catppuccin.nix )
     (import ./quickshell.nix )
     (import ./obs.nix )
     (import ./thunar.nix )
+    (import ./vscode.nix )
     (import ./zed.nix )
     (import ./virtualization.nix )
   ];

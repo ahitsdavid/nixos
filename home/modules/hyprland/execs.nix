@@ -10,9 +10,13 @@ in
   wayland.windowManager.hyprland.settings = {
     exec-once = [
       # Wayland wallpaper 
-      
-      "killall -q swww;sleep .5 && swww-daemon"
-      "sleep 1.5 && swww img ${config.home.homeDirectory}/${wallpaper}"
+      "wl-paste --type text --watch cliphist store"
+      "wl-paste --type image --watch cliphist store"
+      "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+      "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+      "swww-daemon --format xrgb --no-cache"
+      "sleep 0.5 && swww img ${config.home.homeDirectory}/${wallpaper}"
+      "hypridle"
       # AGS (Aylur's GTK Shell)
       #"ags run --gtk4 &" 
     ];

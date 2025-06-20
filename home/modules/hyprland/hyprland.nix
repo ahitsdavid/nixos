@@ -2,11 +2,27 @@
 {inputs, pkgs, config, lib, ... }:
 {
   home.packages = with pkgs; [
+      cava
       swww
       wl-clipboard
       brightnessctl
+      fuzzel
+      grimblast
+      hyprland-qt-support
+      hyprland-qtutils
+      hyprlang
       hyprshot
       hyprpicker
+      hyprwayland-scanner
+      networkmanagerapplet
+      nwg-displays
+      slurp
+      swappy
+      tesseract
+      wf-recorder
+
+      #Quickshell
+      translate-shell
   ];
   
   wayland.windowManager.hyprland = {
@@ -22,4 +38,10 @@
       enable = true;
     };
   };
+
+  xdg.userDirs = {
+    enable = true;
+    createDirectories = true;
+  };
+  
 }

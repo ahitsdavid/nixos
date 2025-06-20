@@ -89,6 +89,10 @@ hardware.trackpoint = {
     
     # Video4Linux utilities
     v4l-utils  
+
+    glxinfo
+    mesa
+    mesa-demos  
   ];
 
   services.throttled.enable = true;

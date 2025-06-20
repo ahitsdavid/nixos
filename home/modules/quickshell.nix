@@ -36,6 +36,11 @@ in
     home.packages = with pkgs; [
       cfg.package
       gammastep
+      geoclue2
+      playerctl
+      wireplumber
+      libdbusmenu-gtk3
+      ddcutil
       gnome-control-center
       gnome-usage
       kdePackages.syntax-highlighting
