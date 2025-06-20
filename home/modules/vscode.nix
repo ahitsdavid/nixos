@@ -1,7 +1,12 @@
 #home/modules/vscode.nix 
 { pkgs, ... } :
 {
-  vscode = {
+
+  home.sessionVariables = {
+    ELECTRON_OZONE_PLATFORM_HINT = "wayland";
+  };
+  
+  programs.vscode = {
     enable = true;
     profiles = {
       default = {
