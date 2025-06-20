@@ -13,9 +13,10 @@
     (import ./quickshell.nix )
     (import ./obs.nix )
     (import ./thunar.nix )
-    (import ./vscode.nix )
-    (import ./zed.nix )
     (import ./virtualization.nix )
+    (import ./vscode.nix )
+    (import ./xdg.nix )
+    (import ./zed.nix )
   ];
 
   #programs.dolphin = {

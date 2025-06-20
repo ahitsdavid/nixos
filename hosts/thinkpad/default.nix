@@ -13,13 +13,9 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
-  # Configure GDM customization
-  #services.gdm-customization = {
-  #  enable = true;
-  #  session = "hyprland";
-  #  face.enable = true;
-  #};
-
+  # Kernel
+  boot.kernelPackages = pkgs.linuxPackages_latest;
+  
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
