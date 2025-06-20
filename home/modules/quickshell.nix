@@ -55,11 +55,6 @@ in
     # Create config symlink if config path is provided
     home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/dotfiles/.config/quickshell";
 
-    # Set environment variables for Qt modules
-    home.sessionVariables = {
-      QML2_IMPORT_PATH = qmlImportPath;
-    };
-
     # Autostart QuickShell if enabled
     systemd.user.services.quickshell = mkIf cfg.autostart {
       Unit = {

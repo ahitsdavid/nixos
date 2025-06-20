@@ -15,7 +15,6 @@
     (import ./thunar.nix )
     (import ./virtualization.nix )
     (import ./vscode.nix )
-    (import ./xdg.nix )
     (import ./zed.nix )
   ];
 

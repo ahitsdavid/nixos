@@ -32,12 +32,6 @@
     ".config/face.jpg".source = ./users/${username}/face.png;
   };
 
-  home.sessionVariables = {
-    EDITOR = "nvim";
-    BROWSER = "firefox";
-    TERMINAL = "kitty";
-  };
-
   programs = {
     home-manager.enable = true;
 

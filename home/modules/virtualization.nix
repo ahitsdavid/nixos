@@ -3,8 +3,4 @@
      virt-manager
      virt-viewer 
   ];
-
-    home.sessionVariables = {
-    LIBVIRT_DEFAULT_URI = "qemu:///system";
-  };
 }

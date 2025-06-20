@@ -121,14 +121,20 @@
     };
   };
 
+  xdg.portal = {
+    enable = true;
+    xdgOpenUsePortal= true;
+    config = {
+        common.default = ["gtk"];
+        hyprland.default = ["hyprland" "gtk"];
+    };
+    extraPortals = with pkgs; [
+        xdg-desktop-portal-gtk
+    ];
+  };
+
   systemd.user.services.xdg-desktop-portal-gtk = {
     wantedBy = [ "graphical-session.target" ];
-    environment = {
-      WAYLAND_DISPLAY = "wayland-1";
-      DISPLAY = ":0";
-      XDG_SESSION_TYPE = "wayland";
-      XDG_CURRENT_DESKTOP = "Hyprland";
-    };
   };
 
   # Fonts
@@ -151,12 +157,6 @@
 
   # Desktop Environment
   services.xserver.enable = true;
-  #services.xserver.displayManager.gdm = {
-  #  enable = true;
-  #  wayland = true;
-  #  # This enables user icons in GDM
-  #  autoSuspend = false;
-  #};
   services.greetd = {
     enable = true;
     vt = 3;
