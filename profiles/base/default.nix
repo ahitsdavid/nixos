@@ -24,7 +24,6 @@
     adwaita-icon-theme
     hicolor-icon-theme
     wget
-    eza
     cliphist
     jq
     mutagen
@@ -156,11 +155,15 @@
         enable = true;
         autohint = true;
       };
+      defaultFonts = {
+        monospace = [ "JetBrainsMono Nerd Font" ];
+        sansSerif = [ "JetBrainsMono Nerd Font" "Noto Sans" ];
+        serif = [ "JetBrainsMono Nerd Font" "Noto Serif" ];
+      };
     };
   };
 
-  # Desktop Environment
-  services.xserver.enable = true;
+  # Login Environment
   services.greetd = {
     enable = true;
     vt = 3;

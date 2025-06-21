@@ -19,6 +19,7 @@
   services.qemuGuest.enable = true;
   services.spice-vdagentd.enable = true;
 
+  services.xserver.enable = true;
   services.xserver.videoDrivers = [ "qxl" ];
   #boot.initrd.kernelModules = [ "virtio_pci" "virtio_blk" "virtio_gpu" ];
   #boot.kernelModules = [ "virtio_console" "virtio_gpu" "drm" ];
