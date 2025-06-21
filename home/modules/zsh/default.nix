@@ -12,7 +12,6 @@
     syntaxHighlighting.enable = true;
 
     shellAliases = {
-      ll = "ls -l";
       v = "nvim";
       sv = "sudo nvim";
       c = "clear";

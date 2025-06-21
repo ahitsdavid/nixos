@@ -1,4 +1,5 @@
 #home/modules/eza.nix 
+{ pkgs, ... }:
 {
   programs.eza = {
     enable = true;
