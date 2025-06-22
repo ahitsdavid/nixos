@@ -2,50 +2,12 @@
 { inputs, username }:
 { config, pkgs, ... }: {
   imports = [
-    (import ../../core/modules { inherit username })
+    (import ../../core/modules { inherit username; })
     (import ./users.nix { inherit inputs username; })
     (import ./networking.nix { inherit inputs; })
     (import ./nix-config.nix { inherit inputs; })
   ];
 
-  environment.systemPackages = with pkgs; [
-    brightnessctl # Screen Brightness control
-    ffmpeg        # Video / Audio
-    killall       # Blanket process kill
-    lshw          # Detailedhardware information
-    nwg-displays  # configure monitor configs via GUI
-    lxqt.pavucontrol-qt# Audio device control
-    pciutils      # PCI Inspection
-    unrar         # .rar file tool
-    unzip         # .zip file tool
-    usbutils      # USB Device tool
-    axel
-    bc
-    glxinfo
-    adwaita-icon-theme
-    hicolor-icon-theme
-    wget
-    cliphist
-    jq
-    mutagen
-    greetd.tuigreet
-    curl
-    git
-    htop
-    file
-    zip
-    unzip
-    gnupg
-    vlc
-    efibootmgr
-    os-prober
-    parted
-    gptfdisk
-    sbctl
-    rsync
-    tree
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
-  ];
   # Bluetooth
   services.blueman.enable = true;
   # Flatpak for unity
@@ -136,17 +98,7 @@
   systemd.user.services.xdg-desktop-portal-gtk = {
     wantedBy = [ "graphical-session.target" ];
   };
-  # Login Environment
-  services.greetd = {
-    enable = true;
-    vt = 3;
-    settings = {
-      default_session = {
-        user = username;
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland"; # start Hyprland with a TUI login manager
-      };
-    };
-  };
+
 
   # Configure AccountsService which handles user icons
   services.accounts-daemon.enable = true;
