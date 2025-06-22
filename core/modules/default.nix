@@ -1,10 +1,13 @@
 # core/modules/default.nix
-{ username }:
+{ inputs, username }:
 { pkgs, ... }: {
   imports = [
+    ( import ./bootloader.nix )
     ( import ./fonts.nix )
     ( import ./greetd.nix )
-    ( import ./packages.nix )
+    ( import ./networking.nix { inherit inputs; })
+    ( import ./packages.nix { inherit inputs; })
+    ( import ./pipewire.nix )
     ( import ./steam.nix )
   ];
 

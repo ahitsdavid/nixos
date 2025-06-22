@@ -2,9 +2,8 @@
 { inputs, username }:
 { config, pkgs, ... }: {
   imports = [
-    (import ../../core/modules { inherit username; })
+    (import ../../core/modules { inherit inputs username; })
     (import ./users.nix { inherit inputs username; })
-    (import ./networking.nix { inherit inputs; })
     (import ./nix-config.nix { inherit inputs; })
   ];
 
@@ -29,35 +28,6 @@
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
-
-  # Bootloader.
-  boot.loader = {
-    systemd-boot = {
-      enable = true;
-      configurationLimit = 10;
-      editor = false;
-    };
-    efi = {
-      canTouchEfiVariables = true;
-      efiSysMountPoint = "/boot";
-    };
-
-    # boot menu timeout
-    timeout = 5;
-  };
-
-  # Preserve old generations for rollbacks
-  boot.bootspec.enable = true;
-
-  # Enable sound with pipewire.
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-    jack.enable = true;
-  };
 
   #Hardware
   hardware = {
