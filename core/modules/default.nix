@@ -1,7 +1,9 @@
 # core/modules/default.nix
 { pkgs, ... }: {
   imports = [
-    (import ./steam.nix )
+    ( import ./fonts.nix )
+    ( import ./greetd.nix )
+    ( import ./steam.nix )
   ];
 
 }

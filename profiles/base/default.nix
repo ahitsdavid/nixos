@@ -2,6 +2,7 @@
 { inputs, username }:
 { config, pkgs, ... }: {
   imports = [
+    (import ../../core/modules { inherit username })
     (import ./users.nix { inherit inputs username; })
     (import ./networking.nix { inherit inputs; })
     (import ./nix-config.nix { inherit inputs; })
@@ -135,34 +136,6 @@
   systemd.user.services.xdg-desktop-portal-gtk = {
     wantedBy = [ "graphical-session.target" ];
   };
-
-  # Fonts
-  fonts = {
-    packages = with pkgs; [
-      accountsservice
-      source-code-pro
-      noto-fonts
-      noto-fonts-cjk-sans
-      twitter-color-emoji
-      font-awesome
-      powerline-fonts
-      nerd-fonts.jetbrains-mono
-      nerd-fonts.symbols-only
-    ];
-    fontconfig = {
-      enable = true;
-      hinting = {
-        enable = true;
-        autohint = true;
-      };
-      defaultFonts = {
-        monospace = [ "JetBrainsMono Nerd Font" ];
-        sansSerif = [ "JetBrainsMono Nerd Font" "Noto Sans" ];
-        serif = [ "JetBrainsMono Nerd Font" "Noto Serif" ];
-      };
-    };
-  };
-
   # Login Environment
   services.greetd = {
     enable = true;
