@@ -7,7 +7,7 @@
       (import ../../profiles/base { inherit inputs username; })
       (import ../../profiles/development { inherit inputs username; })
       (import ../../profiles/work { inherit inputs username; })
-      (import ../../drivers/intel.nix )
+      (import ../../drivers/ )
 
       # Import the GDM customization module
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })

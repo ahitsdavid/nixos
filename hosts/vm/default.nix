@@ -7,7 +7,7 @@
       (import ../../profiles/base { inherit inputs username; })
       (import ../../profiles/development { inherit inputs username; })
       (import ../../profiles/work { inherit inputs username; })
-      (import ../../drivers/intel.nix )
+      (import ../../core/drivers/intel.nix )
     ];
 
   # Bootloader.
