@@ -23,13 +23,6 @@
       home-manager.flake = inputs.home-manager;
     };
 
-    # Optimization settings
-    #settings = {
-
-
-
-    #};
-
     # Garbage collection
     gc = {
       automatic = true;

@@ -31,6 +31,7 @@
         
         # Themes
         "QT_QPA_PLATFORM, wayland"
+        "GREETD_GTK_THEME, Catppuccin-Mocha-Standard-Blue-Dark"
         "QT_QPA_PLATFORMTHEME, qt6ct"
         # "QT_STYLE_OVERRIDE, kvantum"
         "WLR_NO_HARDWARE_CURSORS, 1"

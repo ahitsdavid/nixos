@@ -12,7 +12,10 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     nurpkgs.url = "github:nix-community/NUR";
     nvf = {
       url = "github:notashelf/nvf";
@@ -59,6 +62,7 @@
     nurpkgs,
     catppuccin,
     quickshell,
+    stylix,
     ... 
     } @ inputs: 
   let 

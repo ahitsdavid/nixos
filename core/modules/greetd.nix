@@ -1,4 +1,4 @@
-{pkgs, username, ...}: {
+{pkgs, lib, username, ...}: {
   # Login Environment
   services.greetd = {
     enable = true;
@@ -6,7 +6,18 @@
     settings = {
       default_session = {
         user = username;
-        command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --cmd Hyprland"; # start Hyprland with a TUI login manager
+        command = lib.concatStringsSep " " [
+          "${pkgs.greetd.tuigreet}/bin/tuigreet"
+          "--time"
+          "--cmd Hyprland"
+          # Catppuccin Mocha color scheme
+          "--container-padding 2"
+          "--prompt-padding 1"
+          "--asterisks"
+          "--asterisks-char ●"
+          "--window-padding 2"
+          "--greeting 'Welcome to NixOS'"
+        ];
       };
     };
   };
