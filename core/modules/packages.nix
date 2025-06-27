@@ -6,7 +6,7 @@
     bc                    # Basic calculator and math tool
     brightnessctl         # Screen Brightness control
     cliphist              # Clipboard history manager for Wayland
-    catppuccin-gtk        # Catppucin GTK theme
+    #catppuccin-gtk        # Catppucin GTK theme
     curl                  # Command-line tool for transferring data with URLs
     efibootmgr            # EFI boot manager for UEFI systems
     ffmpeg                # Video / Audio

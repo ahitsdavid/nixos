@@ -51,9 +51,7 @@
       
       # GTK system theme
       gtk.enable = true;
-      
-      # Hyprland system integration
-      hyprland.enable = true;
+
     };
 
     # System opacity

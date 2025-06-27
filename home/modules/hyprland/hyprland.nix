@@ -25,6 +25,13 @@
       translate-shell
   ];
   
+  home.file = {
+    ".config/hypr/scripts" = {
+      source = ./scripts;
+      recursive = true;
+    };
+  };
+
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.system}.hyprland;

@@ -9,7 +9,7 @@
     accent = "blue";   # Options: rosewater, flamingo, pink, mauve, red, maroon, peach, yellow, green, teal, sky, sapphire, blue, lavender
     
     # Enable specific application themes
-    gtk.enable = true;
+    #gtk.enable = true;
     hyprland.enable = true;
     hyprlock.enable = true;
     kitty.enable = true;

@@ -9,6 +9,7 @@
     ( import ./packages.nix { inherit inputs; })
     ( import ./pipewire.nix )
     ( import ./steam.nix )
+    #( import ./stylix.nix )
   ];
 
 }
