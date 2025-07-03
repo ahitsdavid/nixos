@@ -4,6 +4,7 @@
   imports = [
     (import ./bash.nix )
     #(import ./dolphin.nix )
+    (import ./claude.nix )
     (import ./eza.nix )
     (import ./kitty.nix )
     (import ./nvf.nix )

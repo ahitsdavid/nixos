@@ -5,7 +5,7 @@
     axel                  # Multi-threaded download accelerator
     bc                    # Basic calculator and math tool
     brightnessctl         # Screen Brightness control
-    claude-code           # Claude code
+    #claude-code           # Claude code
     cliphist              # Clipboard history manager for Wayland
     #catppuccin-gtk        # Catppucin GTK theme
     curl                  # Command-line tool for transferring data with URLs
