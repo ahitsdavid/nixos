@@ -41,15 +41,16 @@ in
       "$mod, B, global, quickshell:sidebarLeftToggle" # [hidden]
       "$mod, O, global, quickshell:sidebarLeftToggle" # [hidden]
       
+      # APPS
       # VSCode
-      "$mod, C, exec, code"
+      "$mod, C, exec, ~/.config/hypr/scripts/launch_first_available.sh 'code' 'codium' 'zed' 'kate' 'gnome-text-editor' 'emacs' 'command -v nvim && kitty -1 nvim'"
       # Terminal
-      "$mod, Return, exec, ${terminal}"
-      "$mod, T, exec, ${terminal}"
+      "$mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm'"
+      "$mod, T, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm'"
       # Browser
-      "$mod, W, exec, ${browser} || firefox"
+      "$mod, W, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera'"
       # File Manager
-      "$mod CONTROL, F, exec, ${file-manager}"
+      "$mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar'"
       # Rofi
       "$mod, Space, exec, pkill -x rofi || rofi -show drun"
       # Session management
