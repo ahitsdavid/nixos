@@ -38,10 +38,6 @@
       url = "github:VirtCode/hypr-dynamic-cursors";
       inputs.hyprland.follows = "hyprland" ;  
     }; 
-    quickshell = {
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -61,7 +57,6 @@
     home-manager,
     nurpkgs,
     catppuccin,
-    quickshell,
     stylix,
     ... 
     } @ inputs: 
@@ -90,7 +85,7 @@
             home-manager.useGlobalPkgs = true;
             home-manager.backupFileExtension = "backup";
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs username system quickshell; };
+            home-manager.extraSpecialArgs = { inherit inputs username system; };
             home-manager.users.${username} = { 
               imports = [
                 ./home/base.nix

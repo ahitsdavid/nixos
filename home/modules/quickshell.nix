@@ -1,79 +1,97 @@
-{ config, lib, pkgs, quickshell, ... }:
-with lib;
-let
-  cfg = config.programs.quickshell;
-  qmlImportPath = lib.concatStringsSep ":" [
-    "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-    "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-    "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-  ];
-in
+{ config, lib, pkgs, ... }:
+
 {
-  options.programs.quickshell = {
-    enable = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to enable QuickShell";
-    };
-    package = mkOption {
-      type = types.package;
-      default = quickshell.packages.${pkgs.system}.default;
-      description = "The QuickShell package to use";
-    };
-    config = mkOption {
-      type = types.nullOr types.path;
-      default = null;
-      description = "Path to QuickShell configuration directory";
-    };
-    autostart = mkOption {
-      type = types.bool;
-      default = true;
-      description = "Whether to autostart QuickShell";
+  # Use the official Home Manager QuickShell module
+  programs.quickshell = {
+    enable = true;
+    # Remove package line to use default, or specify if needed
+    # package = pkgs.quickshell; # if available in nixpkgs
+    
+    # Set the config directory - commented out for now
+    # activeConfig = "default";
+    # configs = {
+    #   default = "${config.home.homeDirectory}/dotfiles/.config/quickshell";
+    # };
+    
+    # Enable systemd service
+    systemd = {
+      enable = true;
     };
   };
 
-  config = mkIf cfg.enable {
-    home.packages = with pkgs; [
-      cfg.package
-      gammastep
-      geoclue2
-      playerctl
-      wireplumber
-      libdbusmenu-gtk3
-      ddcutil
-      gnome-control-center
-      gnome-usage
-      kdePackages.syntax-highlighting
-      material-symbols
-      libsForQt5.qtgraphicaleffects # Qt5 GraphicalEffects module
-      qt6.qt5compat # Qt6 Qt5 compatibility layer          # Rubik - main font
-      rubik    
-      nerd-fonts.space-mono    
-      better-control
+  # Extend the official systemd service to add environment variables
+  systemd.user.services.quickshell.Service.Environment = [
+    "QML2_IMPORT_PATH=${lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+    ]}"
+  ];
+
+  # Add QML import paths as session variables
+  home.sessionVariables = {
+    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
     ];
-
-    # Create config symlink if config path is provided
-    home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink  "${config.home.homeDirectory}/dotfiles/.config/quickshell";
-
-    # Autostart QuickShell if enabled
-    systemd.user.services.quickshell = mkIf cfg.autostart {
-      Unit = {
-        Description = "QuickShell";
-        After = [ "graphical-session-pre.target" ];
-        PartOf = [ "graphical-session.target" ];
-      };
-      Service = {
-        ExecStart = "${cfg.package}/bin/quickshell";
-        Restart = "on-failure";
-        RestartSec = 1;
-        TimeoutStopSec = 10;
-        Environment = [
-          "QML2_IMPORT_PATH=${qmlImportPath}"
-        ];
-      };
-      Install = {
-        WantedBy = [ "graphical-session.target" ];
-      };
-    };
   };
+
+  # Also add to shell profile for immediate availability
+  programs.bash.sessionVariables = {
+    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+    ];
+  };
+
+  # And for zsh if you use it
+  programs.zsh.sessionVariables = {
+    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+    ];
+  };
+
+  # Install additional packages that QuickShell needs
+  home.packages = with pkgs; [
+    # System tools
+    gammastep
+    geoclue2
+    playerctl
+    wireplumber
+    libdbusmenu-gtk3
+    ddcutil
+    
+    # GNOME tools
+    gnome-control-center
+    gnome-usage
+    
+    # KDE/Qt packages
+    kdePackages.syntax-highlighting
+    libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
+    qt6.qt5compat                  # Qt6 Qt5 compatibility layer
+    
+    # Qt5 packages
+    libsForQt5.qtquickcontrols2
+    libsForQt5.qtquickcontrols
+    
+    # Qt6 packages (correct names)
+    qt6.qtdeclarative              # Includes QtQuick
+    qt6.qtquick3d
+    
+    # Fonts
+    material-symbols
+    rubik
+    nerd-fonts.space-mono
+    
+    # Other tools
+    better-control
+  ];
+
+  # Create the config symlink to your dotfiles in home directory
+  # Use config.lib.file.mkOutOfStoreSymlink to properly reference home directory
+  home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/quickshell";
 }
