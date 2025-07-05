@@ -1,4 +1,4 @@
-{username, ...}: {
+{username, lib, ...}: {
   programs.hyprlock = {
     enable = true;
     settings = {
@@ -8,7 +8,7 @@
         hide_cursor = true;
         no_fade_in = true;
       };
-      background = [
+      background = lib.mkForce [
         {
           path = "/home/${username}/Pictures/Wallpapers/yosemite.png";
           blur_passes = 3;

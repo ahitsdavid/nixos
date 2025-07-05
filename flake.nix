@@ -77,7 +77,7 @@
 
           # Catpuccin theming
           catppuccin.nixosModules.catppuccin
-          # NUR Overlay
+          # NUR Overlay - moved to system nixpkgs to avoid home-manager warning
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
 
           # home-manager NixOS module

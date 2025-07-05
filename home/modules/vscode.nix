@@ -9,18 +9,15 @@
           ms-python.python
           jnoortheen.nix-ide
           esbenp.prettier-vscode
-          catppuccin.catppuccin-vsc
-          catppuccin.catppuccin-vsc-icons
+          # catppuccin.catppuccin-vsc  # Remove color theme - let Stylix handle
+          catppuccin.catppuccin-vsc-icons  # Keep icons - Stylix doesn't handle these
           ms-vscode.cmake-tools
           ms-vscode-remote.remote-ssh
           ];
         userSettings = {
-          "editor.fontSize" = 14;
-          "editor.fontFamily" = "'JetBrainsMono Nerd Font', 'JetBrains Mono', monospace";
+          # Let Stylix handle font and theme settings
           "editor.fontLigatures" = true;
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
-          # Workbench settings
-          "workbench.colorTheme" = "Catppuccin Mocha";
   
           # Language-specific settings
           "[nix]" = {

@@ -1,8 +1,8 @@
 # colors.nix - Hyprland colors connected to Stylix base16 scheme
 # Automatically adapts to any base16 theme changes
-{ config, ... }: 
+{ config, lib, ... }: 
 let
-  # Get colors from Stylix base16 scheme
+  # Get colors from Stylix base16 scheme (now properly inherited)
   colors = config.stylix.base16Scheme;
 in {
   wayland.windowManager.hyprland.settings = {
@@ -42,32 +42,7 @@ in {
     "$mauve" = "$base0E";
     "$flamingo" = "$base0F";
 
-    # Window border colors
-    general = {
-      "col.active_border" = "$mauve $blue 45deg";
-      "col.inactive_border" = "$surface0";
-    };
-
-    # Group border colors  
-    group = {
-      "col.border_active" = "$mauve";
-      "col.border_inactive" = "$surface0";
-      "col.border_locked_active" = "$red";
-      "col.border_locked_inactive" = "$surface1";
-    };
-
-    # Decoration colors
-    decoration = {
-      shadow = {
-        color = "rgba(${colors.base01}aa)"; # mantle with transparency
-        color_inactive = "rgba(${colors.base01}77)";
-      };
-    };
-
-    # Misc colors
-    misc = {
-      "col.splash" = "$text";
-      background_color = "$background";
-    };
+    # Let Stylix handle all theming automatically
+    # Color variables are available for other uses, but Stylix controls Hyprland theming
   };
 }

@@ -1,9 +1,9 @@
 #home/modules/kitty.nix 
-{ pkgs, ... } :
+{ pkgs, lib, ... } :
 {
   programs.kitty = {
     enable = true;
-    themeFile = "Catppuccin-Mocha";
+    # Remove themeFile - let Stylix handle theming
     settings = {
       font_size = 12;
       font = "JetBrainsMono Nerd Font";
@@ -13,7 +13,7 @@
       dynamic_background_opacity = true;
       enable_audio_bell = false;
       mouse_hide_wait = "-1.0";
-      background_opacity = "0.7";
+      background_opacity = lib.mkForce "0.7"; # Override Stylix to keep transparency
       background_blur = 5;
       tab_fade = 1;
       active_tab_font_style = "bold";

@@ -109,8 +109,6 @@
       load_direnv = "shell_hook";
       base_keymap = "VSCode";
       show_whitespaces = "all" ;
-      ui_font_size = 16;
-      buffer_font_size = 16;
     };
   };
 }

@@ -52,8 +52,8 @@
       };
 
       general = {
-        gaps_in = 4;
-        gaps_out = 5;
+        gaps_in = 8;
+        gaps_out = 10;
         gaps_workspaces = 50;
         border_size = 2;
         
@@ -89,11 +89,11 @@
         };
         
         shadow = {
-          enabled = true;
+          enabled = false;
           ignore_window = true;
-          range = 30;
+          range = 15;
           offset = "0 2";
-          render_power = 4;
+          render_power = 2;
         };
 
         # active_opacity = 1;

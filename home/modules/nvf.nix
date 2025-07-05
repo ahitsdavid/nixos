@@ -64,8 +64,6 @@
         gitsigns.codeActions.enable = false; # throws an annoying debug message
       };
 
-      theme.name = "catppuccin";
-      theme.style = "dark";
     };
   };
 }
