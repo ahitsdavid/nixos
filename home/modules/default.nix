@@ -12,6 +12,7 @@
     (import ./btop.nix )
     (import ./zen-browser.nix )
     (import ./catppuccin.nix )
+    (import ./stylix.nix )
     (import ./quickshell.nix )
     (import ./obs.nix )
     (import ./thunar.nix )

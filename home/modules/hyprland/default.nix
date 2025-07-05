@@ -7,6 +7,7 @@
     (import ./hyprlock.nix)
     (import ./env.nix )
     (import ./general.nix )
+    (import ./colors.nix )
     (import ./keybinds.nix )
     (import ./execs.nix )
 

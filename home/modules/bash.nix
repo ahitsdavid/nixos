@@ -3,8 +3,7 @@
     enable = true;
     enableCompletion = true;
     initExtra = ''
-      fastfetch
-      zsh
+      # Bash configuration - keeping minimal since zsh is primary shell
     '';
     shellAliases = {
       sv = "sudo nvim";

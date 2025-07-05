@@ -1,33 +1,36 @@
 #!/usr/bin/env bash
 
-# Get the window under the cursor
+# Simple approach: get the focused window's PID and find the deepest shell process
 window_info=$(hyprctl activewindow -j)
 window_pid=$(echo "$window_info" | jq -r '.pid')
 
-# If we found a PID, try to get its working directory
 if [ "$window_pid" != "null" ] && [ -n "$window_pid" ]; then
-    # Check if the process has a cwd we can access
-    if [ -L "/proc/$window_pid/cwd" ]; then
-        cwd=$(readlink "/proc/$window_pid/cwd" 2>/dev/null)
-        if [ -n "$cwd" ] && [ -d "$cwd" ]; then
-            # Launch terminal in that directory using launch_first_available
-            cd "$cwd" && ~/.config/hypr/scripts/launch_first_available.sh 'kitty' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' &
-            exit 0
-        fi
-    fi
+    # Find all child processes (including nested ones)
+    all_pids=$(pgrep -P "$window_pid")
     
-    # If that didn't work, try to find a child process (like a shell)
-    children=$(pgrep -P "$window_pid" 2>/dev/null)
-    for child in $children; do
-        if [ -L "/proc/$child/cwd" ]; then
-            cwd=$(readlink "/proc/$child/cwd" 2>/dev/null)
-            if [ -n "$cwd" ] && [ -d "$cwd" ]; then
-                cd "$cwd" && ~/.config/hypr/scripts/launch_first_available.sh 'kitty' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' &
-                exit 0
+    # Add the parent PID to the list
+    all_pids="$window_pid $all_pids"
+    
+    # Try to find the most recent shell process with a valid cwd
+    best_cwd=""
+    for pid in $all_pids; do
+        if [ -L "/proc/$pid/cwd" ]; then
+            cmd=$(ps -p "$pid" -o comm= 2>/dev/null | tr -d ' ')
+            if [[ "$cmd" == "zsh" ]] || [[ "$cmd" == "bash" ]]; then
+                cwd=$(readlink "/proc/$pid/cwd" 2>/dev/null)
+                if [ -n "$cwd" ] && [ -d "$cwd" ] && [ "$cwd" != "$HOME" ]; then
+                    best_cwd="$cwd"
+                fi
             fi
         fi
     done
+    
+    # If we found a good directory, use it
+    if [ -n "$best_cwd" ]; then
+        kitty --directory="$best_cwd" zsh &
+        exit 0
+    fi
 fi
 
-# Fallback: use launch_first_available in home directory
-~/.config/hypr/scripts/launch_first_available.sh 'kitty' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' &
+# Fallback: just launch kitty normally
+kitty zsh &

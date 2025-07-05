@@ -52,6 +52,9 @@
       # GTK system theme
       gtk.enable = true;
 
+      # Applications - gradually replacing Catppuccin
+      kitty.enable = true;
+      
     };
 
     # System opacity

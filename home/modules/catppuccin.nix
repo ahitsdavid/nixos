@@ -10,9 +10,9 @@
     
     # Enable specific application themes
     #gtk.enable = true;
-    hyprland.enable = true;
+    hyprland.enable = false;
     hyprlock.enable = true;
-    kitty.enable = true;
+    kitty.enable = false;  # Migrated to Stylix
     kvantum.enable = true;
     nvim.enable = true;
     obs.enable = true;

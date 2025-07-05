@@ -7,6 +7,8 @@
     python3Packages.ipython
     python3Packages.black
     python3Packages.pylint
+    python3Packages.pywayland
+    python3Packages.setproctitle
     poetry
   ];
 }

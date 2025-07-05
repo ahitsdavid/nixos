@@ -43,12 +43,12 @@ in
       
       # APPS
       # VSCode
-      "$mod, C, exec, ~/.config/hypr/scripts/launch_first_available.sh 'code' 'codium' 'zed' 'kate' 'gnome-text-editor' 'emacs' 'command -v nvim && kitty -1 nvim'"
+      "$mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh"
       # Terminal
       "$mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm'"
-      "$mod, T, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm'"
+      "$mod, T, exec, ~/.config/hypr/scripts/open_terminal_here.sh"
       # Browser
-      "$mod, W, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera'"
+      "$mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera'"
       # File Manager
       "$mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar'"
       # Rofi
@@ -133,6 +133,9 @@ in
     bindl = [
       ", XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
       "$mod, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle"
+      # Lid switch bindings - disable ThinkPad display when lid is closed
+      ", switch:on:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,disable'"
+      ", switch:off:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,preferred,auto,1'"
     ];
     
     # Reload Hyprland

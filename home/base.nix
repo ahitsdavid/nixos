@@ -19,6 +19,7 @@
     spotify
     oh-my-posh
     telegram-desktop
+    stremio
   ];
 
   # Place Files Inside Home Directory

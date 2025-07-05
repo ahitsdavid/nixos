@@ -88,6 +88,7 @@
             home-manager.extraSpecialArgs = { inherit inputs username system; };
             home-manager.users.${username} = { 
               imports = [
+                stylix.homeModules.stylix
                 ./home/base.nix
                 ./home/gaming.nix
                 # Add any extra home-manager modules

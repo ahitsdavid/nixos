@@ -26,10 +26,17 @@
   ];
   
   home.file = {
-    ".config/hypr/scripts" = {
-      source = ./scripts;
-      recursive = true;
-      executable = true; 
+    ".config/hypr/scripts/launch_first_available.sh" = {
+      source = ./scripts/launch_first_available.sh;
+      executable = true;
+    };
+    ".config/hypr/scripts/open_terminal_here.sh" = {
+      source = ./scripts/open_terminal_here.sh;
+      executable = true;
+    };
+    ".config/hypr/scripts/open_vscode_here.sh" = {
+      source = ./scripts/open_vscode_here.sh;
+      executable = true;
     };
   };
 

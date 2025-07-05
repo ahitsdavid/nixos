@@ -23,6 +23,8 @@
       tab_bar_style = "powerline";
       #tab_bar_style = "fade";
       enabled_layouts = "splits";
+      allow_remote_control = true;
+      listen_on = "unix:/tmp/kitty";
     };
       extraConfig = ''
 

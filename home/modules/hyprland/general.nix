@@ -55,11 +55,8 @@
         gaps_in = 4;
         gaps_out = 5;
         gaps_workspaces = 50;
-        border_size = 1;
+        border_size = 2;
         
-        "col.active_border" = "rgba(0DB7D4FF)";
-        "col.inactive_border" = "rgba(31313600)";
-
         resize_on_border = true;
         no_focus_fallback = true;
         layout = "dwindle";
@@ -97,7 +94,6 @@
           range = 30;
           offset = "0 2";
           render_power = 4;
-          color = "rgba(00000010)";
         };
 
         # active_opacity = 1;
