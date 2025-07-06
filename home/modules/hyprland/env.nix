@@ -32,8 +32,10 @@
         # Themes
         "QT_QPA_PLATFORM, wayland"
         "GREETD_GTK_THEME, Catppuccin-Mocha-Standard-Blue-Dark"
-        "QT_QPA_PLATFORMTHEME, qt6ct"
+        # "QT_QPA_PLATFORMTHEME, kvantum"  # Disabled to prevent Quickshell conflicts
         # "QT_STYLE_OVERRIDE, kvantum"
+        "QT_QPA_PLATFORMTHEME, gtk3"  # Override qt5ct to prevent kvantum style loading
+        "QT_STYLE_OVERRIDE, "  # Clear any kvantum style override
         "WLR_NO_HARDWARE_CURSORS, 1"
         
         # HYPRCURSOR

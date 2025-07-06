@@ -2,12 +2,12 @@
 
 
 {
-  # Qt theming configuration (required for Catppuccin kvantum)
-  qt = {
-    enable = true;
-    platformTheme.name = lib.mkForce "kvantum";
-    style.name = lib.mkForce "kvantum";  # Required for Catppuccin Qt theming
-  };
+  # Qt theming configuration - disabled to prevent Quickshell conflicts
+  # qt = {
+  #   enable = true;
+  #   platformTheme.name = lib.mkForce "kvantum";
+  #   style.name = lib.mkForce "kvantum";
+  # };
 
   # Enable the Catppuccin module
   catppuccin = {
@@ -21,7 +21,7 @@
     hyprland.enable = false;
     hyprlock.enable = false;  # Migrated to Stylix
     kitty.enable = false;  # Migrated to Stylix
-    kvantum.enable = true;
+    kvantum.enable = false;  # Disabled to prevent Quickshell conflicts
     nvim.enable = false;  # Migrated to Stylix
     obs.enable = true;
     rofi.enable = false;  # Migrated to Stylix

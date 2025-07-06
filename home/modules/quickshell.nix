@@ -25,6 +25,7 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ]}"
   ];
 
@@ -34,6 +35,7 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 
@@ -43,6 +45,7 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 
@@ -52,6 +55,7 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 
@@ -86,6 +90,10 @@
     material-symbols
     rubik
     nerd-fonts.space-mono
+    
+    # Theme engines
+    libsForQt5.qtstyleplugin-kvantum
+    kdePackages.qtstyleplugin-kvantum
     
     # Other tools
     better-control

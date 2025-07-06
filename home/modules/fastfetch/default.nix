@@ -1,3 +1,4 @@
+{ config, ... }:
 {
   programs.fastfetch = {
     enable = true;
@@ -5,8 +6,8 @@
     settings = {
       display = {
         color = {
-          keys = "35";
-          output = "95";
+          keys = "#${config.stylix.base16Scheme.base0D}";    # Stylix blue
+          output = "#${config.stylix.base16Scheme.base05}";  # Stylix text
         };
         separator = " ➜  ";
       };
@@ -27,97 +28,97 @@
         {
           type = "os";
           key = "OS - NixOS";
-          keyColor = "31";
+          keyColor = "#${config.stylix.base16Scheme.base08}";  # Stylix red
         }
         {
           type = "kernel";
           key = " ├  ";
-          keyColor = "31";
+          keyColor = "#${config.stylix.base16Scheme.base08}";  # Stylix red
         }
         {
           type = "packages";
           key = " ├ 󰏖 ";
-          keyColor = "31";
+          keyColor = "#${config.stylix.base16Scheme.base08}";  # Stylix red
         }
         {
           type = "shell";
           key = " └  ";
-          keyColor = "31";
+          keyColor = "#${config.stylix.base16Scheme.base08}";  # Stylix red
         }
         "break"
         {
           type = "wm";
           key = "WM   ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         {
           type = "wmtheme";
           key = " ├ 󰉼 ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         {
           type = "icons";
           key = " ├ 󰀻 ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         {
           type = "cursor";
           key = " ├  ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         {
           type = "terminal";
           key = " ├  ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         {
           type = "terminalfont";
           key = " └  ";
-          keyColor = "32";
+          keyColor = "#${config.stylix.base16Scheme.base0B}";  # Stylix green
         }
         "break"
         {
           type = "host";
           format = "{5} {1} Type {2}";
           key = "PC   ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "cpu";
           format = "{1} ({3}) @ {7}";
           key = " ├  ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "gpu";
           format = "{1} {2} @ {12}";
           key = " ├ 󰢮 ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "memory";
           key = " ├  ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "disk";
           key = " ├ 󰋊 ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "monitor";
           key = " ├  ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "player";
           key = " ├ 󰥠 ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         {
           type = "media";
           key = " └ 󰝚 ";
-          keyColor = "33";
+          keyColor = "#${config.stylix.base16Scheme.base0A}";  # Stylix yellow
         }
         "break"
         {

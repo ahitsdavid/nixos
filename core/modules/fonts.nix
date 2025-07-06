@@ -18,11 +18,8 @@
         enable = true;
         autohint = true;
       };
-      defaultFonts = {
-        monospace = [ "JetBrainsMono Nerd Font" ];
-        sansSerif = [ "JetBrainsMono Nerd Font" "Noto Sans" ];
-        serif = [ "JetBrainsMono Nerd Font" "Noto Serif" ];
-      };
+      # Let Stylix handle default fonts
+      # defaultFonts will be managed by Stylix configuration
     };
   };
 }
