@@ -21,7 +21,7 @@
     rofi.enable = false;  # Migrated to Stylix
     spotify-player.enable = true;
     vscode.profiles.default.enable = false;  # Migrated to Stylix
-    yazi.enable = false;  # Migrated to Stylix
+    yazi.enable = false;  # Miggitrated to Stylix
     zed.enable = false;  # Migrated to Stylix
     zed.icons.enable = false;  # Migrated to Stylix
   };
