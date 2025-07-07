@@ -93,7 +93,7 @@
             home-manager.users.${username} = { 
               imports = [
                 stylix.homeModules.stylix
-                inputs.spicetify-nix.homeModules.spicetify-nix
+                inputs.spicetify-nix.homeManagerModules.spicetify-nix
                 ./home/base.nix
                 ./home/gaming.nix
                 # Add any extra home-manager modules
