@@ -75,6 +75,7 @@
         specialArgs = { inherit inputs username; };
         modules = [
           stylix.nixosModules.stylix
+          inputs.sops-nix.nixosModules.sops
           
           # Host-specific configuration
           ./hosts/${hostname}

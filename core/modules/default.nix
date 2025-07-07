@@ -8,6 +8,7 @@
     ( import ./networking.nix { inherit inputs; })
     ( import ./packages.nix { inherit inputs; })
     ( import ./pipewire.nix )
+    ( import ./sops.nix )
     ( import ./steam.nix )
     #( import ./stylix.nix )
   ];

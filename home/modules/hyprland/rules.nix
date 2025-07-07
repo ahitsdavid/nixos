@@ -10,6 +10,8 @@
         "opacity 0.8 0.8 1, class:^(code)$"
         "opacity 0.8 0.8 1, class:^([Cc]ode)$"
         "opacity 0.8 0.8 1, class:^(code-url-handler)$"
+        "opacity 0.8 0.8 1, class:^(dev.zed.Zed)$"
+        "opacity 0.8 0.8 1, class:^(zed)$"
       ];
       
       windowrulev2 = [

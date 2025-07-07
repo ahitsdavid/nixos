@@ -1,0 +1,40 @@
+# SOPS Configuration
+# This file controls how secrets are encrypted and who can decrypt them
+
+keys:
+  # Add your public key here after running: age-keygen -o ~/.config/sops/age/keys.txt
+  # The public key will look like: age1abc123def456...
+  # Example:
+  # - &davidthach age1your_public_key_here...
+  
+  # For multiple users, add more keys:
+  # - &alice age1alice_public_key...
+  # - &bob age1bob_public_key...
+
+creation_rules:
+  # System secrets - basic configuration that most forks would want
+  - path_regex: secrets/system\.yaml$
+    key_groups:
+    - age:
+      # Add your key reference here, example:
+      # - *davidthach
+      # - *alice  # if sharing with others
+      
+  # Personal secrets - your private API keys, tokens, etc.
+  - path_regex: secrets/personal\.yaml$
+    key_groups:
+    - age:
+      # Only your key should decrypt personal secrets
+      # - *davidthach
+      
+  # Work secrets - work-related credentials
+  - path_regex: secrets/work\.yaml$
+    key_groups:
+    - age:
+      # - *davidthach
+      # - *workteam_member  # if sharing with work team
+
+# Default fallback rule for any other .yaml files
+  - key_groups:
+    - age:
+      # - *davidthach

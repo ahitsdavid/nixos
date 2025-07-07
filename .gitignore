@@ -1,1 +1,14 @@
 CLAUDE.md
+
+# SOPS-Nix secrets - DO NOT COMMIT THE ACTUAL SECRETS!
+secrets/system.yaml
+secrets/personal.yaml  
+secrets/work.yaml
+
+# Age keys - NEVER COMMIT YOUR PRIVATE KEYS!
+**/*age/keys.txt
+**/sops/age/keys.txt
+
+# Backup files that sops might create
+secrets/*.yaml.bak
+secrets/.*.yaml.swp
