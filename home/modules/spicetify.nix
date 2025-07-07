@@ -9,16 +9,16 @@
     
     # Enable common extensions
     enabledExtensions = with config.programs.spicetify.extensions; [
-      "adblock"
-      "hidePodcasts"
-      "shuffle"
-      "keyboardShortcut"
+      adblock
+      hidePodcasts
+      shuffle
+      keyboardShortcut
     ];
     
     # Enable common custom apps
     enabledCustomApps = with config.programs.spicetify.customApps; [
-      "newReleases"
-      "betterLibrary"
+      newReleases
+      betterLibrary
     ];
   };
 }
