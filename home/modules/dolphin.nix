@@ -65,22 +65,10 @@ in
       kdePackages.ark
     ];
 
-    # Configure Qt to use kvantum - disabled to let global settings handle this
-    # qt = {
-    #   enable = true;
-    #   platformTheme.name = lib.mkForce "kvantum";
-    #   style.name = lib.mkForce "kvantum";
-    # };
-
 
 
     home.sessionVariables = mkMerge [
       {
-        # QT_QPA_PLATFORMTHEME = "kvantum";  # Disabled - causes issues with Quickshell
-        # QT_STYLE_OVERRIDE = "kvantum";  # Disabled - causes issues with Quickshell
-        # Force Qt6 to use Kvantum with specific style
-        # QT6_QPA_PLATFORMTHEME = "kvantum";  # Disabled - causes issues with Quickshell
-        # QT6_STYLE_OVERRIDE = "kvantum";  # Disabled - causes issues with Quickshell
         TERMINAL = cfg.terminal;
       }
       (mkIf cfg.setAsDefault {

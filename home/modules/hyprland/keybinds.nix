@@ -68,7 +68,7 @@ in
       "$mod SHIFT, Right, movewindow, r"
       "$mod SHIFT, Up, movewindow, u"
       "$mod SHIFT, Down, movewindow, d"
-      "$mod ALT, Space, togglefloating,"
+      "$mod SHIFT, Space, togglefloating,"
       "$mod, F, fullscreen, 0"
       "$mod, D, fullscreen, 1"
       "$mod, P, pin,"

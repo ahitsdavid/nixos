@@ -5,6 +5,13 @@
   wayland.windowManager.hyprland = {
     settings = {
       # Window rules
+      windowrule = [
+        # VSCode - blur and opacity
+        "opacity 0.8 0.8 1, class:^(code)$"
+        "opacity 0.8 0.8 1, class:^([Cc]ode)$"
+        "opacity 0.8 0.8 1, class:^(code-url-handler)$"
+      ];
+      
       windowrulev2 = [
         # Uncomment to apply global transparency to all windows:
         # "opacity 0.89 override 0.89 override, class:.*"

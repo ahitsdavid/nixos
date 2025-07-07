@@ -9,17 +9,20 @@
       default = {
       id = 0;
         isDefault = true;
-        extensions.packages = with pkgs.nur.repos.rycee.firefox-addons; [
-          ublock-origin
-          bitwarden
-          buster-captcha-solver
-          translate-web-pages
-          return-youtube-dislikes
-          sponsorblock
-          catppuccin-web-file-icons  # Keep icons only
-          firefox-color              # For custom theming
-          windscribe
-        ];
+        extensions = {
+          force = true;
+          packages = with pkgs.nur.repos.rycee.firefox-addons; [
+            ublock-origin
+            bitwarden
+            buster-captcha-solver
+            translate-web-pages
+            return-youtube-dislikes
+            sponsorblock
+            catppuccin-web-file-icons  # Keep icons only
+            firefox-color              # For custom theming
+            windscribe
+          ];
+        };
         settings = {
           "browser.startup.homepage" = "https://www.google.com";
           "browser.startup.page" = 1;
@@ -27,15 +30,15 @@
           # Enable userChrome.css
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           
-          # Dark mode settings
-          "layout.css.prefers-color-scheme.content-override" = 0;  # Use system dark mode preference
-          "ui.systemUsesDarkTheme" = 1;  # Force dark mode
+          # Dark mode settings - only for browser UI, not web content
+          "layout.css.prefers-color-scheme.content-override" = 2;  # Don't override website color schemes
+          "ui.systemUsesDarkTheme" = 1;  # Keep dark browser UI
           "browser.theme.dark-private-windows" = true;
           "devtools.theme" = "dark";
           
-          # Force dark mode for web content
-          "browser.display.document_color_use" = 2;  # Always use system colors
-          "browser.display.permit_backplate" = true;  # Allow dark backgrounds
+          # Don't force colors on web content
+          "browser.display.document_color_use" = 0;  # Use website colors
+          "browser.display.permit_backplate" = false;  # Don't override backgrounds
           
           # Use dark theme as base and enhance with userChrome.css
           "extensions.activeThemeID" = "firefox-compact-dark@mozilla.org";
@@ -227,67 +230,9 @@
           }
         '';
         
-        # userContent.css for web page dark mode
+        # userContent.css - minimal styling, no web content modification
         userContent = ''
-          /* Apply dark theme to web content using Stylix colors */
-          @-moz-document url-prefix(http://), url-prefix(https://), url-prefix(file://) {
-            /* Force dark mode for websites that don't support it */
-            :root {
-              color-scheme: dark !important;
-            }
-            
-            /* Generic dark styling for sites without proper dark mode */
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) {
-              filter: invert(1) hue-rotate(180deg) !important;
-            }
-            
-            /* Exclude images, videos, and media from inversion */
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) img,
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) video,
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) iframe,
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) svg,
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) embed,
-            html:not([data-theme*="dark"]):not([class*="dark"]):not([data-bs-theme="dark"]) object {
-              filter: invert(1) hue-rotate(180deg) !important;
-            }
-            
-            
-            /* Respect sites that already have dark mode */
-            html[data-theme*="dark"],
-            html[class*="dark"], 
-            html[data-bs-theme="dark"],
-            body[data-theme*="dark"],
-            body[class*="dark"],
-            body[data-bs-theme="dark"] {
-              filter: none !important;
-            }
-          }
-          
-          /* Specific site improvements */
-          @-moz-document domain(google.com) {
-            /* Google has good dark mode support, don't invert */
-            html { filter: none !important; background-color: inherit !important; }
-          }
-          
-          @-moz-document domain(github.com) {
-            /* GitHub has good dark mode support, don't invert */
-            html { filter: none !important; }
-          }
-          
-          @-moz-document domain(youtube.com) {
-            /* YouTube has good dark mode support, don't invert */
-            html { filter: none !important; }
-          }
-          
-          @-moz-document domain(reddit.com) {
-            /* Reddit has dark mode, don't invert */
-            html { filter: none !important; }
-          }
-          
-          @-moz-document domain(stackoverflow.com) {
-            /* Stack Overflow has dark mode, don't invert */
-            html { filter: none !important; }
-          }
+          /* No web content styling - let sites handle their own themes */
         '';
         
         bookmarks = {

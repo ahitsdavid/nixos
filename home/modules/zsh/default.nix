@@ -13,6 +13,9 @@
     
     initContent = ''
       fastfetch
+      
+      # Fix autosuggestion color - use Stylix base04 (surface2) for better readability
+      export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#${config.stylix.base16Scheme.base04}"
     '';
 
     shellAliases = {

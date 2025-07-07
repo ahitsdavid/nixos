@@ -46,6 +46,19 @@ in
     };
   };
 
+  # Install Zen browser policies (same as Firefox since Zen is Firefox-based)
+  environment.etc."zen/policies/policies.json".text = builtins.toJSON {
+    policies = {
+      SecurityDevices = {
+        "CAC Reader" = "${pkgs.opensc}/lib/opensc-pkcs11.so";
+      };
+      Certificates = {
+        ImportEnterpriseRoots = true;
+        Install = map builtins.toString p7bPaths;
+      };
+    };
+  };
+
   # Chromium Configuration for CAC
   programs.chromium = {
     extraOpts = {

@@ -49,6 +49,10 @@
     };
     zen-browser.url = "github:0xc000022070/zen-browser-flake";
     sops-nix.url = "github:Mic92/sops-nix";
+    spicetify-nix = {
+      url = "github:Gerg-L/spicetify-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { 
@@ -89,6 +93,7 @@
             home-manager.users.${username} = { 
               imports = [
                 stylix.homeModules.stylix
+                inputs.spicetify-nix.homeModules.spicetify-nix
                 ./home/base.nix
                 ./home/gaming.nix
                 # Add any extra home-manager modules

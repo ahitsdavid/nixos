@@ -4,16 +4,6 @@
   # Use the official Home Manager QuickShell module
   programs.quickshell = {
     enable = true;
-    # Remove package line to use default, or specify if needed
-    # package = pkgs.quickshell; # if available in nixpkgs
-    
-    # Set the config directory - commented out for now
-    # activeConfig = "default";
-    # configs = {
-    #   default = "${config.home.homeDirectory}/dotfiles/.config/quickshell";
-    # };
-    
-    # Enable systemd service
     systemd = {
       enable = true;
     };
@@ -25,7 +15,6 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ]}"
   ];
 
@@ -35,7 +24,6 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 
@@ -45,7 +33,6 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 
@@ -55,7 +42,6 @@
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      # Removed invalid kvantum QML paths - kvantum provides style plugins, not QML modules
     ];
   };
 

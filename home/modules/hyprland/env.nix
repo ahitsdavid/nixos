@@ -29,11 +29,8 @@
         "GLFW_IM_MODULE, ibus"
         "INPUT_METHOD, fcitx"
         
-        # Themes
+        # Themes - let Stylix handle GTK theme names
         "QT_QPA_PLATFORM, wayland"
-        "GREETD_GTK_THEME, Catppuccin-Mocha-Standard-Blue-Dark"
-        # "QT_QPA_PLATFORMTHEME, kvantum"  # Disabled to prevent Quickshell conflicts
-        # "QT_STYLE_OVERRIDE, kvantum"
         "QT_QPA_PLATFORMTHEME, gtk3"  # Override qt5ct to prevent kvantum style loading
         "QT_STYLE_OVERRIDE, "  # Clear any kvantum style override
         "WLR_NO_HARDWARE_CURSORS, 1"
@@ -41,6 +38,10 @@
         # HYPRCURSOR
         "HYPRCURSOR_THEME, rose-pine-hyprcursor"
         "HYPRCURSOR_SIZE, 40"
+        
+        # XCURSOR (for X11/XWayland apps like Zen browser)
+        "XCURSOR_THEME, rose-pine-hyprcursor"
+        "XCURSOR_SIZE, 40"
 
         # DEFAULTS
         "EDITOR, nvim"

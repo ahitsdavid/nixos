@@ -2,12 +2,6 @@
 
 
 {
-  # Qt theming configuration - disabled to prevent Quickshell conflicts
-  # qt = {
-  #   enable = true;
-  #   platformTheme.name = lib.mkForce "kvantum";
-  #   style.name = lib.mkForce "kvantum";
-  # };
 
   # Enable the Catppuccin module
   catppuccin = {
@@ -26,7 +20,7 @@
     obs.enable = true;
     rofi.enable = false;  # Migrated to Stylix
     spotify-player.enable = true;
-    vscode.enable = false;  # Migrated to Stylix
+    vscode.profiles.default.enable = false;  # Migrated to Stylix
     yazi.enable = false;  # Migrated to Stylix
     zed.enable = false;  # Migrated to Stylix
     zed.icons.enable = false;  # Migrated to Stylix

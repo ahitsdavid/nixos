@@ -19,6 +19,7 @@
     (import ./virtualization.nix )
     (import ./vscode.nix )
     (import ./zed.nix )
+    (import ./spicetify.nix )
   ];
 
   #programs.dolphin = {

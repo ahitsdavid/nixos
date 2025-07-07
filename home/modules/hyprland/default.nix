@@ -10,6 +10,7 @@
     (import ./colors.nix )
     (import ./keybinds.nix )
     (import ./execs.nix )
+    (import ./rules.nix )
 
   ];
 

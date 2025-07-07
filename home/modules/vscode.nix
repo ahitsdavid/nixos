@@ -18,6 +18,9 @@
           # Let Stylix handle font and theme settings
           "editor.fontLigatures" = true;
           "editor.defaultFormatter" = "esbenp.prettier-vscode";
+          
+          # Disable update checking
+          "update.mode" = "none";
   
           # Language-specific settings
           "[nix]" = {
