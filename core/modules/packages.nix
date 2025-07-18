@@ -2,7 +2,6 @@
 { pkgs, ... }: {
   environment.systemPackages = with pkgs; [
     adwaita-icon-theme    # GNOME's default icon theme
-    axel                  # Multi-threaded download accelerator
     bc                    # Basic calculator and math tool
     brightnessctl         # Screen Brightness control
     #claude-code           # Claude code
