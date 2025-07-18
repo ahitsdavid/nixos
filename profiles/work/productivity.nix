@@ -3,7 +3,7 @@
   # Productivity tools
   environment.systemPackages = with pkgs; [
     pandoc
-    texlive.combined.scheme-full
+    texlive.combined.scheme-medium
     obsidian
     zotero
   ];
