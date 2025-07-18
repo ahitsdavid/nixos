@@ -5,8 +5,9 @@
   imports = [
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
     
-    # Include our basic configuration
-    (import ./profiles/base { inherit inputs username; })
+    # Include specific modules we need (excluding bootloader which conflicts with ISO)
+    (import ./profiles/base/users.nix { inherit inputs username; })
+    (import ./profiles/base/nix-config.nix { inherit inputs; })
     
     # Include Nvidia drivers for hardware detection
     ./core/drivers/nvidia.nix
@@ -58,8 +59,8 @@
     # Partitioning tools
     parted
     gparted
-    cfdisk
-    gdisk
+    util-linux  # provides cfdisk
+    gptfdisk    # provides gdisk
     
     # Filesystem tools
     # ext4
@@ -104,13 +105,9 @@
     settings.PermitRootLogin = "yes";
   };
 
-  # Set a default password for installation (change this!)
-  users.users.root.initialPassword = "nixos";
-  users.users.nixos = {
-    isNormalUser = true;
-    initialPassword = "nixos";
-    extraGroups = [ "wheel" "networkmanager" ];
-  };
+  # Override the default passwords with lib.mkForce
+  users.users.root.initialPassword = lib.mkForce "nixos";
+  users.users.nixos.initialPassword = lib.mkForce "nixos";
 
   # Enable networkmanager for easier network setup
   networking.networkmanager.enable = true;
@@ -123,11 +120,9 @@
   };
 
   # Enable X11 and display manager for installation GUI
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-  };
+  services.xserver.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Hardware configuration hints for desktop
   hardware.graphics = {
