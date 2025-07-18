@@ -12,3 +12,8 @@ secrets/work.yaml
 # Backup files that sops might create
 secrets/*.yaml.bak
 secrets/.*.yaml.swp
+
+# Nix build results - ISO files can be large
+result
+result-*
+*.iso
