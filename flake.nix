@@ -119,6 +119,17 @@
         extraModules.homeModules = [ catppuccin.homeModules.catppuccin ];
       };
       
+      # Desktop Configuration
+      desktop = mkNixosConfiguration {
+        hostname = "desktop";
+        extraModules = {
+          systemModules = [
+            { drivers.nvidia.enable = true; }
+          ];
+          homeModules = [ catppuccin.homeModules.catppuccin ];
+        };
+      };
+      
       # VM Configuration
       vm = mkNixosConfiguration {
         hostname = "vm";
@@ -129,6 +140,20 @@
         # If you need VM-specific home modules:
         # extraModules.homeModules = [ ./home/vm-specific.nix ];
       };
-    };    
+    };
+    
+    # ISO image for desktop installation
+    packages.${system} = {
+      desktop-iso = nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs username; };
+        modules = [
+          stylix.nixosModules.stylix
+          inputs.sops-nix.nixosModules.sops
+          catppuccin.nixosModules.catppuccin
+          ./iso.nix
+        ];
+      };
+    };
   };
 }

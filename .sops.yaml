@@ -1,12 +1,8 @@
 # SOPS Configuration
 # This file controls how secrets are encrypted and who can decrypt them
 
-keys:
-  # Add your public key here after running: age-keygen -o ~/.config/sops/age/keys.txt
-  # The public key will look like: age1abc123def456...
-  # Example:
-  # - &davidthach age1your_public_key_here...
-  
+keys: 
+  - &davidthach age1g2lrl7380khsxt988e5x59yjfnf9q4tmhq29gx2tg86j4vl8mgvsj6pcx3  
   # For multiple users, add more keys:
   # - &alice age1alice_public_key...
   # - &bob age1bob_public_key...
