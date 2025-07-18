@@ -3,7 +3,7 @@
 
 {
   imports = [
-    <nixpkgs/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix>
+    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
     
     # Include our basic configuration
     (import ./profiles/base { inherit inputs username; })
@@ -11,6 +11,9 @@
     # Include Nvidia drivers for hardware detection
     ./core/drivers/nvidia.nix
   ];
+
+  # Allow unfree packages (needed for Nvidia drivers)
+  nixpkgs.config.allowUnfree = true;
 
   # Enable Nvidia drivers in ISO
   drivers.nvidia.enable = true;
