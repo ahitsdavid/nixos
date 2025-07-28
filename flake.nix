@@ -90,10 +90,11 @@
             home-manager.useGlobalPkgs = true;
             home-manager.backupFileExtension = "backup";
             home-manager.useUserPackages = true;
-            home-manager.extraSpecialArgs = { inherit inputs username system; };
+            home-manager.extraSpecialArgs = { inherit inputs username system; hostname = hostname; };
             home-manager.users.${username} = { 
               imports = [
                 stylix.homeModules.stylix
+                catppuccin.homeModules.catppuccin
                 inputs.spicetify-nix.homeManagerModules.default
                 ./home/base.nix
                 ./home/gaming.nix
@@ -116,7 +117,6 @@
       # Thinkpad Configuration
       thinkpad = mkNixosConfiguration {
         hostname = "thinkpad";
-        extraModules.homeModules = [ catppuccin.homeModules.catppuccin ];
       };
       
       # Desktop Configuration
@@ -126,7 +126,6 @@
           systemModules = [
             { drivers.nvidia.enable = true; }
           ];
-          homeModules = [ catppuccin.homeModules.catppuccin ];
         };
       };
       

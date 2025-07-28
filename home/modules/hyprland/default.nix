@@ -1,7 +1,6 @@
 # Hyprland default.nix
-{ pkgs, config, lib, ... }: 
+{ pkgs, config, lib, hostname ? "unknown", ... }: 
 let
-  hostname = config.networking.hostName or "unknown";
   isDesktop = hostname == "desktop";
 in {
   
