@@ -20,6 +20,7 @@
     (import ./vscode.nix )
     (import ./zed.nix )
     (import ./spicetify.nix )
+    (import ./docker-gui.nix )
   ];
 
   #programs.dolphin = {

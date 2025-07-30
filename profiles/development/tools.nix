@@ -13,12 +13,20 @@
     tmux
     direnv
     qemu
+    xorg.xhost    # X11 access control for Docker GUI apps
+    xorg.xauth    # X11 authentication for Docker GUI apps
   ];
 
   virtualisation = {
     libvirtd.enable = true;
     docker.enable = true;
     podman.enable = false;
+  };
+
+  # Enable X11 forwarding for Docker GUI apps
+  services.xserver = {
+    enable = true;
+    displayManager.gdm.enable = false; # We use greetd, not GDM
   };
 
   programs.direnv.enable = true;

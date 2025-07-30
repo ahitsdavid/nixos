@@ -149,3 +149,48 @@ nixos-rebuild switch --flake .#desktop
 nixos-rebuild switch --flake .#thinkpad
 nixos-rebuild switch --flake .#vm
 ```
+
+## IMPORTANT: Git Workflow for System Changes
+
+**⚠️ CRITICAL RULE: Always commit configuration changes before rebuilding NixOS ⚠️**
+
+When making changes to this NixOS configuration:
+
+1. **Review changes**: Check what files were modified
+   ```bash
+   git status
+   git diff
+   ```
+
+2. **Stage changes**: Add files to git tracking
+   ```bash
+   git add .
+   # OR selectively add specific files
+   git add path/to/modified/file.nix
+   ```
+
+3. **Get permission before commit**: Always review the commit message and changes
+   ```bash
+   git commit -m "Description of changes made"
+   ```
+
+4. **NEVER rebuild with dirty git tree**: NixOS rebuild should only happen after clean commits
+   ```bash
+   # ❌ BAD: Will show "warning: Git tree is dirty"
+   sudo nixos-rebuild switch --flake .#thinkpad
+   
+   # ✅ GOOD: Clean git tree
+   git add . && git commit -m "Add docker GUI support" 
+   sudo nixos-rebuild switch --flake .#thinkpad
+   ```
+
+5. **Push changes**: Keep remote in sync
+   ```bash
+   git push origin main
+   ```
+
+**Why this matters:**
+- Dirty git trees can cause build failures
+- Changes might be lost if not committed
+- Other systems won't get the updates
+- Rollback becomes impossible without proper git history
