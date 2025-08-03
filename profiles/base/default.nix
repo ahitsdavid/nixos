@@ -26,6 +26,14 @@
     variant = "";
   };
 
+  #Handles DNS Configuraiton
+  networking.resolvconf.enable = false;
+
+  environment.etc."resolv.conf".text = ''
+    nameserver 8.8.8.8
+    nameserver 1.1.1.1
+  '';
+  
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
