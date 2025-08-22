@@ -77,14 +77,14 @@
           stylix.nixosModules.stylix
           inputs.sops-nix.nixosModules.sops
           
+          # NUR Overlay - at system level
+          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+          
           # Host-specific configuration
           ./hosts/${hostname}
 
           # Catpuccin theming
           catppuccin.nixosModules.catppuccin
-          # NUR Overlay - moved to system nixpkgs to avoid home-manager warning
-          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
-
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;

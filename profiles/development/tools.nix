@@ -24,10 +24,8 @@
   };
 
   # Enable X11 forwarding for Docker GUI apps
-  services.xserver = {
-    enable = true;
-    displayManager.gdm.enable = false; # We use greetd, not GDM
-  };
+  services.xserver.enable = true;
+  services.displayManager.gdm.enable = false; # We use greetd, not GDM
 
   programs.direnv.enable = true;
   programs.direnv.nix-direnv.enable = true;
