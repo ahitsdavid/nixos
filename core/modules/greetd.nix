@@ -6,7 +6,7 @@
       default_session = {
         user = username;
         command = lib.concatStringsSep " " [
-          "${pkgs.greetd.tuigreet}/bin/tuigreet"
+          "${pkgs.tuigreet}/bin/tuigreet"
           "--time"
           "--cmd Hyprland"
           "--container-padding 2"

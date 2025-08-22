@@ -10,7 +10,7 @@
     accent = "blue";   # Options: rosewater, flamingo, pink, mauve, red, maroon, peach, yellow, green, teal, sky, sapphire, blue, lavender
     
     # Enable specific application themes
-    #gtk.enable = true;
+    gtk.enable = true;
     btop.enable = false;  # Migrated to Stylix
     hyprland.enable = false;
     hyprlock.enable = false;  # Migrated to Stylix

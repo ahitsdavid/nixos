@@ -15,7 +15,7 @@
     glxinfo               # OpenGL information utility
     gnupg                 # GNU Privacy Guard - encryption and signing tool
     gptfdisk              # GPT partitioning tool (gdisk)
-    greetd.tuigreet       # Terminal UI greeter for greetd display manager
+    tuigreet              # Terminal UI greeter for greetd display manager
     hicolor-icon-theme    # Freedesktop icon theme specification
     htop                  # Interactive process viewer and system monitor
     jq                    # Command-line JSON processor
