@@ -77,8 +77,10 @@
           stylix.nixosModules.stylix
           inputs.sops-nix.nixosModules.sops
           
-          # NUR Overlay - at system level
+          # NUR Overlay - at system level  
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
+          # Allow unfree packages globally
+          { nixpkgs.config.allowUnfree = true; }
           
           # Host-specific configuration
           ./hosts/${hostname}

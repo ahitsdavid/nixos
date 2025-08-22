@@ -14,6 +14,5 @@
     meld
   ];
 
-  # Allow unfree packages (for VSCode, etc,)
-  nixpkgs.config.allowUnfree = true;
+  # Allow unfree packages moved to flake.nix to avoid home-manager warning
 }
