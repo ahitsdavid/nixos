@@ -1,11 +1,11 @@
 #home/modules/thunar.nix
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 {
   gtk = {
     enable = true;
     iconTheme = {
       name = "Papirus-Dark";
-      package = pkgs.papirus-icon-theme;
+      package = lib.mkDefault pkgs.papirus-icon-theme;
     };
   };
 
