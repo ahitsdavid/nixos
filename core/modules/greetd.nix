@@ -23,7 +23,6 @@
         ];
       };
     };
-    vt = 1;
   };
 
   # Additional systemd configuration to prevent console messages from interfering
