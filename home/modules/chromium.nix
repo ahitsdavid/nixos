@@ -1,17 +1,20 @@
 { config, pkgs, ... }: {
-  # Chromium package
+  # Chromium package with wrapper to disable default browser check
   home.packages = with pkgs; [
-    chromium
+    (chromium.override {
+      commandLineArgs = [
+        "--no-default-browser-check"
+        "--disable-default-apps"
+      ];
+    })
   ];
 
-  # Configure Chromium to not ask about default browser
-  home.file.".config/chromium/Default/Preferences" = {
+  # Also set the policy file as backup
+  home.file.".config/chromium/policies/managed/no_default_browser_check.json" = {
     text = ''
       {
-        "browser": {
-          "check_default_browser": false,
-          "default_browser_setting_enabled": false
-        }
+        "DefaultBrowserSettingEnabled": false,
+        "BrowserAddPersonEnabled": false
       }
     '';
   };
