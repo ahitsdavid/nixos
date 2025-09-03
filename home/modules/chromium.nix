@@ -1,12 +1,15 @@
 { config, pkgs, ... }: 
 let
-  chromium-no-default = pkgs.writeShellScriptBin "chromium" ''
-    exec ${pkgs.chromium}/bin/chromium --no-default-browser-check --disable-default-apps "$@"
-  '';
+  chromium-wrapped = pkgs.chromium.override {
+    commandLineArgs = [
+      "--no-default-browser-check"
+      "--disable-default-apps"
+    ];
+  };
 in {
-  # Chromium package with wrapper script
+  # Chromium package with no default browser check
   home.packages = with pkgs; [
-    chromium-no-default
+    chromium-wrapped
   ];
 
   # Set policy files to disable default browser prompts
