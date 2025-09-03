@@ -10,13 +10,13 @@
     (import ./modules/hyprland )
     (import ./modules/fastfetch )
     (import ./modules/rofi )
+    (import ./modules/chromium.nix )
     
   ];
   
   # Packages for user
   home.packages = with pkgs; [
     bitwarden
-    chromium
     # spotify  # Removed - provided by spicetify
     oh-my-posh
     telegram-desktop
