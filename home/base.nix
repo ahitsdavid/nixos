@@ -9,7 +9,7 @@
     (import ./modules/default.nix )
     (import ./modules/hyprland )
     (import ./modules/fastfetch )
-    (import ./modules/rofi )
+    #(import ./modules/rofi )
     (import ./modules/chromium.nix )
     
   ];
@@ -21,6 +21,7 @@
     oh-my-posh
     telegram-desktop
     stremio
+    localsend
   ];
 
   # Place Files Inside Home Directory
