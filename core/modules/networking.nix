@@ -8,8 +8,8 @@
       allowPing = true;
 
       # Open ports as needed
-      allowedTCPPorts = [ 22 8008 8009 ]; # 8008/8009 for Chromecast
-      allowedUDPPorts = [ 5353 ]; # mDNS for device discovery
+      allowedTCPPorts = [ 22 8008 8009 53317 ]; # 8008/8009 for Chromecast, 53317 for LocalSend
+      allowedUDPPorts = [ 5353 53317 ]; # mDNS for device discovery, 53317 for LocalSend
     };
   };
 
