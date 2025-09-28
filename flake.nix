@@ -81,6 +81,8 @@
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
           # Allow unfree packages globally
           { nixpkgs.config.allowUnfree = true; }
+          # Allow specific insecure packages temporarily
+          { nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ]; }
           
           # Host-specific configuration
           ./hosts/${hostname}
