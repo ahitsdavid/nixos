@@ -42,9 +42,9 @@
     # Generate separate config files from Nix
     ".config/hypr/rules.conf".text = ''
       # Window rules
-      windowrule = opacity 0.8 0.8 1, class:^(code)$
-      windowrule = opacity 0.8 0.8 1, class:^([Cc]ode)$
-      windowrule = opacity 0.8 0.8 1, class:^(code-url-handler)$
+      windowrule = opacity 0.8 0.8, class:^(code)$
+      windowrule = opacity 0.8 0.8, class:^([Cc]ode)$
+      windowrule = opacity 0.8 0.8, class:^(code-url-handler)$
       windowrule = opacity 0.80 0.80, class:^(vesktop)$
       windowrule = opacity 0.80 0.80, class:^(discord)$
       windowrule = opacity 0.80 0.80, class:^(WebCord)$
@@ -86,7 +86,7 @@
       windowrule = float, title:^(Open)$
       windowrule = float, title:^(Authentication Required)$
       windowrule = float, title:^(Add Folder to Workspace)$
-      windowrule = float, initialtitle:^(Open File)$
+      windowrule = float, title:^(Open File)$
       windowrule = float, title:^(Choose Files)$
       windowrule = float, title:^(Save As)$
       windowrule = float, title:^(Confirm to replace files)$

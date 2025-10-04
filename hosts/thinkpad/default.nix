@@ -21,10 +21,10 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Lidswitch set to ignore
-  services.logind = {
-    lidSwitch = "ignore";
-    lidSwitchExternalPower = "ignore";
-    lidSwitchDocked = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
   };
 
   # TLP for advanced power management
