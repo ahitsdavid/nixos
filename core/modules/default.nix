@@ -4,7 +4,8 @@
   imports = [
     ( import ./bootloader.nix )
     ( import ./fonts.nix )
-    ( import ./greetd.nix )
+    #( import ./greetd.nix )
+    ( import ./sddm.nix )
     ( import ./networking.nix { inherit inputs; })
     ( import ./packages.nix { inherit inputs; })
     ( import ./pipewire.nix )
