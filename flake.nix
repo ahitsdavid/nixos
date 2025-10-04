@@ -72,18 +72,17 @@
     mkNixosConfiguration = { hostname, extraModules ? [] }:
       nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs username;
-          # Pass configured pkgs with overlays and config
-          pkgs = import nixpkgs {
-            inherit system;
-            overlays = [ nurpkgs.overlays.default ];
-            config = {
+        specialArgs = { inherit inputs username; };
+        modules = [
+          # Configure nixpkgs at the system level
+          {
+            nixpkgs.overlays = [ nurpkgs.overlays.default ];
+            nixpkgs.config = {
               allowUnfree = true;
               permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
             };
-          };
-        };
-        modules = [
+          }
+
           stylix.nixosModules.stylix
           inputs.sops-nix.nixosModules.sops
 
