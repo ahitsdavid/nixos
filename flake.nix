@@ -69,18 +69,21 @@
     username = "davidthach";
     
     # Create a function to make a NixOS configuration with common modules
-    mkNixosConfiguration = { hostname, extraModules ? [] }: 
+    mkNixosConfiguration = { hostname, extraModules ? [] }:
       nixpkgs.lib.nixosSystem {
         inherit system;
-        specialArgs = { inherit inputs username; };
+        specialArgs = { inherit inputs username;
+          # Pass configured pkgs with overlays and config
+          pkgs = import nixpkgs {
+            inherit system;
+            overlays = [ nurpkgs.overlays.default ];
+            config = {
+              allowUnfree = true;
+              permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
+            };
+          };
+        };
         modules = [
-          # NUR Overlay - at system level
-          { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
-          # Allow unfree packages globally
-          { nixpkgs.config.allowUnfree = true; }
-          # Allow specific insecure packages temporarily
-          { nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ]; }
-
           stylix.nixosModules.stylix
           inputs.sops-nix.nixosModules.sops
 
@@ -95,7 +98,7 @@
             home-manager.backupFileExtension = "backup";
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs username system; hostname = hostname; };
-            home-manager.users.${username} = { 
+            home-manager.users.${username} = {
               imports = [
                 stylix.homeModules.stylix
                 catppuccin.homeModules.catppuccin
