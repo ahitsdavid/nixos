@@ -74,16 +74,16 @@
         inherit system;
         specialArgs = { inherit inputs username; };
         modules = [
-          stylix.nixosModules.stylix
-          inputs.sops-nix.nixosModules.sops
-          
-          # NUR Overlay - at system level  
+          # NUR Overlay - at system level
           { nixpkgs.overlays = [ nurpkgs.overlays.default ]; }
           # Allow unfree packages globally
           { nixpkgs.config.allowUnfree = true; }
           # Allow specific insecure packages temporarily
           { nixpkgs.config.permittedInsecurePackages = [ "qtwebengine-5.15.19" ]; }
-          
+
+          stylix.nixosModules.stylix
+          inputs.sops-nix.nixosModules.sops
+
           # Host-specific configuration
           ./hosts/${hostname}
 
