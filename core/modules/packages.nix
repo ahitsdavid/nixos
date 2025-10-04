@@ -23,6 +23,7 @@
     lshw                  # Detailed hardware information
     lxqt.pavucontrol-qt   # Audio device control
     mutagen               # Audio metadata tag editor
+    ncspot                # Spotify terminal client
     nwg-displays          # configure monitor configs via GUI
     os-prober             # Operating system detection utility
     parted                # Disk partitioning tool
