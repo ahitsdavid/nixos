@@ -32,6 +32,7 @@
     targets = {
       kitty.enable = true;
       rofi.enable = true;   # Migrated from Catppuccin
+      vim.enable = false;
       neovim.enable = false;
       firefox = {
         enable = true;
