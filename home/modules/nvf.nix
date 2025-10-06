@@ -10,6 +10,12 @@
       viAlias = true;
       withNodeJs = true;
       lsp.enable = true;
+
+      theme = {
+        enable = true;
+        name = "catppuccin";
+        style = "mocha";
+      };
       
       languages = {
         enableFormat = true;
