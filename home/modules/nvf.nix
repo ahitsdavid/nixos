@@ -83,7 +83,7 @@
             action = ":vsplit | terminal claude<CR>";
             desc = "Open Claude Code in vertical split";
           };
-          "<leader>ct" = {
+          "<leader>ch" = {
             action = ":split | terminal claude<CR>";
             desc = "Open Claude Code in horizontal split";
           };
