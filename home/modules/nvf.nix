@@ -92,7 +92,7 @@
         gitsigns.codeActions.enable = false; # throws an annoying debug message
       };
 
-      # Custom keybinds for Claude Code
+      # Custom keybinds for Claude Code and terminal
       maps = {
         normal = {
           "<leader>cc" = {
@@ -102,6 +102,18 @@
           "<leader>ch" = {
             action = ":split | terminal claude<CR>";
             desc = "Open Claude Code in horizontal split";
+          };
+          "<leader>tv" = {
+            action = ":vsplit | terminal<CR>";
+            desc = "Open terminal in vertical split";
+          };
+          "<leader>th" = {
+            action = ":split | terminal<CR>";
+            desc = "Open terminal in horizontal split";
+          };
+          "<leader>tt" = {
+            action = ":tabnew | terminal<CR>";
+            desc = "Open terminal in new tab";
           };
         };
       };
