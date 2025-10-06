@@ -1,4 +1,4 @@
-{ inputs, config, ... }: 
+{ inputs, config, lib, ... }:
 {
 
   imports = [inputs.nvf.homeManagerModules.default];
@@ -13,8 +13,8 @@
 
       theme = {
         enable = true;
-        name = "catppuccin";
-        style = "mocha";
+        name = lib.mkForce "catppuccin";
+        style = lib.mkForce "mocha";
       };
       
       languages = {
