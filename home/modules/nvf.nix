@@ -53,8 +53,14 @@
       autocomplete.nvim-cmp.enable = true;
       projects.project-nvim.enable = true;
       dashboard.dashboard-nvim.enable = true;
-      filetree.neo-tree.enable = true;
-      
+      filetree.neo-tree = {
+        enable = true;
+        setupOpts = {
+          open_on_setup = true;
+          open_on_setup_file = true;
+        };
+      };
+
       spellcheck = {
         enable = false;
       };
