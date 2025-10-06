@@ -56,10 +56,26 @@
       filetree.neo-tree = {
         enable = true;
         setupOpts = {
-          open_on_setup = true;
-          open_on_setup_file = true;
+          close_if_last_window = true;
+          enable_git_status = true;
+          enable_diagnostics = true;
+          filesystem = {
+            follow_current_file = {
+              enabled = true;
+            };
+          };
         };
       };
+
+      luaConfigRC.neo-tree-autoopen = ''
+        vim.api.nvim_create_autocmd("VimEnter", {
+          callback = function()
+            if vim.fn.argc() > 0 then
+              require("neo-tree.command").execute({ action = "show" })
+            end
+          end,
+        })
+      '';
 
       spellcheck = {
         enable = false;
