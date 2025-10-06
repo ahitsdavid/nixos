@@ -59,22 +59,24 @@
         enable = true;
         useImage = true;
       };
-      
+
       # Boot splash
       plymouth = {
         enable = true;
         logo = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
       };
-      
+
       # Console
       console.enable = true;
-      
+
       # GTK system theme
       gtk.enable = true;
 
       # Applications - gradually replacing Catppuccin
       kitty.enable = true;
-      
+
+      # Disable neovim theming - use Catppuccin instead
+      vim.enable = false;
     };
 
     # System opacity
