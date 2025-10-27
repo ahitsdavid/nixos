@@ -1,13 +1,15 @@
 # home/gaming.nix
 { config, pkgs, inputs, ... }:
 let
-  # Optimized Pokerogue wrapper that fixes EGL/hardware acceleration
-  # Forces native OpenGL and uses X11 for better compatibility
+  # Optimized Pokerogue wrapper with proper EGL environment
+  # Sets up Mesa/Intel drivers and disables Wayland to fix ANGLE initialization
   pokerogue-optimized = pkgs.writeShellScriptBin "pokerogue-app" ''
+    export LIBGL_ALWAYS_SOFTWARE=0
+    export __EGL_VENDOR_LIBRARY_FILENAMES=${pkgs.mesa.drivers}/share/glvnd/egl_vendor.d/50_mesa.json
+    export MESA_LOADER_DRIVER_OVERRIDE=iris
     exec ${inputs.pokerogue-app.packages.x86_64-linux.pokerogue-app}/bin/pokerogue \
-      --use-gl=desktop \
-      --enable-features=VaapiVideoDecoder,UseOzonePlatform \
-      --ozone-platform=x11 \
+      --disable-features=UseOzonePlatform \
+      --enable-features=VaapiVideoDecoder \
       --enable-gpu-rasterization \
       --enable-accelerated-2d-canvas \
       "$@"
