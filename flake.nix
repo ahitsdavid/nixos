@@ -53,6 +53,7 @@
       url = "github:Gerg-L/spicetify-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    pokerogue-app.url = "github:Admiral-Billy/Pokerogue-App";
   };
 
   outputs = { 
