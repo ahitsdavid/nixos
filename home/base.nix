@@ -20,7 +20,7 @@
     # spotify  # Removed - provided by spicetify
     oh-my-posh
     telegram-desktop
-    stremio
+    # stremio  # Temporarily disabled due to qtwebengine build issues
     localsend
   ];
 
