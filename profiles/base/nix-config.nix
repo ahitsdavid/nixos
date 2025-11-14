@@ -8,6 +8,8 @@
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;
       trusted-users = [ "root" "@wheel" ];
+      # Increase download buffer for large updates
+      download-buffer-size = 268435456; # 256 MiB (in bytes)
       # Binary cache for faster builds
       substituters = [
         "https://cache.nixos.org"
