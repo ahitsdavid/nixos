@@ -91,9 +91,9 @@
     
     # LVM
     lvm2
-    
+
     # GPU utilities
-    glxinfo
+    mesa-demos
     nvidia-vaapi-driver
     nvtopPackages.full
   ];

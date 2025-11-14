@@ -37,9 +37,8 @@
     # Monitoring tools
     lm_sensors
     nvidia-vaapi-driver
-    
+
     # GPU utilities
-    glxinfo
     mesa
     mesa-demos
     nvtopPackages.full

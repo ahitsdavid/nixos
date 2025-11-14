@@ -12,7 +12,7 @@
     ffmpeg                # Video / Audio
     file                  # File type identification utility
     git                   # Distributed version control system
-    glxinfo               # OpenGL information utility
+    mesa-demos            # OpenGL information utility (includes glxinfo)
     gnupg                 # GNU Privacy Guard - encryption and signing tool
     gptfdisk              # GPT partitioning tool (gdisk)
     tuigreet              # Terminal UI greeter for greetd display manager
