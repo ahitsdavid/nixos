@@ -80,7 +80,10 @@
             nixpkgs.overlays = [ nurpkgs.overlays.default ];
             nixpkgs.config = {
               allowUnfree = true;
-              permittedInsecurePackages = [ "qtwebengine-5.15.19" ];
+              permittedInsecurePackages = [
+                "qtwebengine-5.15.19"
+                "electron-36.9.5"
+              ];
             };
           }
 
