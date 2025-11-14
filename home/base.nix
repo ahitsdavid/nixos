@@ -16,7 +16,7 @@
   
   # Packages for user
   home.packages = with pkgs; [
-    bitwarden
+    bitwarden-desktop
     # spotify  # Removed - provided by spicetify
     oh-my-posh
     telegram-desktop
