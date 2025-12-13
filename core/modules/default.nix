@@ -12,6 +12,7 @@
     ( import ./sops.nix )
     ( import ./steam.nix )
     #( import ./stylix.nix )
+    ( import ./yubikey.nix )
   ];
 
 }
