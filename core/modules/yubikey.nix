@@ -32,7 +32,7 @@
     mode = "challenge-response";
 
     # Debug mode - set to false after enrollment works
-    debug = true;
+    debug = false;
 
     # Control mode: sufficient means YubiKey OR password works
     # If YubiKey succeeds, skip password. If it fails, try password.
