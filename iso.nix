@@ -116,7 +116,7 @@
   # Enable Hyprland for a graphical environment during installation
   programs.hyprland = {
     enable = true;
-    package = inputs.hyprland.packages.${pkgs.system}.hyprland;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
   };
 
   # Enable X11 and display manager for installation GUI

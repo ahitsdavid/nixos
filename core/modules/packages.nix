@@ -37,6 +37,6 @@
     vlc                   # Media player and streaming server
     wget                  # Network downloader
     zip                   # File compression utility
-    inputs.rose-pine-hyprcursor.packages.${pkgs.system}.default
+    inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
 }

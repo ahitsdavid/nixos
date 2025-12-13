@@ -40,9 +40,9 @@
 
     git = {
       enable = true;
-      userName = "David Thach";
-      userEmail = "davidthach@live.com";
-      extraConfig = {
+      settings = {
+        user.name = "David Thach";
+        user.email = "davidthach@live.com";
         init.defaultBranch = "main";
       };
     };
