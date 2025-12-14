@@ -38,65 +38,66 @@
       source = ./scripts/open_vscode_here.sh;
       executable = true;
     };
-    
+
     # Generate separate config files from Nix
     ".config/hypr/rules.conf".text = ''
-      # Window rules
-      windowrule = opacity 0.8 0.8, class:^(code)$
-      windowrule = opacity 0.8 0.8, class:^([Cc]ode)$
-      windowrule = opacity 0.8 0.8, class:^(code-url-handler)$
-      windowrule = opacity 0.80 0.80, class:^(vesktop)$
-      windowrule = opacity 0.80 0.80, class:^(discord)$
-      windowrule = opacity 0.80 0.80, class:^(WebCord)$
-      windowrule = opacity 0.80 0.80, class:^(ArmCord)$
-      
-      # Floating rules
-      windowrule = float, class:^(org.kde.dolphin)$, title:^(Progress Dialog — Dolphin)$
-      windowrule = float, class:^(org.kde.dolphin)$, title:^(Copying — Dolphin)$
-      windowrule = float, title:^(About Mozilla Firefox)$
-      windowrule = float, class:^(firefox)$, title:^(Picture-in-Picture)$
-      windowrule = float, class:^(firefox)$, title:^(Library)$
-      windowrule = float, class:^(kitty)$, title:^(top)$
-      windowrule = float, class:^(kitty)$, title:^(btop)$
-      windowrule = float, class:^(kitty)$, title:^(htop)$
-      windowrule = float, class:^(vlc)$
-      windowrule = float, class:^(kvantummanager)$
-      windowrule = float, class:^(qt5ct)$
-      windowrule = float, class:^(qt6ct)$
-      windowrule = float, class:^(nwg-look)$
-      windowrule = float, class:^(org.kde.ark)$
-      windowrule = float, class:^(org.pulseaudio.pavucontrol)$
-      windowrule = float, class:^(blueman-manager)$
-      windowrule = float, class:^(nm-applet)$
-      windowrule = float, class:^(nm-connection-editor)$
-      windowrule = float, class:^(org.kde.polkit-kde-authentication-agent-1)$
-      windowrule = float, class:^(Signal)$
-      windowrule = float, class:^(com.github.rafostar.Clapper)$
-      windowrule = float, class:^(app.drey.Warp)$
-      windowrule = float, class:^(net.davidotek.pupgui2)$
-      windowrule = float, class:^(yad)$
-      windowrule = float, class:^(eog)$
-      windowrule = float, class:^(io.github.alainm23.planify)$
-      windowrule = float, class:^(io.gitlab.theevilskeleton.Upscaler)$
-      windowrule = float, class:^(com.github.unrud.VideoDownloader)$
-      windowrule = float, class:^(io.gitlab.adhami3310.Impression)$
-      windowrule = float, class:^(io.missioncenter.MissionCenter)$
-      
+      # Window rules - Updated for Hyprland 0.52.0+
+      # Opacity rules now require three values: inactive, active, fullscreen
+      windowrulev2 = opacity 0.8 0.8 1, class:^(code)$
+      windowrulev2 = opacity 0.8 0.8 1, class:^([Cc]ode)$
+      windowrulev2 = opacity 0.8 0.8 1, class:^(code-url-handler)$
+      windowrulev2 = opacity 0.80 0.80 1, class:^(vesktop)$
+      windowrulev2 = opacity 0.80 0.80 1, class:^(discord)$
+      windowrulev2 = opacity 0.80 0.80 1, class:^(WebCord)$
+      windowrulev2 = opacity 0.80 0.80 1, class:^(ArmCord)$
+
+      # Floating rules - converted to windowrulev2 for better compatibility
+      windowrulev2 = float, class:^(org.kde.dolphin)$, title:^(Progress Dialog — Dolphin)$
+      windowrulev2 = float, class:^(org.kde.dolphin)$, title:^(Copying — Dolphin)$
+      windowrulev2 = float, title:^(About Mozilla Firefox)$
+      windowrulev2 = float, class:^(firefox)$, title:^(Picture-in-Picture)$
+      windowrulev2 = float, class:^(firefox)$, title:^(Library)$
+      windowrulev2 = float, class:^(kitty)$, title:^(top)$
+      windowrulev2 = float, class:^(kitty)$, title:^(btop)$
+      windowrulev2 = float, class:^(kitty)$, title:^(htop)$
+      windowrulev2 = float, class:^(vlc)$
+      windowrulev2 = float, class:^(kvantummanager)$
+      windowrulev2 = float, class:^(qt5ct)$
+      windowrulev2 = float, class:^(qt6ct)$
+      windowrulev2 = float, class:^(nwg-look)$
+      windowrulev2 = float, class:^(org.kde.ark)$
+      windowrulev2 = float, class:^(org.pulseaudio.pavucontrol)$
+      windowrulev2 = float, class:^(blueman-manager)$
+      windowrulev2 = float, class:^(nm-applet)$
+      windowrulev2 = float, class:^(nm-connection-editor)$
+      windowrulev2 = float, class:^(org.kde.polkit-kde-authentication-agent-1)$
+      windowrulev2 = float, class:^(Signal)$
+      windowrulev2 = float, class:^(com.github.rafostar.Clapper)$
+      windowrulev2 = float, class:^(app.drey.Warp)$
+      windowrulev2 = float, class:^(net.davidotek.pupgui2)$
+      windowrulev2 = float, class:^(yad)$
+      windowrulev2 = float, class:^(eog)$
+      windowrulev2 = float, class:^(io.github.alainm23.planify)$
+      windowrulev2 = float, class:^(io.gitlab.theevilskeleton.Upscaler)$
+      windowrulev2 = float, class:^(com.github.unrud.VideoDownloader)$
+      windowrulev2 = float, class:^(io.gitlab.adhami3310.Impression)$
+      windowrulev2 = float, class:^(io.missioncenter.MissionCenter)$
+
       # Common modals
-      windowrule = float, title:^(Open)$
-      windowrule = float, title:^(Authentication Required)$
-      windowrule = float, title:^(Add Folder to Workspace)$
-      windowrule = float, title:^(Open File)$
-      windowrule = float, title:^(Choose Files)$
-      windowrule = float, title:^(Save As)$
-      windowrule = float, title:^(Confirm to replace files)$
-      windowrule = float, title:^(File Operation Progress)$
-      windowrule = float, class:^([Xx]dg-desktop-portal-gtk)$
-      windowrule = float, title:^(File Upload)(.*)$
-      windowrule = float, title:^(Choose wallpaper)(.*)$
-      windowrule = float, title:^(Library)(.*)$
-      windowrule = float, class:^(.*dialog.*)$
-      windowrule = float, title:^(.*dialog.*)$
+      windowrulev2 = float, title:^(Open)$
+      windowrulev2 = float, title:^(Authentication Required)$
+      windowrulev2 = float, title:^(Add Folder to Workspace)$
+      windowrulev2 = float, title:^(Open File)$
+      windowrulev2 = float, title:^(Choose Files)$
+      windowrulev2 = float, title:^(Save As)$
+      windowrulev2 = float, title:^(Confirm to replace files)$
+      windowrulev2 = float, title:^(File Operation Progress)$
+      windowrulev2 = float, class:^([Xx]dg-desktop-portal-gtk)$
+      windowrulev2 = float, title:^(File Upload)(.*)$
+      windowrulev2 = float, title:^(Choose wallpaper)(.*)$
+      windowrulev2 = float, title:^(Library)(.*)$
+      windowrulev2 = float, class:^(.*dialog.*)$
+      windowrulev2 = float, title:^(.*dialog.*)$
       
       # Window rules v2
       windowrulev2 = noblur, xwayland:1
@@ -116,7 +117,6 @@
       windowrulev2 = keepaspectratio, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$
       windowrulev2 = move 73% 72%, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$
       windowrulev2 = size 25%, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$
-      windowrulev2 = float, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$
       windowrulev2 = pin, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$
       windowrulev2 = center, title:^(Open File)(.*)$
       windowrulev2 = center, title:^(Select a File)(.*)$
@@ -138,47 +138,10 @@
       
       # Workspace rules
       workspace = special:special, gapsout:30
-      
-      # Layer rules
-      layerrule = xray 1, .*
-      layerrule = noanim, walker
-      layerrule = noanim, selection
-      layerrule = noanim, overview
-      layerrule = noanim, anyrun
-      layerrule = noanim, indicator.*
-      layerrule = noanim, osk
-      layerrule = noanim, hyprpicker
-      layerrule = noanim, noanim
-      layerrule = blur, gtk-layer-shell
-      layerrule = ignorezero, gtk-layer-shell
-      layerrule = blur, launcher
-      layerrule = ignorealpha 0.5, launcher
-      layerrule = blur, notifications
-      layerrule = ignorealpha 0.69, notifications
-      layerrule = blur, logout_dialog
-      layerrule = animation slide left, sideleft.*
-      layerrule = animation slide right, sideright.*
-      layerrule = blur, session[0-9]*
-      layerrule = blur, bar[0-9]*
-      layerrule = ignorealpha 0.6, bar[0-9]*
-      layerrule = blur, barcorner.*
-      layerrule = ignorealpha 0.6, barcorner.*
-      layerrule = blur, dock[0-9]*
-      layerrule = ignorealpha 0.6, dock[0-9]*
-      layerrule = blur, indicator.*
-      layerrule = ignorealpha 0.6, indicator.*
-      layerrule = blur, overview[0-9]*
-      layerrule = ignorealpha 0.6, overview[0-9]*
-      layerrule = blur, cheatsheet[0-9]*
-      layerrule = ignorealpha 0.6, cheatsheet[0-9]*
-      layerrule = blur, sideright[0-9]*
-      layerrule = ignorealpha 0.6, sideright[0-9]*
-      layerrule = blur, sideleft[0-9]*
-      layerrule = ignorealpha 0.6, sideleft[0-9]*
-      layerrule = blur, indicator.*
-      layerrule = ignorealpha 0.6, indicator.*
-      layerrule = blur, osk[0-9]*
-      layerrule = ignorealpha 0.6, osk[0-9]*
+
+      # NOTE: Layer rules have been moved to rules.nix to avoid parsing errors.
+      # Text-based layerrule directives in sourced config files cause syntax
+      # errors in Hyprland 0.52.0+. Use the Nix settings format in rules.nix instead.
     '';
     
     ".config/hypr/env.conf".text = ''

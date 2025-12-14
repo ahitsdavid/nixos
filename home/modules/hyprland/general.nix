@@ -152,9 +152,12 @@
         
         disable_hyprland_logo = true;
         force_default_wallpaper = 0;
-        new_window_takes_over_fullscreen = 2;
+        # Note: new_window_takes_over_fullscreen was deprecated in Hyprland 0.42+
+        # The behavior is now handled automatically - new windows will take focus
+        # but won't forcefully exit fullscreen. If you need the old behavior,
+        # you may need to use window rules or keybinds instead.
         allow_session_lock_restore = true;
-        
+
         initial_workspace_tracking = false;
       };
 

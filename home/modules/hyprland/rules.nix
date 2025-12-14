@@ -4,17 +4,15 @@
 {
   wayland.windowManager.hyprland = {
     settings = {
-      # Window rules
-      windowrule = [
+      # Window rules v2 (opacity rules moved here for Hyprland 0.52.0+ compatibility)
+      windowrulev2 = [
         # VSCode - blur and opacity
         "opacity 0.8 0.8 1, class:^(code)$"
         "opacity 0.8 0.8 1, class:^([Cc]ode)$"
         "opacity 0.8 0.8 1, class:^(code-url-handler)$"
         "opacity 0.8 0.8 1, class:^(dev.zed.Zed)$"
         "opacity 0.8 0.8 1, class:^(zed)$"
-      ];
-      
-      windowrulev2 = [
+
         # Uncomment to apply global transparency to all windows:
         # "opacity 0.89 override 0.89 override, class:.*"
 
@@ -73,51 +71,50 @@
       # Workspace rules
       workspace = "special:special, gapsout:30";
 
-      # Layer rules
+      # Layer rules - TEMPORARILY DISABLED due to Hyprland 0.52.0 parsing changes
+      # These layerrules are causing "invalid field" errors in Hyprland 0.52.0
+      # The syntax may have changed or there may be a bug in the current version
+      # TODO: Re-enable once the correct syntax for Hyprland 0.52.0 is determined
       layerrule = [
-        "xray 1, .*"
-        # "noanim, .*"
-        "noanim, walker"
-        "noanim, selection"
-        "noanim, overview"
-        "noanim, anyrun"
-        "noanim, indicator.*"
-        "noanim, osk"
-        "noanim, hyprpicker"
-
-        "noanim, noanim"
-        "blur, gtk-layer-shell"
-        "ignorezero, gtk-layer-shell"
-        "blur, launcher"
-        "ignorealpha 0.5, launcher"
-        "blur, notifications"
-        "ignorealpha 0.69, notifications"
-        "blur, logout_dialog" # wlogout
-
-        # ags
-        "animation slide left, sideleft.*"
-        "animation slide right, sideright.*"
-        "blur, session[0-9]*"
-        "blur, bar[0-9]*"
-        "ignorealpha 0.6, bar[0-9]*"
-        "blur, barcorner.*"
-        "ignorealpha 0.6, barcorner.*"
-        "blur, dock[0-9]*"
-        "ignorealpha 0.6, dock[0-9]*"
-        "blur, indicator.*"
-        "ignorealpha 0.6, indicator.*"
-        "blur, overview[0-9]*"
-        "ignorealpha 0.6, overview[0-9]*"
-        "blur, cheatsheet[0-9]*"
-        "ignorealpha 0.6, cheatsheet[0-9]*"
-        "blur, sideright[0-9]*"
-        "ignorealpha 0.6, sideright[0-9]*"
-        "blur, sideleft[0-9]*"
-        "ignorealpha 0.6, sideleft[0-9]*"
-        "blur, indicator.*"
-        "ignorealpha 0.6, indicator.*"
-        "blur, osk[0-9]*"
-        "ignorealpha 0.6, osk[0-9]*"
+        # "xray 1, .*"
+        # "noanim, walker"
+        # "noanim, selection"
+        # "noanim, overview"
+        # "noanim, anyrun"
+        # "noanim, indicator.*"
+        # "noanim, osk"
+        # "noanim, hyprpicker"
+        # "noanim, noanim"
+        # "blur, gtk-layer-shell"
+        # "ignorezero, gtk-layer-shell"
+        # "blur, launcher"
+        # "ignorealpha 0.5, launcher"
+        # "blur, notifications"
+        # "ignorealpha 0.69, notifications"
+        # "blur, logout_dialog"
+        # "animation slide left, sideleft.*"
+        # "animation slide right, sideright.*"
+        # "blur, session[0-9]*"
+        # "blur, bar[0-9]*"
+        # "ignorealpha 0.6, bar[0-9]*"
+        # "blur, barcorner.*"
+        # "ignorealpha 0.6, barcorner.*"
+        # "blur, dock[0-9]*"
+        # "ignorealpha 0.6, dock[0-9]*"
+        # "blur, indicator.*"
+        # "ignorealpha 0.6, indicator.*"
+        # "blur, overview[0-9]*"
+        # "ignorealpha 0.6, overview[0-9]*"
+        # "blur, cheatsheet[0-9]*"
+        # "ignorealpha 0.6, cheatsheet[0-9]*"
+        # "blur, sideright[0-9]*"
+        # "ignorealpha 0.6, sideright[0-9]*"
+        # "blur, sideleft[0-9]*"
+        # "ignorealpha 0.6, sideleft[0-9]*"
+        # "blur, indicator.*"
+        # "ignorealpha 0.6, indicator.*"
+        # "blur, osk[0-9]*"
+        # "ignorealpha 0.6, osk[0-9]*"
       ];
     };
   };
