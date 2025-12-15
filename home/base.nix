@@ -22,6 +22,7 @@
     telegram-desktop
     # stremio  # Temporarily disabled due to qtwebengine build issues
     localsend
+    peazip  # Archive manager for ZIP, 7Z, and 200+ formats
   ];
 
   # Place Files Inside Home Directory
