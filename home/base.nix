@@ -23,6 +23,11 @@
     # stremio  # Temporarily disabled due to qtwebengine build issues
     localsend
     peazip  # Archive manager for ZIP, 7Z, and 200+ formats
+    openscad  # 3D CAD modeler for generating STL files
+
+    # Media players for Unraid server
+    plex-media-player  # Plex desktop client
+    jellyfin-media-player  # Jellyfin desktop client
   ];
 
   # Place Files Inside Home Directory
