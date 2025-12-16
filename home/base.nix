@@ -26,7 +26,7 @@
     openscad  # 3D CAD modeler for generating STL files
 
     # Media players for Unraid server
-    plex-media-player  # Plex desktop client
+    plex-desktop  # Plex desktop client (official)
     jellyfin-media-player  # Jellyfin desktop client
   ];
 
