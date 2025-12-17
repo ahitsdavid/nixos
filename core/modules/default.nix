@@ -14,7 +14,6 @@
     #( import ./stylix.nix )
     ( import ./tailscale.nix )
     ( import ./yubikey.nix )
-    ( import ./nextcloud.nix )
   ];
 
 }
