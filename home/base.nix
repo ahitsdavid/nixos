@@ -28,6 +28,12 @@
     # Media players for Unraid server
     plex-desktop  # Plex desktop client (official)
     jellyfin-media-player  # Jellyfin desktop client
+
+    # Photo editing and RAW file management
+    darktable  # Professional RAW photo workflow application
+    gimp  # General-purpose image editor with RAW support
+    digikam  # Professional photo management with RAW support
+    shotwell  # Photo manager with RAW support
   ];
 
   # Place Files Inside Home Directory
