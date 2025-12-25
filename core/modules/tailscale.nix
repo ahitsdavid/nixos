@@ -1,7 +1,10 @@
 # core/modules/tailscale.nix
 { pkgs, ... }: {
   # Enable Tailscale service
-  services.tailscale.enable = true;
+  services.tailscale = {
+    enable = true;
+    extraUpFlags = [ "--accept-routes" ];
+  };
 
   # Open firewall for Tailscale
   networking.firewall = {
