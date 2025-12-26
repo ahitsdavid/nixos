@@ -63,7 +63,7 @@
 
   xdg.portal = {
     enable = true;
-    xdgOpenUsePortal= true;
+    xdgOpenUsePortal = false;  # Disabled - portal doesn't provide OpenURI interface
     config = {
         common.default = ["gtk"];
         hyprland.default = ["hyprland" "gtk"];
