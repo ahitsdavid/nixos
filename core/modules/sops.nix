@@ -2,10 +2,10 @@
 { config, lib, pkgs, ... }:
 
 let
-  # Check if secrets files exist
-  hasSystemSecrets = builtins.pathExists ../../secrets/system.yaml;
-  hasPersonalSecrets = builtins.pathExists ../../secrets/personal.yaml;
-  hasWorkSecrets = builtins.pathExists ../../secrets/work.yaml;
+  # Enable secrets - files are gitignored so safe to always enable
+  hasSystemSecrets = false;
+  hasPersonalSecrets = true;
+  hasWorkSecrets = false;
 in
 {
   # Enable SOPS
@@ -49,24 +49,24 @@ in
       # Personal secrets (API keys, tokens)
       (lib.mkIf hasPersonalSecrets {
         "api_keys/weather" = {
-          sopsFile = ../../secrets/personal.yaml;
+          sopsFile = ./../../secrets/personal.yaml;
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/github" = {
-          sopsFile = ../../secrets/personal.yaml;
+          sopsFile = ./../../secrets/personal.yaml;
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/ai_service" = {
-          sopsFile = ../../secrets/personal.yaml;
+          sopsFile = ./../../secrets/personal.yaml;
           owner = "davidthach";
           mode = "0400";
         };
 
         # SSH keys for personal servers
         "ssh/unraid_private_key" = {
-          sopsFile = ../../secrets/personal.yaml;
+          sopsFile = ./../../secrets/personal.yaml;
           owner = "davidthach";
           mode = "0400";
           path = "/home/davidthach/.ssh/unraid_rsa";
