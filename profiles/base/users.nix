@@ -6,7 +6,7 @@
   users.users.${username} = {
     isNormalUser = true;
     description = "David Thach";
-    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" ];
+    extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "keys" ];
   };
   
   # Allow sudo without password for wheel group (optional)
