@@ -68,6 +68,18 @@ in
           mode = "0400";
           path = "/home/davidthach/.ssh/id_rsa";
         };
+
+        # Bitwarden account info (login IDs, NOT passwords)
+        "bitwarden/email" = {
+          # sopsFile defaults to defaultSopsFile
+          owner = "davidthach";
+          mode = "0400";
+        };
+        "bitwarden/self_hosted_url" = {
+          # sopsFile defaults to defaultSopsFile
+          owner = "davidthach";
+          mode = "0400";
+        };
       })
       
       # Work secrets  

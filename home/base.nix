@@ -12,6 +12,7 @@
     #(import ./modules/rofi )
     (import ./modules/chromium.nix )
     (import ./modules/ssh.nix )
+    (import ./modules/bitwarden.nix )
 
   ];
   
