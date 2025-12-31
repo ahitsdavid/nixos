@@ -1,10 +1,5 @@
 CLAUDE.md
 
-# SOPS-Nix secrets - DO NOT COMMIT THE ACTUAL SECRETS!
-secrets/system.yaml
-secrets/personal.yaml  
-secrets/work.yaml
-
 # Age keys - NEVER COMMIT YOUR PRIVATE KEYS!
 **/*age/keys.txt
 **/sops/age/keys.txt
@@ -12,6 +7,9 @@ secrets/work.yaml
 # Backup files that sops might create
 secrets/*.yaml.bak
 secrets/.*.yaml.swp
+
+# NOTE: Encrypted .yaml files in secrets/ are SAFE to commit
+# SOPS encrypts them, so they should be tracked in git
 
 # Nix build results - ISO files can be large
 result

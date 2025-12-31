@@ -2,10 +2,7 @@
 { config, lib, pkgs, ... }:
 
 let
-  # Secrets directory - use absolute path to avoid nix store copying
-  secretsPath = /home/davidthach/nixos/secrets;
-
-  # Enable secrets - files are gitignored so safe to always enable
+  # Enable secrets
   hasSystemSecrets = false;
   hasPersonalSecrets = true;
   hasWorkSecrets = false;
@@ -16,8 +13,8 @@ in
     # Set default age key file location
     age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
 
-    # Default sops file
-    defaultSopsFile = secretsPath + "/personal.yaml";
+    # Default sops file - relative to flake root
+    defaultSopsFile = ../../secrets/personal.yaml;
     
     # Only configure secrets if the files exist (fork-friendly!)
     secrets = lib.mkMerge [
