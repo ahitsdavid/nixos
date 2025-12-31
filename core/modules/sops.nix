@@ -3,7 +3,7 @@
 
 let
   # Enable secrets
-  hasSystemSecrets = false;
+  hasSystemSecrets = true;
   hasPersonalSecrets = true;
   hasWorkSecrets = false;
 in
@@ -13,7 +13,7 @@ in
     # Set default age key file location
     age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
 
-    # Default sops file - relative to flake root
+    # Default sops file for personal secrets
     defaultSopsFile = ../../secrets/personal.yaml;
     
     # Only configure secrets if the files exist (fork-friendly!)
@@ -21,31 +21,17 @@ in
       # System secrets (WiFi, VPN, etc.)
       (lib.mkIf hasSystemSecrets {
         # WiFi passwords
-        "wifi/home_network" = {
+        "wifi/dantat" = {
           sopsFile = ../../secrets/system.yaml;
           owner = "root";
           group = "networkmanager";
           mode = "0440";
         };
-        "wifi/work_network" = {
+        "wifi/dantat_5g" = {
           sopsFile = ../../secrets/system.yaml;
-          owner = "root"; 
+          owner = "root";
           group = "networkmanager";
           mode = "0440";
-        };
-        
-        # System SSH keys for services
-        "ssh/backup_key" = {
-          sopsFile = ../../secrets/system.yaml;
-          owner = "root";
-          mode = "0600";
-        };
-        
-        # VPN configuration
-        "vpn/work_config" = {
-          sopsFile = ../../secrets/system.yaml;
-          owner = "root";
-          mode = "0600";
         };
       })
       
