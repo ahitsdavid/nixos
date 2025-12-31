@@ -12,9 +12,13 @@
       executable = true;
       text = ''
         #!/bin/sh
-        BW_EMAIL=$(cat /run/secrets/bitwarden/email)
         BW_URL=$(cat /run/secrets/bitwarden/self_hosted_url)
-        bw config server "$BW_URL" && bw login "$BW_EMAIL"
+        BW_CLIENT_ID=$(cat /run/secrets/bitwarden/client_id)
+        BW_CLIENT_SECRET=$(cat /run/secrets/bitwarden/client_secret)
+
+        bw config server "$BW_URL"
+        echo "Logging in with API key..."
+        echo "$BW_CLIENT_SECRET" | BW_CLIENTID="$BW_CLIENT_ID" bw login --apikey --raw
       '';
     };
     ".local/bin/bw-standard" = {

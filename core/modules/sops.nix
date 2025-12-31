@@ -80,6 +80,16 @@ in
           owner = "davidthach";
           mode = "0400";
         };
+        "bitwarden/client_id" = {
+          # sopsFile defaults to defaultSopsFile
+          owner = "davidthach";
+          mode = "0400";
+        };
+        "bitwarden/client_secret" = {
+          # sopsFile defaults to defaultSopsFile
+          owner = "davidthach";
+          mode = "0400";
+        };
       })
       
       # Work secrets  
