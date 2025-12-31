@@ -8,8 +8,8 @@ let
   hasWorkSecrets = builtins.pathExists ../../secrets/work.yaml;
 in
 {
-  # Enable SOPS only if key file exists
-  sops = lib.mkIf (builtins.pathExists /home/davidthach/.config/sops/age/keys.txt) {
+  # Enable SOPS
+  sops = {
     # Set default age key file location
     age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
     
