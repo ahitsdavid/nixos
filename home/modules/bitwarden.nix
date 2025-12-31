@@ -16,9 +16,12 @@
         BW_CLIENT_ID=$(cat /run/secrets/bitwarden/client_id)
         BW_CLIENT_SECRET=$(cat /run/secrets/bitwarden/client_secret)
 
+        # Logout if already logged in
+        bw logout 2>/dev/null || true
+
         bw config server "$BW_URL"
         echo "Logging in with API key..."
-        echo "$BW_CLIENT_SECRET" | BW_CLIENTID="$BW_CLIENT_ID" bw login --apikey --raw
+        printf "%s\n%s\n" "$BW_CLIENT_ID" "$BW_CLIENT_SECRET" | bw login --apikey
       '';
     };
     ".local/bin/bw-standard" = {
