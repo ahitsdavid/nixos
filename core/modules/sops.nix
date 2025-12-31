@@ -2,6 +2,9 @@
 { config, lib, pkgs, ... }:
 
 let
+  # Secrets directory - use absolute path to avoid nix store copying
+  secretsPath = /home/davidthach/nixos/secrets;
+
   # Enable secrets - files are gitignored so safe to always enable
   hasSystemSecrets = false;
   hasPersonalSecrets = true;
@@ -12,6 +15,9 @@ in
   sops = {
     # Set default age key file location
     age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
+
+    # Default sops file
+    defaultSopsFile = secretsPath + "/personal.yaml";
     
     # Only configure secrets if the files exist (fork-friendly!)
     secrets = lib.mkMerge [
@@ -49,24 +55,24 @@ in
       # Personal secrets (API keys, tokens)
       (lib.mkIf hasPersonalSecrets {
         "api_keys/weather" = {
-          sopsFile = ./../../secrets/personal.yaml;
+          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/github" = {
-          sopsFile = ./../../secrets/personal.yaml;
+          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/ai_service" = {
-          sopsFile = ./../../secrets/personal.yaml;
+          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
 
         # SSH keys for personal servers
         "ssh/unraid_private_key" = {
-          sopsFile = ./../../secrets/personal.yaml;
+          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
           path = "/home/davidthach/.ssh/unraid_rsa";
