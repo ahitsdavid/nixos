@@ -12,25 +12,21 @@ creation_rules:
   - path_regex: secrets/system\.yaml$
     key_groups:
     - age:
-      # Add your key reference here, example:
-      # - *davidthach
-      # - *alice  # if sharing with others
-      
+      - *davidthach
+
   # Personal secrets - your private API keys, tokens, etc.
   - path_regex: secrets/personal\.yaml$
     key_groups:
     - age:
-      # Only your key should decrypt personal secrets
-      # - *davidthach
-      
+      - *davidthach
+
   # Work secrets - work-related credentials
   - path_regex: secrets/work\.yaml$
     key_groups:
     - age:
-      # - *davidthach
-      # - *workteam_member  # if sharing with work team
+      - *davidthach
 
 # Default fallback rule for any other .yaml files
   - key_groups:
     - age:
-      # - *davidthach
+      - *davidthach

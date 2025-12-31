@@ -63,6 +63,14 @@ in
           owner = "davidthach";
           mode = "0400";
         };
+
+        # SSH keys for personal servers
+        "ssh/unraid_private_key" = {
+          sopsFile = ../../../secrets/personal.yaml;
+          owner = "davidthach";
+          mode = "0400";
+          path = "/home/davidthach/.ssh/unraid_rsa";
+        };
       })
       
       # Work secrets  

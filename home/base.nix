@@ -11,7 +11,8 @@
     (import ./modules/fastfetch )
     #(import ./modules/rofi )
     (import ./modules/chromium.nix )
-    
+    (import ./modules/ssh.nix )
+
   ];
   
   # Packages for user
