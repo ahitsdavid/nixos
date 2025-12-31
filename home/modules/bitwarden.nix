@@ -47,6 +47,33 @@
     bw-get = "bw get";
   };
 
+  # Shell functions for convenient workflows
+  programs.zsh.initExtra = lib.mkIf (username == "davidthach") ''
+    # One-command login + unlock for self-hosted Bitwarden
+    bw-start() {
+      echo "Logging in to self-hosted Bitwarden..."
+      ~/.local/bin/bw-self || return 1
+
+      echo "Unlocking vault..."
+      export BW_SESSION=$(bw unlock --raw)
+
+      if [ -n "$BW_SESSION" ]; then
+        echo "✓ Vault unlocked and session exported!"
+        echo "You can now use: bw list items, bw get password <name>, etc."
+      else
+        echo "✗ Failed to unlock vault"
+        return 1
+      fi
+    }
+
+    # Lock and clear session
+    bw-stop() {
+      bw lock 2>/dev/null
+      unset BW_SESSION
+      echo "✓ Vault locked and session cleared"
+    }
+  '';
+
   # Environment setup
   home.sessionVariables = lib.mkIf (username == "davidthach") {
     # Bitwarden CLI uses these
