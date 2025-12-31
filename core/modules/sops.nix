@@ -74,6 +74,14 @@ in
           mode = "0400";
           path = "/home/davidthach/.ssh/unraid_rsa";
         };
+
+        # GitHub SSH key
+        "ssh/github_private_key" = {
+          # sopsFile defaults to defaultSopsFile
+          owner = "davidthach";
+          mode = "0400";
+          path = "/home/davidthach/.ssh/id_rsa";
+        };
       })
       
       # Work secrets  
