@@ -90,6 +90,9 @@
     DOTFILES_DIR="${config.home.homeDirectory}/dotfiles"
     DOTFILES_REPO="https://github.com/ahitsdavid/dotfiles"
 
+    # Add openssh to PATH for git operations
+    export PATH="${pkgs.openssh}/bin:$PATH"
+
     if [ ! -d "$DOTFILES_DIR" ]; then
       $DRY_RUN_CMD ${pkgs.git}/bin/git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
       echo "Cloned dotfiles repository to $DOTFILES_DIR"
