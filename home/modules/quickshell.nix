@@ -85,6 +85,20 @@
     better-control
   ];
 
+  # Automatically clone/pull dotfiles from GitHub
+  home.activation.cloneDotfiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    DOTFILES_DIR="${config.home.homeDirectory}/dotfiles"
+    DOTFILES_REPO="https://github.com/ahitsdavid/dotfiles"
+
+    if [ ! -d "$DOTFILES_DIR" ]; then
+      $DRY_RUN_CMD ${pkgs.git}/bin/git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+      echo "Cloned dotfiles repository to $DOTFILES_DIR"
+    else
+      $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$DOTFILES_DIR" pull
+      echo "Updated dotfiles repository at $DOTFILES_DIR"
+    fi
+  '';
+
   # Create the config symlink to your dotfiles in home directory
   # Use config.lib.file.mkOutOfStoreSymlink to properly reference home directory
   home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/quickshell";
