@@ -1,6 +1,9 @@
 # home/modules/firefox/default.nix
 # Firefox config
-{ config, pkgs, ... }: {
+{ config, pkgs, ... }:
+let
+  sharedBookmarks = import ../shared-bookmarks.nix { };
+in {
 
   programs.firefox = {
     enable = true;
@@ -249,20 +252,8 @@
           /* No web content styling - let sites handle their own themes */
         '';
         
-        bookmarks = {
-          force = true;
-          settings = [
-            {
-              name = "Work Bookmarks";
-              bookmarks = [
-                {
-                  name = "Web Git";
-                  url = "https://web.git.mil";
-                }
-              ];
-            }
-          ];
-        };
+        # Use shared bookmarks configuration
+        bookmarks = sharedBookmarks.bookmarks;
       };
     };
   };

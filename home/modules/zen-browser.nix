@@ -1,5 +1,7 @@
-{ inputs, pkgs, config, ... }: 
-{
+{ inputs, pkgs, config, ... }:
+let
+  sharedBookmarks = import ./shared-bookmarks.nix { };
+in {
 
   imports = [inputs.zen-browser.homeModules.beta];
 
@@ -251,6 +253,9 @@
         userContent = ''
           /* No web content styling - let sites handle their own themes */
         '';
+
+        # Use shared bookmarks configuration
+        bookmarks = sharedBookmarks.bookmarks;
       };
     };
   };
