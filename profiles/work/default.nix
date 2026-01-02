@@ -11,6 +11,11 @@
     libreoffice
     drawio
     remmina
+<<<<<<< HEAD
+=======
+    # webcord  # Temporarily disabled due to build issues - use discord or vesktop instead
+    discord
+>>>>>>> 0a40089 (Fix NixOS deprecation warnings and webcord build error)
     qtcreator
   ];
 

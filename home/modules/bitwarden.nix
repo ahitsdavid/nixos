@@ -48,7 +48,7 @@
   };
 
   # Shell functions for convenient workflows
-  programs.zsh.initExtra = lib.mkIf (username == "davidthach") ''
+  programs.zsh.initContent = lib.mkIf (username == "davidthach") ''
     # One-command login + unlock for self-hosted Bitwarden
     bw-start() {
       echo "Logging in to self-hosted Bitwarden..."

@@ -11,7 +11,7 @@
 
   xdg.enable = true;
   # Add useful Thunar plugins
-  home.packages = with pkgs.xfce; [
+  home.packages = with pkgs; [
     thunar
     thunar-volman      # Removable media management
     thunar-archive-plugin  # Archive support
