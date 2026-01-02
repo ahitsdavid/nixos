@@ -29,11 +29,38 @@
       {
         name = "Personal";
         bookmarks = [
-          # Add personal bookmarks
-          # {
-          #   name = "Gmail";
-          #   url = "https://mail.google.com";
-          # }
+          {
+            name = "Vaultwarden";
+            url = "https://sharky-nas.tailb3f624.ts.net:18443";
+          }
+          {
+            name = "Unraid";
+            url = "http://100.107.237.79/login";
+          }
+          {
+            name = "qBittorrent";
+            url = "http://100.107.237.79:8080";
+          }
+          {
+            name = "Immich";
+            url = "http://100.107.237.79:8081";
+          }
+          {
+            name = "NextCloud";
+            url = "http://192.168.1.29:8082";
+          }
+          {
+            name = "Radarr";
+            url = "http://100.107.237.79:7878";
+          }
+          {
+            name = "Sonarr";
+            url = "http://100.107.237.79:8989";
+          }
+          {
+            name = "Prowlarr";
+            url = "http://100.107.237.79:9696";
+          }
         ];
       }
     ];
