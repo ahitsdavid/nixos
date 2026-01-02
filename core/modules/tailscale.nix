@@ -1,10 +1,15 @@
 # core/modules/tailscale.nix
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+let
+  # Toggle automatic login on/off
+  enableAutoLogin = true;  # Set to false to disable auto-login
+in
+{
   # Enable Tailscale service
   services.tailscale = {
     enable = true;
-    # Use auth key from SOPS for automatic login
-    authKeyFile = config.sops.secrets."tailscale/auth_key".path;
+    # Use auth key from SOPS for automatic login (if enabled)
+    authKeyFile = lib.mkIf enableAutoLogin config.sops.secrets."tailscale/auth_key".path;
     extraUpFlags = [ "--accept-routes" ];
   };
 
