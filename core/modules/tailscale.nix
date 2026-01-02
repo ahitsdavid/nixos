@@ -31,10 +31,4 @@ in
   environment.systemPackages = with pkgs; [
     tailscale
   ];
-
-  # Configure DNS to use Tailscale's MagicDNS
-  networking.nameservers = [ "100.100.100.100" "8.8.8.8" "1.1.1.1" ];
-
-  # Prevent other services from overwriting resolv.conf
-  environment.etc."resolv.conf".mode = "direct-symlink";
 }

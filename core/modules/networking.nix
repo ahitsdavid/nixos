@@ -2,7 +2,12 @@
 { inputs }:
 { config, pkgs, ... }: {
   networking = {
-    networkmanager.enable = true;
+    networkmanager = {
+      enable = true;
+      # Configure DNS to use Tailscale's MagicDNS first
+      dns = "default";
+      insertNameservers = [ "100.100.100.100" ];
+    };
     firewall = {
       enable = true;
       allowPing = true;
