@@ -50,6 +50,12 @@ in
       
       # Personal secrets (API keys, tokens)
       (lib.mkIf hasPersonalSecrets {
+        # User password hash for declarative user management
+        "users/davidthach/password_hash" = {
+          # sopsFile defaults to defaultSopsFile (personal.yaml)
+          neededForUsers = true;  # Available during early boot for user creation
+        };
+
         "api_keys/weather" = {
           # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
