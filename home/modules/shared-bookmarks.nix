@@ -51,15 +51,15 @@
           }
           {
             name = "Radarr";
-            url = "https://sharky-nas.tailb3f624.ts.net:17878";
+            url = "http://192.168.1.29:7878";
           }
           {
             name = "Sonarr";
-            url = "https://sharky-nas.tailb3f624.ts.net:18989";
+            url = "http://192.168.1.29:8989";
           }
           {
             name = "Prowlarr";
-            url = "https://sharky-nas.tailb3f624.ts.net:19696";
+            url = "http://192.168.1.29:9696";
           }
           {
             name = "Plex";
