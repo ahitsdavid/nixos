@@ -37,6 +37,10 @@
           "browser.startup.homepage" = "https://www.google.com";
           "browser.startup.page" = 1;
           "browser.shell.checkDefaultBrowser" = false;
+
+          # Disable DNS over HTTPS to use system DNS (needed for Tailscale)
+          "network.trr.mode" = 5;  # 5 = off, use system DNS only
+          "network.dns.disablePrefetch" = false;  # Allow DNS prefetch
           # Enable userChrome.css
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           
