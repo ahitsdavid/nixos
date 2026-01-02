@@ -35,35 +35,35 @@
           }
           {
             name = "Unraid";
-            url = "http://100.107.237.79/login";
+            url = "https://sharky-nas.tailb3f624.ts.net:18043";
           }
           {
             name = "qBittorrent";
-            url = "http://100.107.237.79:8080";
+            url = "https://sharky-nas.tailb3f624.ts.net:18080";
           }
           {
             name = "Immich";
-            url = "http://100.107.237.79:8081";
+            url = "https://sharky-nas.tailb3f624.ts.net:18081";
           }
           {
             name = "NextCloud";
-            url = "http://192.168.1.29:8082";
+            url = "https://sharky-nas.tailb3f624.ts.net:18082";
           }
           {
             name = "Radarr";
-            url = "http://100.107.237.79:7878";
+            url = "https://sharky-nas.tailb3f624.ts.net:17878";
           }
           {
             name = "Sonarr";
-            url = "http://100.107.237.79:8989";
+            url = "https://sharky-nas.tailb3f624.ts.net:18989";
           }
           {
             name = "Prowlarr";
-            url = "http://100.107.237.79:9696";
+            url = "https://sharky-nas.tailb3f624.ts.net:19696";
           }
           {
             name = "Plex";
-            url = "http://100.107.237.79:32400";
+            url = "https://sharky-nas.tailb3f624.ts.net:32443";
           }
         ];
       }

@@ -46,9 +46,6 @@ in {
           # Disable DNS over HTTPS to use system DNS (needed for Tailscale)
           "network.trr.mode" = 5;  # 5 = off, use system DNS only
           "network.dns.disablePrefetch" = false;  # Allow DNS prefetch
-
-          # Disable insecure password warning for local/Tailscale HTTP services
-          "security.insecure_field_warning.contextual.enabled" = false;
           # Enable userChrome.css
           "toolkit.legacyUserProfileCustomizations.stylesheets" = true;
           
