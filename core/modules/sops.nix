@@ -33,6 +33,13 @@ in
           group = "networkmanager";
           mode = "0440";
         };
+
+        # Tailscale auth key for automatic login
+        "tailscale/auth_key" = {
+          sopsFile = ../../secrets/system.yaml;
+          owner = "root";
+          mode = "0400";
+        };
       })
       
       # Personal secrets (API keys, tokens)

@@ -1,8 +1,10 @@
 # core/modules/tailscale.nix
-{ pkgs, ... }: {
+{ config, pkgs, ... }: {
   # Enable Tailscale service
   services.tailscale = {
     enable = true;
+    # Use auth key from SOPS for automatic login
+    authKeyFile = config.sops.secrets."tailscale/auth_key".path;
     extraUpFlags = [ "--accept-routes" ];
   };
 
