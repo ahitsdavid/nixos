@@ -1,8 +1,14 @@
 # SOPS Configuration
 # This file controls how secrets are encrypted and who can decrypt them
 
-keys: 
-  - &davidthach age1g2lrl7380khsxt988e5x59yjfnf9q4tmhq29gx2tg86j4vl8mgvsj6pcx3  
+keys:
+  # Daily key - used on systems for normal operations
+  - &daily age1g2lrl7380khsxt988e5x59yjfnf9q4tmhq29gx2tg86j4vl8mgvsj6pcx3
+
+  # Master key - stored securely offline (Bitwarden + paper backup)
+  # Can decrypt all secrets if daily key is lost/compromised
+  - &master age1ufxwrvqk9fnusw5fl508ycmn392zqzsexh6mvlzggfx3h2xya4xqekgmsl
+
   # For multiple users, add more keys:
   # - &alice age1alice_public_key...
   # - &bob age1bob_public_key...
@@ -12,21 +18,25 @@ creation_rules:
   - path_regex: secrets/system\.yaml$
     key_groups:
     - age:
-      - *davidthach
+      - *daily
+      - *master
 
   # Personal secrets - your private API keys, tokens, etc.
   - path_regex: secrets/personal\.yaml$
     key_groups:
     - age:
-      - *davidthach
+      - *daily
+      - *master
 
   # Work secrets - work-related credentials
   - path_regex: secrets/work\.yaml$
     key_groups:
     - age:
-      - *davidthach
+      - *daily
+      - *master
 
 # Default fallback rule for any other .yaml files
   - key_groups:
     - age:
-      - *davidthach
+      - *daily
+      - *master
