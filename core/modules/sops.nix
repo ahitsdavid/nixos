@@ -53,7 +53,7 @@ in
         # User password hash for declarative user management
         "users/davidthach/password_hash" = {
           # sopsFile defaults to defaultSopsFile (personal.yaml)
-          neededForUsers = true;  # Available during early boot for user creation
+          owner = "root";
           mode = "0400";
         };
 
