@@ -93,12 +93,17 @@
     # Add openssh to PATH for git operations
     export PATH="${pkgs.openssh}/bin:$PATH"
 
-    if [ ! -d "$DOTFILES_DIR" ]; then
-      $DRY_RUN_CMD ${pkgs.git}/bin/git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
-      echo "Cloned dotfiles repository to $DOTFILES_DIR"
+    # Check if network is available before attempting git operations
+    if ${pkgs.iputils}/bin/ping -c 1 -W 2 github.com >/dev/null 2>&1; then
+      if [ ! -d "$DOTFILES_DIR" ]; then
+        $DRY_RUN_CMD ${pkgs.git}/bin/git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
+        echo "Cloned dotfiles repository to $DOTFILES_DIR"
+      else
+        $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$DOTFILES_DIR" pull
+        echo "Updated dotfiles repository at $DOTFILES_DIR"
+      fi
     else
-      $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$DOTFILES_DIR" pull
-      echo "Updated dotfiles repository at $DOTFILES_DIR"
+      echo "Network not available, skipping dotfiles clone/pull"
     fi
   '';
 
