@@ -5,6 +5,16 @@
   programs.firefox = {
     enable = true;
     package = pkgs.firefox;
+
+    # Install custom certificates (Vaultwarden self-signed cert)
+    policies = {
+      Certificates = {
+        Install = [
+          "${config.home.homeDirectory}/nixos/certs/vaultwarden.crt"
+        ];
+      };
+    };
+
     profiles = {
       default = {
       id = 0;

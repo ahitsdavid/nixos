@@ -10,6 +10,13 @@
     policies = {
       DisableAppUpdate = true;
       DisableTelemetry = true;
+
+      # Install custom certificates (Vaultwarden self-signed cert)
+      Certificates = {
+        Install = [
+          "${config.home.homeDirectory}/nixos/certs/vaultwarden.crt"
+        ];
+      };
     };
     profiles = {
       default = {
