@@ -15,6 +15,8 @@ in
     # Use auth key from SOPS for automatic login (only if secret exists)
     authKeyFile = lib.mkIf hasAuthKeySecret config.sops.secrets."tailscale/auth_key".path;
     extraUpFlags = [ "--accept-routes" ];
+    # Use routing features to ensure routes are accepted
+    useRoutingFeatures = "both";  # Accept routes and advertise (if needed)
   };
 
   # Open firewall for Tailscale
