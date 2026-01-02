@@ -6,6 +6,7 @@ let
   hasSystemSecrets = true;
   hasPersonalSecrets = true;
   hasWorkSecrets = false;
+  hasTailscaleAuthKey = true;  # Set to false if you don't have Tailscale auth key
 in
 {
   # Enable SOPS
@@ -33,8 +34,10 @@ in
           group = "networkmanager";
           mode = "0440";
         };
+      })
 
-        # Tailscale auth key for automatic login
+      # Tailscale secrets (separate so forks can disable)
+      (lib.mkIf (hasSystemSecrets && hasTailscaleAuthKey) {
         "tailscale/auth_key" = {
           sopsFile = ../../secrets/system.yaml;
           owner = "root";

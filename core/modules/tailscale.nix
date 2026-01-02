@@ -2,6 +2,8 @@
 { config, pkgs, lib, ... }:
 let
   # Toggle automatic login on/off
+  # NOTE: If you fork this config without the auth key, set this to false
+  # Also set hasTailscaleAuthKey = false in sops.nix
   enableAutoLogin = true;  # Set to false to disable auto-login
 in
 {
