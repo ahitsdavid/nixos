@@ -1,5 +1,9 @@
 { config, pkgs, lib, username, ... }:
 
+let
+  # Check if Bitwarden secrets exist (fork-friendly)
+  hasBitwardenSecrets = (lib.hasAttr "bitwarden/self_hosted_url" (config.sops.secrets or {}));
+in
 {
   # Only enable for davidthach user
   home.packages = lib.mkIf (username == "davidthach") (with pkgs; [
@@ -7,7 +11,7 @@
   ]);
 
   # Create wrapper scripts that read credentials from SOPS secrets
-  home.file = lib.mkIf (username == "davidthach") {
+  home.file = lib.mkIf (username == "davidthach" && hasBitwardenSecrets) {
     ".local/bin/bw-self" = {
       executable = true;
       text = ''

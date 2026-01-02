@@ -1,12 +1,16 @@
 { config, lib, pkgs, ... }:
 
+let
+  # Check if SSH secrets exist (fork-friendly)
+  hasUnraidKey = (lib.hasAttr "ssh/unraid_private_key" (config.sops.secrets or {}));
+in
 {
   programs.ssh = {
     enable = true;
     enableDefaultConfig = false;
 
     # SSH client configuration
-    matchBlocks = {
+    matchBlocks = lib.mkIf hasUnraidKey {
       "unraid" = {
         hostname = "192.168.1.29";
         user = "root";

@@ -2,20 +2,23 @@
 { config, lib, pkgs, ... }:
 
 let
-  # Enable secrets
-  hasSystemSecrets = true;
-  hasPersonalSecrets = true;
-  hasWorkSecrets = false;
-  hasTailscaleAuthKey = true;  # Set to false if you don't have Tailscale auth key
+  # Automatically detect which secret files exist (fork-friendly!)
+  systemSecretsPath = ../../secrets/system.yaml;
+  personalSecretsPath = ../../secrets/personal.yaml;
+  workSecretsPath = ../../secrets/work.yaml;
+
+  hasSystemSecrets = builtins.pathExists systemSecretsPath;
+  hasPersonalSecrets = builtins.pathExists personalSecretsPath;
+  hasWorkSecrets = builtins.pathExists workSecretsPath;
 in
 {
-  # Enable SOPS
-  sops = {
+  # Enable SOPS only if we have at least one secrets file
+  sops = lib.mkIf (hasSystemSecrets || hasPersonalSecrets || hasWorkSecrets) {
     # Set default age key file location
     age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
 
-    # Default sops file for personal secrets
-    defaultSopsFile = ../../secrets/personal.yaml;
+    # Default sops file for personal secrets (if it exists)
+    defaultSopsFile = lib.mkIf hasPersonalSecrets personalSecretsPath;
     
     # Only configure secrets if the files exist (fork-friendly!)
     secrets = lib.mkMerge [
@@ -23,23 +26,23 @@ in
       (lib.mkIf hasSystemSecrets {
         # WiFi passwords
         "wifi/dantat" = {
-          sopsFile = ../../secrets/system.yaml;
+          sopsFile = systemSecretsPath;
           owner = "root";
           group = "networkmanager";
           mode = "0440";
         };
         "wifi/dantat_5g" = {
-          sopsFile = ../../secrets/system.yaml;
+          sopsFile = systemSecretsPath;
           owner = "root";
           group = "networkmanager";
           mode = "0440";
         };
       })
 
-      # Tailscale secrets (separate so forks can disable)
-      (lib.mkIf (hasSystemSecrets && hasTailscaleAuthKey) {
+      # Tailscale secrets
+      (lib.mkIf hasSystemSecrets {
         "tailscale/auth_key" = {
-          sopsFile = ../../secrets/system.yaml;
+          sopsFile = systemSecretsPath;
           owner = "root";
           mode = "0400";
         };
@@ -102,15 +105,15 @@ in
         };
       })
       
-      # Work secrets  
+      # Work secrets
       (lib.mkIf hasWorkSecrets {
         "work/company_api" = {
-          sopsFile = ../../secrets/work.yaml;
+          sopsFile = workSecretsPath;
           owner = "davidthach";
           mode = "0400";
         };
         "work/vpn_config" = {
-          sopsFile = ../../secrets/work.yaml;
+          sopsFile = workSecretsPath;
           owner = "root";
           mode = "0600";
         };
