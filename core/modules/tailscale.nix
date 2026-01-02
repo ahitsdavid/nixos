@@ -2,16 +2,18 @@
 { config, pkgs, lib, ... }:
 let
   # Toggle automatic login on/off
-  # NOTE: If you fork this config without the auth key, set this to false
-  # Also set hasTailscaleAuthKey = false in sops.nix
   enableAutoLogin = true;  # Set to false to disable auto-login
+
+  # Check if SOPS secret exists (fork-friendly: works without SOPS)
+  hasAuthKeySecret = enableAutoLogin &&
+    (lib.hasAttr "tailscale/auth_key" (config.sops.secrets or {}));
 in
 {
   # Enable Tailscale service
   services.tailscale = {
     enable = true;
-    # Use auth key from SOPS for automatic login (if enabled)
-    authKeyFile = lib.mkIf enableAutoLogin config.sops.secrets."tailscale/auth_key".path;
+    # Use auth key from SOPS for automatic login (only if secret exists)
+    authKeyFile = lib.mkIf hasAuthKeySecret config.sops.secrets."tailscale/auth_key".path;
     extraUpFlags = [ "--accept-routes" ];
   };
 
