@@ -4,9 +4,9 @@
   networking = {
     networkmanager = {
       enable = true;
-      # Configure DNS to use Tailscale's MagicDNS first
+      # Configure DNS to use Tailscale's MagicDNS first, with fallbacks
       dns = "default";
-      insertNameservers = [ "100.100.100.100" ];
+      insertNameservers = [ "100.100.100.100" "8.8.8.8" "1.1.1.1" ];
     };
     firewall = {
       enable = true;
