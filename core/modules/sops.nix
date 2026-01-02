@@ -54,6 +54,7 @@ in
         "users/davidthach/password_hash" = {
           # sopsFile defaults to defaultSopsFile (personal.yaml)
           neededForUsers = true;  # Available during early boot for user creation
+          mode = "0400";
         };
 
         "api_keys/weather" = {
