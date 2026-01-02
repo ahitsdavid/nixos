@@ -140,9 +140,6 @@ hardware.trackpoint = {
 
   networking = {
     hostName = "thinkpad";
-    nameservers = [ "8.8.8.8" "1.1.1.1" ];
-    # Ensure NetworkManager doesn't override DNS settings
-    networkmanager.dns = "none";
   };
 
   system.stateVersion = "25.05";
