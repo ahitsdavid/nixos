@@ -21,15 +21,15 @@
         packageOverrides = pyfinal: pyprev: {
           python-validity = pyprev.python-validity or (pyfinal.buildPythonPackage rec {
             pname = "python-validity";
-            version = "0.14";
+            version = "0.15";
             pyproject = true;
             build-system = [ pyfinal.setuptools ];
 
             src = final.fetchFromGitHub {
               owner = "uunicorn";
               repo = "python-validity";
-              rev = "v${version}";
-              hash = "sha256-2OZmLGVPJBGuiJc1kDl8CqINUqOq+KmL3RPQ4VKPgXY=";
+              rev = version;  # No "v" prefix
+              hash = "sha256-/Hwi10EVTIEZ+dDQuatML3ux1E2a0KshhrKyrgK5wv4=";
             };
 
             dependencies = with pyfinal; [
