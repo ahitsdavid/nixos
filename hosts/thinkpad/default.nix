@@ -13,18 +13,6 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
-
-  # Fix python-validity package for nixos-unstable
-  nixpkgs.overlays = [
-    (final: prev: {
-      python3Packages = prev.python3Packages // {
-        python-validity = prev.python3Packages.python-validity.overridePythonAttrs (old: {
-          pyproject = true;
-          build-system = with prev.python3Packages; [ setuptools ];
-        });
-      };
-    })
-  ];
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
@@ -73,10 +61,11 @@ hardware.trackpoint = {
 };
       
   # Fingerprint reader (Synaptics 06cb:009a)
-  # Using specialized driver for this specific model
-  services."06cb-009a-fingerprint-sensor" = {
+  # Using fprintd with TOD (Touch OEM Drivers) support
+  services.fprintd = {
     enable = true;
-    backend = "python-validity";  # Start with this to enroll and get calibration data
+    tod.enable = true;
+    tod.driver = pkgs.libfprint-2-tod1-vfs0090;
   };
 
   # Enable fingerprint authentication for login and sudo

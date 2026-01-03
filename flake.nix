@@ -55,10 +55,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     pokerogue-app.url = "github:Admiral-Billy/Pokerogue-App";
-    nixos-06cb-009a-fingerprint-sensor = {
-      url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor/24.11";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = { 
@@ -132,11 +128,6 @@
       # Thinkpad Configuration
       thinkpad = mkNixosConfiguration {
         hostname = "thinkpad";
-        extraModules = {
-          systemModules = [
-            inputs.nixos-06cb-009a-fingerprint-sensor.nixosModules."06cb-009a-fingerprint-sensor"
-          ];
-        };
       };
       
       # Desktop Configuration
