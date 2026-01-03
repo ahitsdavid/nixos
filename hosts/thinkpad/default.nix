@@ -122,20 +122,21 @@ hardware.trackpoint = {
   # python-validity DBus service (provides fprint-compatible interface)
   systemd.services.python3-validity-dbus = {
     description = "Validity fingerprint sensor DBus service";
-    after = [ "python3-validity-firmware.service" ];
+    after = [ "python3-validity-firmware.service" "dbus.service" ];
     requires = [ "python3-validity-firmware.service" ];
     serviceConfig = {
-      Type = "dbus";
-      BusName = "io.github.uunicorn.Fprint";
+      Type = "simple";  # Changed from dbus - let it run even if registration fails
       # Run through python3 with proper environment
       ExecStart = "${pkgs.python3.withPackages (ps: [ ps.python-validity ])}/bin/python3 ${pkgs.python3Packages.python-validity}/lib/python-validity/dbus-service";
       RuntimeDirectory = "python-validity";
       RuntimeDirectoryMode = "0755";
+      Restart = "on-failure";
+      RestartSec = "5s";
     };
     wantedBy = [ "multi-user.target" ];
   };
 
-  # Enable fprintd for fingerprint authentication
+  # Keep fprintd enabled for PAM module and commands
   services.fprintd.enable = true;
 
   # Enable fingerprint authentication for login and sudo
