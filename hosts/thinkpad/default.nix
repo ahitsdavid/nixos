@@ -139,9 +139,6 @@ hardware.trackpoint = {
   # Disable standard fprintd - python-validity provides the complete interface
   services.fprintd.enable = false;
 
-  # But we still need the fprintd package for fprintd-enroll command and PAM module
-  environment.systemPackages = [ pkgs.fprintd ];
-
   # Enable PAM fprintd module manually since we disabled the fprintd service
   security.pam.services.login.text = lib.mkBefore ''
     auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
@@ -181,6 +178,7 @@ hardware.trackpoint = {
 
     # Fingerprint reader
     python3Packages.python-validity
+    fprintd  # For fprintd-enroll command
   ];
 
   services.throttled.enable = true;
