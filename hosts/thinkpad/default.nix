@@ -62,6 +62,13 @@ hardware.trackpoint = {
       
   # Fingerprint reader
   services.fprintd.enable = true;
+
+  # Enable fingerprint authentication for login and sudo
+  security.pam.services = {
+    login.fprintAuth = true;
+    sudo.fprintAuth = true;
+    gdm.fprintAuth = true;  # For GDM login
+  };
   
   # Thunderbolt support
   services.hardware.bolt.enable = true;
