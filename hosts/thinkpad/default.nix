@@ -139,6 +139,20 @@ hardware.trackpoint = {
   # Disable standard fprintd - python-validity provides the complete interface
   services.fprintd.enable = false;
 
+  # Create DBus service file for python-validity to handle fprintd activation
+  services.dbus.packages = [
+    (pkgs.writeTextFile {
+      name = "python-validity-dbus-service";
+      destination = "/share/dbus-1/system-services/net.reactivated.Fprint.service";
+      text = ''
+        [D-BUS Service]
+        Name=net.reactivated.Fprint
+        Exec=/bin/false
+        SystemdService=python3-validity-dbus.service
+      '';
+    })
+  ];
+
   # Enable PAM fprintd module manually since we disabled the fprintd service
   security.pam.services.login.text = lib.mkBefore ''
     auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
