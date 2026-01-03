@@ -127,7 +127,8 @@ hardware.trackpoint = {
     serviceConfig = {
       Type = "dbus";
       BusName = "io.github.uunicorn.Fprint";
-      ExecStart = "${pkgs.python3Packages.python-validity}/lib/python-validity/dbus-service";
+      # Run through python3 with proper environment
+      ExecStart = "${pkgs.python3.withPackages (ps: [ ps.python-validity ])}/bin/python3 ${pkgs.python3Packages.python-validity}/lib/python-validity/dbus-service";
       RuntimeDirectory = "python-validity";
       RuntimeDirectoryMode = "0755";
     };
