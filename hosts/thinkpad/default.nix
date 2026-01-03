@@ -136,15 +136,22 @@ hardware.trackpoint = {
     wantedBy = [ "multi-user.target" ];
   };
 
-  # Keep fprintd enabled for PAM module and commands
-  services.fprintd.enable = true;
+  # Disable standard fprintd - python-validity provides the complete interface
+  services.fprintd.enable = false;
 
-  # Enable fingerprint authentication for login and sudo
-  security.pam.services = {
-    login.fprintAuth = true;
-    sudo.fprintAuth = true;
-    gdm.fprintAuth = true;
-  };
+  # But we still need the fprintd package for fprintd-enroll command and PAM module
+  environment.systemPackages = [ pkgs.fprintd ];
+
+  # Enable PAM fprintd module manually since we disabled the fprintd service
+  security.pam.services.login.text = lib.mkBefore ''
+    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
+  '';
+  security.pam.services.sudo.text = lib.mkBefore ''
+    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
+  '';
+  security.pam.services.gdm.text = lib.mkBefore ''
+    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
+  '';
   
   # Thunderbolt support
   services.hardware.bolt.enable = true;
