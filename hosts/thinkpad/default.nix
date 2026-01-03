@@ -108,6 +108,7 @@ hardware.trackpoint = {
   # Enable python-validity systemd service
   systemd.services.python3-validity = {
     description = "Validity fingerprint sensor Python driver";
+    path = [ pkgs.innoextract ];  # Add innoextract to PATH
     serviceConfig = {
       Type = "simple";
       ExecStart = "${pkgs.python3Packages.python-validity}/bin/validity-sensors-firmware";
