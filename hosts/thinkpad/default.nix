@@ -13,6 +13,53 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
+
+  # Override python-validity package to fix format for nixos-unstable
+  nixpkgs.overlays = [
+    (final: prev: {
+      python3 = prev.python3.override {
+        packageOverrides = pyfinal: pyprev: {
+          python-validity = pyprev.python-validity or (pyfinal.buildPythonPackage rec {
+            pname = "python-validity";
+            version = "0.14";
+            pyproject = true;
+            build-system = [ pyfinal.setuptools ];
+
+            src = final.fetchFromGitHub {
+              owner = "uunicorn";
+              repo = "python-validity";
+              rev = "v${version}";
+              hash = "sha256-2OZmLGVPJBGuiJc1kDl8CqINUqOq+KmL3RPQ4VKPgXY=";
+            };
+
+            dependencies = with pyfinal; [
+              cryptography
+              pyusb
+              pyyaml
+              dbus-python
+              pygobject3
+            ];
+
+            nativeBuildInputs = [ final.wrapGAppsNoGuiHook ];
+
+            postPatch = ''
+              substituteInPlace linux_pam/pam-validity-check \
+                --replace /usr/bin/innoextract ${final.innoextract}/bin/innoextract
+            '';
+
+            postInstall = ''
+              install -Dm444 dbus/io.github.uunicorn.Fprint.service -t $out/share/dbus-1/system-services
+              install -Dm444 systemd/python-validity.service -t $out/lib/systemd/system
+              install -Dm444 debian/python-validity.udev $out/lib/udev/rules.d/60-python-validity.rules
+              install -Dm444 LICENSE $out/share/licenses/$pname/LICENSE
+            '';
+          });
+        };
+      };
+      python3Packages = final.python3.pkgs;
+    })
+  ];
+
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
@@ -61,10 +108,18 @@ hardware.trackpoint = {
 };
       
   # Fingerprint reader (Synaptics 06cb:009a)
-  # Unfortunately not supported on NixOS unstable currently
-  # The required TOD driver is broken due to API changes
-  # To enable: switch to NixOS 24.11 stable and use the community flake
-  # services.fprintd.enable = true;
+  # Using custom python-validity package with unstable compatibility
+  services."06cb-009a-fingerprint-sensor" = {
+    enable = true;
+    backend = "python-validity";
+  };
+
+  # Enable fingerprint authentication for login and sudo
+  security.pam.services = {
+    login.fprintAuth = true;
+    sudo.fprintAuth = true;
+    gdm.fprintAuth = true;
+  };
   
   # Thunderbolt support
   services.hardware.bolt.enable = true;
