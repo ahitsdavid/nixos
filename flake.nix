@@ -56,7 +56,7 @@
     };
     pokerogue-app.url = "github:Admiral-Billy/Pokerogue-App";
     nixos-06cb-009a-fingerprint-sensor = {
-      url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor?ref=24.11";
+      url = "github:ahbnr/nixos-06cb-009a-fingerprint-sensor/24.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

@@ -13,6 +13,18 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
+
+  # Fix python-validity package for nixos-unstable
+  nixpkgs.overlays = [
+    (final: prev: {
+      python3Packages = prev.python3Packages // {
+        python-validity = prev.python3Packages.python-validity.overridePythonAttrs (old: {
+          pyproject = true;
+          build-system = with prev.python3Packages; [ setuptools ];
+        });
+      };
+    })
+  ];
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
