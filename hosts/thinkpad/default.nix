@@ -13,10 +13,6 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
-
-  # Allow broken TOD driver - it may still work
-  nixpkgs.config.allowBroken = true;
-
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
@@ -65,19 +61,10 @@ hardware.trackpoint = {
 };
       
   # Fingerprint reader (Synaptics 06cb:009a)
-  # Using fprintd with TOD (Touch OEM Drivers) support
-  services.fprintd = {
-    enable = true;
-    tod.enable = true;
-    tod.driver = pkgs.libfprint-2-tod1-vfs0090;
-  };
-
-  # Enable fingerprint authentication for login and sudo
-  security.pam.services = {
-    login.fprintAuth = true;
-    sudo.fprintAuth = true;
-    gdm.fprintAuth = true;  # For GDM login
-  };
+  # Unfortunately not supported on NixOS unstable currently
+  # The required TOD driver is broken due to API changes
+  # To enable: switch to NixOS 24.11 stable and use the community flake
+  # services.fprintd.enable = true;
   
   # Thunderbolt support
   services.hardware.bolt.enable = true;
