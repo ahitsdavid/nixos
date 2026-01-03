@@ -60,8 +60,12 @@ hardware.trackpoint = {
   emulateWheel = true;
 };
       
-  # Fingerprint reader
-  services.fprintd.enable = true;
+  # Fingerprint reader (Synaptics 06cb:009a)
+  # Using specialized driver for this specific model
+  services."06cb-009a-fingerprint-sensor" = {
+    enable = true;
+    backend = "python-validity";  # Start with this to enroll and get calibration data
+  };
 
   # Enable fingerprint authentication for login and sudo
   security.pam.services = {
