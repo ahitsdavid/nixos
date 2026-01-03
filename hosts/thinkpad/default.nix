@@ -13,48 +13,6 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
-
-  # Override python-validity package to fix format for nixos-unstable
-  nixpkgs.overlays = [
-    (final: prev: {
-      python3 = prev.python3.override {
-        packageOverrides = pyfinal: pyprev: {
-          python-validity = pyprev.python-validity or (pyfinal.buildPythonPackage rec {
-            pname = "python-validity";
-            version = "0.15";
-            pyproject = true;
-            build-system = [ pyfinal.setuptools ];
-
-            src = final.fetchFromGitHub {
-              owner = "uunicorn";
-              repo = "python-validity";
-              rev = version;  # No "v" prefix
-              hash = "sha256-RflX7e6nd11pSg8mh3mjZiVGNUSdox/SKXHR4W+PhMs=";
-            };
-
-            dependencies = with pyfinal; [
-              cryptography
-              pyusb
-              pyyaml
-              dbus-python
-              pygobject3
-            ];
-
-            nativeBuildInputs = [ final.wrapGAppsNoGuiHook final.innoextract ];
-
-            # v0.15 has a different file structure, so we'll configure services separately
-            meta = {
-              description = "Validity fingerprint sensor driver";
-              homepage = "https://github.com/uunicorn/python-validity";
-              license = final.lib.licenses.mit;
-            };
-          });
-        };
-      };
-      python3Packages = final.python3.pkgs;
-    })
-  ];
-
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
@@ -102,67 +60,8 @@ hardware.trackpoint = {
   emulateWheel = true;
 };
       
-  # Fingerprint reader (Synaptics 06cb:009a)
-  # Manual configuration using custom python-validity package
-
-  # Enable python-validity systemd service (one-time firmware download)
-  systemd.services.python3-validity-firmware = {
-    description = "Validity fingerprint sensor firmware setup";
-    path = [ pkgs.innoextract ];  # Add innoextract to PATH
-    serviceConfig = {
-      Type = "oneshot";  # Runs once and exits
-      ExecStart = "${pkgs.python3Packages.python-validity}/bin/validity-sensors-firmware";
-      RemainAfterExit = true;  # Consider it active after successful run
-      RuntimeDirectory = "python-validity";  # Creates /var/run/python-validity/
-      RuntimeDirectoryMode = "0755";
-    };
-    wantedBy = [ "multi-user.target" ];
-  };
-
-  # python-validity DBus service (provides fprint-compatible interface)
-  systemd.services.python3-validity-dbus = {
-    description = "Validity fingerprint sensor DBus service";
-    after = [ "python3-validity-firmware.service" "dbus.service" ];
-    requires = [ "python3-validity-firmware.service" ];
-    serviceConfig = {
-      Type = "simple";  # Changed from dbus - let it run even if registration fails
-      # Run through python3 with proper environment
-      ExecStart = "${pkgs.python3.withPackages (ps: [ ps.python-validity ])}/bin/python3 ${pkgs.python3Packages.python-validity}/lib/python-validity/dbus-service";
-      RuntimeDirectory = "python-validity";
-      RuntimeDirectoryMode = "0755";
-      Restart = "on-failure";
-      RestartSec = "5s";
-    };
-    wantedBy = [ "multi-user.target" ];
-  };
-
-  # Disable standard fprintd - python-validity provides the complete interface
-  services.fprintd.enable = false;
-
-  # Create DBus service file for python-validity to handle fprintd activation
-  services.dbus.packages = [
-    (pkgs.writeTextFile {
-      name = "python-validity-dbus-service";
-      destination = "/share/dbus-1/system-services/net.reactivated.Fprint.service";
-      text = ''
-        [D-BUS Service]
-        Name=net.reactivated.Fprint
-        Exec=/bin/false
-        SystemdService=python3-validity-dbus.service
-      '';
-    })
-  ];
-
-  # Enable PAM fprintd module manually since we disabled the fprintd service
-  security.pam.services.login.text = lib.mkBefore ''
-    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
-  '';
-  security.pam.services.sudo.text = lib.mkBefore ''
-    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
-  '';
-  security.pam.services.gdm.text = lib.mkBefore ''
-    auth sufficient ${pkgs.fprintd}/lib/security/pam_fprintd.so
-  '';
+  # Fingerprint reader
+  services.fprintd.enable = true;
   
   # Thunderbolt support
   services.hardware.bolt.enable = true;
@@ -171,28 +70,24 @@ hardware.trackpoint = {
   hardware.enableAllFirmware = true;
 
   # Add powertop for power analysis
-  environment.systemPackages = with pkgs; [
+  environment.systemPackages = with pkgs; [ 
     # Monitoring tools
     lm_sensors
-    powertop
+    powertop 
     thinkfan
-
+    
     # ThinkPad utilities
     tpacpi-bat
     acpi
-
+    
     # For keyboard backlight control
     acpilight
-
+    
     # Video4Linux utilities
     v4l-utils
 
     mesa
     mesa-demos
-
-    # Fingerprint reader
-    python3Packages.python-validity
-    fprintd  # For fprintd-enroll command
   ];
 
   services.throttled.enable = true;
