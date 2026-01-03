@@ -110,11 +110,6 @@ hardware.trackpoint = {
   # Fingerprint reader (Synaptics 06cb:009a)
   # Manual configuration using custom python-validity package
 
-  # Install python-validity package
-  environment.systemPackages = with pkgs; [
-    python3Packages.python-validity
-  ];
-
   # Enable python-validity systemd service
   systemd.services.python3-validity = {
     description = "Validity fingerprint sensor Python driver";
@@ -146,24 +141,27 @@ hardware.trackpoint = {
   hardware.enableAllFirmware = true;
 
   # Add powertop for power analysis
-  environment.systemPackages = with pkgs; [ 
+  environment.systemPackages = with pkgs; [
     # Monitoring tools
     lm_sensors
-    powertop 
+    powertop
     thinkfan
-    
+
     # ThinkPad utilities
     tpacpi-bat
     acpi
-    
+
     # For keyboard backlight control
     acpilight
-    
+
     # Video4Linux utilities
     v4l-utils
 
     mesa
     mesa-demos
+
+    # Fingerprint reader
+    python3Packages.python-validity
   ];
 
   services.throttled.enable = true;
