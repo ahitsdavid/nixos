@@ -29,7 +29,7 @@
               owner = "uunicorn";
               repo = "python-validity";
               rev = version;  # No "v" prefix
-              hash = "sha256-/Hwi10EVTIEZ+dDQuatML3ux1E2a0KshhrKyrgK5wv4=";
+              hash = "sha256-RflX7e6nd11pSg8mh3mjZiVGNUSdox/SKXHR4W+PhMs=";
             };
 
             dependencies = with pyfinal; [
