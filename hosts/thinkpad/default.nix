@@ -42,12 +42,12 @@
 
             nativeBuildInputs = [ final.wrapGAppsNoGuiHook final.innoextract ];
 
-            postInstall = ''
-              install -Dm444 dbus/io.github.uunicorn.Fprint.service -t $out/share/dbus-1/system-services
-              install -Dm444 systemd/python-validity.service -t $out/lib/systemd/system
-              install -Dm444 debian/python-validity.udev $out/lib/udev/rules.d/60-python-validity.rules
-              install -Dm444 LICENSE $out/share/licenses/$pname/LICENSE
-            '';
+            # v0.15 has a different file structure, so we'll configure services separately
+            meta = {
+              description = "Validity fingerprint sensor driver";
+              homepage = "https://github.com/uunicorn/python-validity";
+              license = final.lib.licenses.mit;
+            };
           });
         };
       };
@@ -116,11 +116,8 @@ hardware.trackpoint = {
     wantedBy = [ "multi-user.target" ];
   };
 
-  # Enable open-fprintd for python-validity
+  # Enable fprintd for fingerprint authentication
   services.fprintd.enable = true;
-
-  # Install udev rules
-  services.udev.packages = [ pkgs.python3Packages.python-validity ];
 
   # Enable fingerprint authentication for login and sudo
   security.pam.services = {
