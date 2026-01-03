@@ -13,6 +13,10 @@
       #(import ../../home/modules/gdm { inherit username lib config pkgs; })
 
     ];
+
+  # Allow broken TOD driver - it may still work
+  nixpkgs.config.allowBroken = true;
+
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
   
