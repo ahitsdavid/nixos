@@ -40,12 +40,7 @@
               pygobject3
             ];
 
-            nativeBuildInputs = [ final.wrapGAppsNoGuiHook ];
-
-            postPatch = ''
-              substituteInPlace linux_pam/pam-validity-check \
-                --replace /usr/bin/innoextract ${final.innoextract}/bin/innoextract
-            '';
+            nativeBuildInputs = [ final.wrapGAppsNoGuiHook final.innoextract ];
 
             postInstall = ''
               install -Dm444 dbus/io.github.uunicorn.Fprint.service -t $out/share/dbus-1/system-services
