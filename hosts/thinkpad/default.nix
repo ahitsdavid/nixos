@@ -108,11 +108,29 @@ hardware.trackpoint = {
 };
       
   # Fingerprint reader (Synaptics 06cb:009a)
-  # Using custom python-validity package with unstable compatibility
-  services."06cb-009a-fingerprint-sensor" = {
-    enable = true;
-    backend = "python-validity";
+  # Manual configuration using custom python-validity package
+
+  # Install python-validity package
+  environment.systemPackages = with pkgs; [
+    python3Packages.python-validity
+  ];
+
+  # Enable python-validity systemd service
+  systemd.services.python3-validity = {
+    description = "Validity fingerprint sensor Python driver";
+    serviceConfig = {
+      Type = "simple";
+      ExecStart = "${pkgs.python3Packages.python-validity}/bin/validity-sensors-firmware";
+      Restart = "always";
+    };
+    wantedBy = [ "multi-user.target" ];
   };
+
+  # Enable open-fprintd for python-validity
+  services.fprintd.enable = true;
+
+  # Install udev rules
+  services.udev.packages = [ pkgs.python3Packages.python-validity ];
 
   # Enable fingerprint authentication for login and sudo
   security.pam.services = {
