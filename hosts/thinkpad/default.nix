@@ -106,7 +106,7 @@ hardware.trackpoint = {
   # Manual configuration using custom python-validity package
 
   # Enable python-validity systemd service (one-time firmware download)
-  systemd.services.python3-validity = {
+  systemd.services.python3-validity-firmware = {
     description = "Validity fingerprint sensor firmware setup";
     path = [ pkgs.innoextract ];  # Add innoextract to PATH
     serviceConfig = {
@@ -117,7 +117,21 @@ hardware.trackpoint = {
       RuntimeDirectoryMode = "0755";
     };
     wantedBy = [ "multi-user.target" ];
-    before = [ "fprintd.service" ];  # Run before fprintd starts
+  };
+
+  # python-validity DBus service (provides fprint-compatible interface)
+  systemd.services.python3-validity-dbus = {
+    description = "Validity fingerprint sensor DBus service";
+    after = [ "python3-validity-firmware.service" ];
+    requires = [ "python3-validity-firmware.service" ];
+    serviceConfig = {
+      Type = "dbus";
+      BusName = "io.github.uunicorn.Fprint";
+      ExecStart = "${pkgs.python3Packages.python-validity}/lib/python-validity/dbus-service";
+      RuntimeDirectory = "python-validity";
+      RuntimeDirectoryMode = "0755";
+    };
+    wantedBy = [ "multi-user.target" ];
   };
 
   # Enable fprintd for fingerprint authentication
