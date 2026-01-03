@@ -105,18 +105,19 @@ hardware.trackpoint = {
   # Fingerprint reader (Synaptics 06cb:009a)
   # Manual configuration using custom python-validity package
 
-  # Enable python-validity systemd service
+  # Enable python-validity systemd service (one-time firmware download)
   systemd.services.python3-validity = {
-    description = "Validity fingerprint sensor Python driver";
+    description = "Validity fingerprint sensor firmware setup";
     path = [ pkgs.innoextract ];  # Add innoextract to PATH
     serviceConfig = {
-      Type = "simple";
+      Type = "oneshot";  # Runs once and exits
       ExecStart = "${pkgs.python3Packages.python-validity}/bin/validity-sensors-firmware";
-      Restart = "always";
+      RemainAfterExit = true;  # Consider it active after successful run
       RuntimeDirectory = "python-validity";  # Creates /var/run/python-validity/
       RuntimeDirectoryMode = "0755";
     };
     wantedBy = [ "multi-user.target" ];
+    before = [ "fprintd.service" ];  # Run before fprintd starts
   };
 
   # Enable fprintd for fingerprint authentication
