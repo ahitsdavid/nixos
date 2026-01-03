@@ -113,6 +113,8 @@ hardware.trackpoint = {
       Type = "simple";
       ExecStart = "${pkgs.python3Packages.python-validity}/bin/validity-sensors-firmware";
       Restart = "always";
+      RuntimeDirectory = "python-validity";  # Creates /var/run/python-validity/
+      RuntimeDirectoryMode = "0755";
     };
     wantedBy = [ "multi-user.target" ];
   };
