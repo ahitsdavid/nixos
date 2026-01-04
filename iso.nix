@@ -15,6 +15,7 @@
 
   # Allow unfree packages (needed for Nvidia drivers)
   nixpkgs.config.allowUnfree = true;
+  nixpkgs.config.allowBroken = true;
 
   # Enable Nvidia drivers in ISO
   drivers.nvidia.enable = true;
