@@ -29,15 +29,12 @@
     "btrfs"    # Advanced filesystem with snapshots
     "xfs"      # High-performance filesystem
     "f2fs"     # Flash-friendly filesystem for SSDs
-    "zfs"      # Advanced filesystem with built-in RAID
+    # "zfs"    # ZFS not compatible with kernel 6.18.2 yet (max 6.17)
     "ntfs"     # Windows compatibility
     "exfat"    # Cross-platform compatibility
     "fat32"    # Boot partition standard
     "bcachefs" # Next-generation COW filesystem
   ];
-
-  # ZFS support
-  boot.zfs.forceImportRoot = false;
   
   # Add filesystem tools and utilities
   environment.systemPackages = with pkgs; [
@@ -72,13 +69,10 @@
     
     # xfs
     xfsprogs
-    
+
     # f2fs
     f2fs-tools
-    
-    # zfs
-    zfs
-    
+
     # ntfs/exfat/fat
     ntfs3g
     exfatprogs
@@ -152,7 +146,6 @@
       echo "- btrfs: Advanced with snapshots, compression, RAID"
       echo "- xfs: High-performance for large files"
       echo "- f2fs: Optimized for SSDs and flash storage"
-      echo "- zfs: Enterprise-grade with built-in RAID, snapshots, dedup"
       echo "- bcachefs: Next-gen copy-on-write filesystem"
       echo ""
       echo "Configuration files are located in /etc/nixos/desktop-config/"
@@ -164,7 +157,6 @@
       echo "   - btrfs: mkfs.btrfs /dev/sdXY"
       echo "   - xfs: mkfs.xfs /dev/sdXY"
       echo "   - f2fs: mkfs.f2fs /dev/sdXY"
-      echo "   - zfs: zpool create rpool /dev/sdXY"
       echo "   - bcachefs: bcachefs format /dev/sdXY"
       echo "3. Mount your filesystems to /mnt"
       echo "4. Copy desktop config: cp -r /etc/nixos/desktop-config/* /mnt/etc/nixos/"
