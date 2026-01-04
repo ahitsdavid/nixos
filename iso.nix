@@ -24,20 +24,17 @@
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
   
   # Enable support for multiple filesystems
+  # ZFS is excluded due to kernel 6.18.2 incompatibility (ZFS max: 6.17)
   boot.supportedFilesystems = lib.mkForce [
     "ext4"     # Standard Linux filesystem
     "btrfs"    # Advanced filesystem with snapshots
     "xfs"      # High-performance filesystem
     "f2fs"     # Flash-friendly filesystem for SSDs
-    # "zfs"    # ZFS not compatible with kernel 6.18.2 yet (max 6.17)
     "ntfs"     # Windows compatibility
     "exfat"    # Cross-platform compatibility
     "vfat"     # Boot partition standard
     "bcachefs" # Next-generation COW filesystem
   ];
-
-  # Explicitly disable ZFS to prevent it from being pulled in
-  boot.zfs.enabled = false;
   
   # Add filesystem tools and utilities
   environment.systemPackages = with pkgs; [
