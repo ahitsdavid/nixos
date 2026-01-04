@@ -111,7 +111,7 @@
 
   # Enable networkmanager for easier network setup
   networking.networkmanager.enable = true;
-  networking.wireless.enable = false;
+  networking.wireless.enable = lib.mkForce false;
 
   # Enable Hyprland for a graphical environment during installation
   programs.hyprland = {
