@@ -20,7 +20,7 @@
   virtualisation = {
     libvirtd.enable = true;
     docker.enable = true;
-    podman.enable = false;
+    podman.enable = true;  # Enabled for distrobox
   };
 
   # Enable X11 forwarding for Docker GUI apps
