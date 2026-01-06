@@ -164,12 +164,13 @@ in
           # Setup custom fastfetch config for Arch container
           echo "Setting up custom fastfetch config..."
           ${pkgs.distrobox}/bin/distrobox enter arch -- \
-            mkdir -p /etc/fastfetch
+            sudo mkdir -p /etc/fastfetch
           cat ${fastfetchConfig} | ${pkgs.distrobox}/bin/distrobox enter arch -- \
             sudo tee /etc/fastfetch/config.jsonc > /dev/null
 
-          # Create alias for easy use
+          # Create alias for easy use in home directory config
           ${pkgs.distrobox}/bin/distrobox enter arch -- bash -c '
+            touch ~/.bashrc 2>/dev/null || true
             if ! grep -q "alias ff=" ~/.bashrc 2>/dev/null; then
               echo "alias ff=\"fastfetch --config /etc/fastfetch/config.jsonc\"" >> ~/.bashrc
             fi
