@@ -56,6 +56,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      Environment = "PATH=/run/current-system/sw/bin";
       ExecStart = let
         createScript = pkgs.writeShellScript "create-arch-distrobox" ''
           # Check if container already exists
@@ -82,6 +83,7 @@ in
     serviceConfig = {
       Type = "oneshot";
       RemainAfterExit = true;
+      Environment = "PATH=/run/current-system/sw/bin";
       ExecStart = let
         # Convert package lists to space-separated strings
         archPkgs = lib.concatStringsSep " " archPackages;
