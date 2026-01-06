@@ -15,6 +15,16 @@ let
     # System utilities
     "fastfetch"
 
+    # Qt6 Development Environment
+    "qt6-base"           # Qt6 core libraries
+    "qt6-tools"          # Qt6 development tools (qmake, etc.)
+    "qt6-declarative"    # Qt Quick/QML
+    "cmake"              # Build system
+    "ninja"              # Fast build tool (optional, used by CMake)
+    "clang"              # C++ compiler + clangd LSP
+    "gdb"                # Debugger
+    "qt6-doc"            # Qt documentation (optional)
+
     # Add your desired packages here
     # Examples:
     # "neovim"
