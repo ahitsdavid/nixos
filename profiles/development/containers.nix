@@ -12,6 +12,9 @@ let
     "git"
     "base-devel"
 
+    # System utilities
+    "fastfetch"
+
     # Add your desired packages here
     # Examples:
     # "neovim"
