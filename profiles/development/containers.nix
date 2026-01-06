@@ -89,6 +89,48 @@ in
         archPkgs = lib.concatStringsSep " " archPackages;
         aurPkgs = lib.concatStringsSep " " aurPackages;
 
+        # Custom fastfetch config showing both NixOS and Arch
+        fastfetchConfig = pkgs.writeText "fastfetch-arch.jsonc" ''
+          {
+            "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+            "logo": {
+              "type": "builtin",
+              "source": "arch"
+            },
+            "display": {
+              "separator": " ➜  "
+            },
+            "modules": [
+              {
+                "type": "title",
+                "format": "{user-name-colored}@{host-name-colored}"
+              },
+              {
+                "type": "separator"
+              },
+              {
+                "type": "custom",
+                "format": "Host OS: NixOS → Container: Arch Linux"
+              },
+              "os",
+              "kernel",
+              "packages",
+              "shell",
+              "display",
+              "de",
+              "wm",
+              "theme",
+              "icons",
+              "terminal",
+              "cpu",
+              "gpu",
+              "memory",
+              "disk",
+              "uptime"
+            ]
+          }
+        '';
+
         setupScript = pkgs.writeShellScript "setup-arch-distrobox" ''
           echo "Setting up Arch container with declarative packages..."
 
@@ -118,6 +160,20 @@ in
             ${pkgs.distrobox}/bin/distrobox enter arch -- \
               yay -S --needed --noconfirm ${aurPkgs}
           fi
+
+          # Setup custom fastfetch config for Arch container
+          echo "Setting up custom fastfetch config..."
+          ${pkgs.distrobox}/bin/distrobox enter arch -- \
+            mkdir -p /etc/fastfetch
+          cat ${fastfetchConfig} | ${pkgs.distrobox}/bin/distrobox enter arch -- \
+            sudo tee /etc/fastfetch/config.jsonc > /dev/null
+
+          # Create alias for easy use
+          ${pkgs.distrobox}/bin/distrobox enter arch -- bash -c '
+            if ! grep -q "alias ff=" ~/.bashrc 2>/dev/null; then
+              echo "alias ff=\"fastfetch --config /etc/fastfetch/config.jsonc\"" >> ~/.bashrc
+            fi
+          '
 
           echo "Arch container setup complete!"
         '';
