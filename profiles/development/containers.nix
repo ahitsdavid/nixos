@@ -3,6 +3,29 @@
 { config, pkgs, lib, ... }:
 let
   username = config.users.users.davidthach.name or "davidthach";
+
+  # Declarative package lists for Arch container
+  # These packages will be installed if not present, but never removed
+  # This provides a reproducible foundation while allowing manual package additions
+  archPackages = [
+    # Base development tools
+    "git"
+    "base-devel"
+
+    # Add your desired packages here
+    # Examples:
+    # "neovim"
+    # "firefox"
+    # "discord"
+  ];
+
+  aurPackages = [
+    # AUR packages to install via yay
+    # Add your desired AUR packages here
+    # Examples:
+    # "visual-studio-code-bin"
+    # "slack-desktop"
+  ];
 in
 {
   # Distrobox for managing containers
@@ -47,9 +70,9 @@ in
     };
   };
 
-  # Auto-setup yay and essential packages in Arch container
+  # Auto-setup yay and declarative packages in Arch container
   systemd.user.services.distrobox-arch-setup = {
-    description = "Setup Arch distrobox with yay";
+    description = "Setup Arch distrobox with yay and declarative packages";
     after = [ "distrobox-arch.service" ];
     wantedBy = [ "default.target" ];
 
@@ -57,12 +80,24 @@ in
       Type = "oneshot";
       RemainAfterExit = true;
       ExecStart = let
+        # Convert package lists to space-separated strings
+        archPkgs = lib.concatStringsSep " " archPackages;
+        aurPkgs = lib.concatStringsSep " " aurPackages;
+
         setupScript = pkgs.writeShellScript "setup-arch-distrobox" ''
-          # Check if yay is already installed
+          echo "Setting up Arch container with declarative packages..."
+
+          # Install pacman packages (install-only, never remove)
+          if [ -n "${archPkgs}" ]; then
+            echo "Installing pacman packages: ${archPkgs}"
+            ${pkgs.distrobox}/bin/distrobox enter arch -- \
+              sudo pacman -S --needed --noconfirm ${archPkgs}
+          fi
+
+          # Install yay if not already installed
           if ! ${pkgs.distrobox}/bin/distrobox enter arch -- which yay &>/dev/null; then
-            echo "Setting up yay in Arch container..."
+            echo "Installing yay for AUR access..."
             ${pkgs.distrobox}/bin/distrobox enter arch -- bash -c '
-              sudo pacman -S --needed --noconfirm git base-devel
               cd /tmp
               git clone https://aur.archlinux.org/yay.git
               cd yay
@@ -70,9 +105,16 @@ in
               cd ..
               rm -rf yay
             '
-          else
-            echo "yay already installed in Arch container"
           fi
+
+          # Install AUR packages (install-only, never remove)
+          if [ -n "${aurPkgs}" ]; then
+            echo "Installing AUR packages: ${aurPkgs}"
+            ${pkgs.distrobox}/bin/distrobox enter arch -- \
+              yay -S --needed --noconfirm ${aurPkgs}
+          fi
+
+          echo "Arch container setup complete!"
         '';
       in "${setupScript}";
     };
