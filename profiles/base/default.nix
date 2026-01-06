@@ -28,7 +28,8 @@
 
   # Common packages for all configurations
   environment.systemPackages = with pkgs; [
-    webcord
+    # Use discord for thinkpad (webcord is broken), webcord for others
+    (if config.networking.hostName == "thinkpad" then discord else webcord)
   ];
 
   #Handles DNS Configuraiton
