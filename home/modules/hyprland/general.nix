@@ -1,9 +1,16 @@
 # home/modules/hyprland/general.nix
-{ pkgs, config, lib, ... }:
+{ pkgs, config, lib, hostname ? "unknown", ... }:
+let
+  isDesktop = hostname == "desktop";
+in
 {
   wayland.windowManager.hyprland = {
     settings = {
-      monitor = [
+      monitor = if isDesktop then [
+        # Desktop setup: Larger ultrawide on left, smaller vertical on right
+        "DP-5,3440x1440@100,0x0,1"           # Samsung CF791 ultrawide on left
+        "DP-4,1920x1080@180,3440x0,1,transform,3"  # Samsung LS27DG30X vertical on right (90° counterclockwise)
+      ] else [
         ",preferred,auto,1"
         # Uncomment the following line to enable HDMI mirroring
         # "HDMI-A-1,1920x1080@60,1920x0,1,mirror,eDP-1"

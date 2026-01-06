@@ -26,6 +26,11 @@
     variant = "";
   };
 
+  # Common packages for all configurations
+  environment.systemPackages = with pkgs; [
+    webcord
+  ];
+
   #Handles DNS Configuraiton
   networking.resolvconf.enable = false;
 

@@ -11,7 +11,6 @@
     libreoffice
     drawio
     remmina
-    webcord
     qtcreator
   ];
 
