@@ -24,6 +24,9 @@
       c = "clear";
       list-generations = "nixos-rebuild list-generations";
       collect-garbage = "sudo nix-collect-garbage -d";
+
+      # Arch container fastfetch with custom config
+      ff-arch = "distrobox enter arch -- fastfetch --config /etc/fastfetch/config.jsonc";
     };
 
     history = {
