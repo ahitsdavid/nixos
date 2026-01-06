@@ -68,15 +68,22 @@
     mesa-demos
     nvtopPackages.full
 
+    # AMD CPU utilities
+    ryzen-monitor-ng
+
     # Desktop utilities
     pciutils
     usbutils
   ];
 
-  # Better scheduler for desktop workloads
+  # Kernel parameters for AMD 7800X3D + Nvidia
   boot.kernelParams = [
+    # Nvidia settings
     "nvidia-drm.modeset=1"
     "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
+
+    # AMD CPU optimizations
+    "amd_pstate=active"
   ];
 
   # SDDM monitor configuration for desktop
