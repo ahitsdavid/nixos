@@ -47,36 +47,34 @@ in
     };
   };
 
-  # Optional: Auto-setup yay and essential packages in Arch container
-  # Uncomment the section below to enable automatic setup
+  # Auto-setup yay and essential packages in Arch container
+  systemd.user.services.distrobox-arch-setup = {
+    description = "Setup Arch distrobox with yay";
+    after = [ "distrobox-arch.service" ];
+    wantedBy = [ "default.target" ];
 
-  # systemd.user.services.distrobox-arch-setup = {
-  #   description = "Setup Arch distrobox with yay";
-  #   after = [ "distrobox-arch.service" ];
-  #   wantedBy = [ "default.target" ];
-  #
-  #   serviceConfig = {
-  #     Type = "oneshot";
-  #     RemainAfterExit = true;
-  #     ExecStart = let
-  #       setupScript = pkgs.writeShellScript "setup-arch-distrobox" ''
-  #         # Check if yay is already installed
-  #         if ! ${pkgs.distrobox}/bin/distrobox enter arch -- which yay &>/dev/null; then
-  #           echo "Setting up yay in Arch container..."
-  #           ${pkgs.distrobox}/bin/distrobox enter arch -- bash -c '
-  #             sudo pacman -S --needed --noconfirm git base-devel
-  #             cd /tmp
-  #             git clone https://aur.archlinux.org/yay.git
-  #             cd yay
-  #             makepkg -si --noconfirm
-  #             cd ..
-  #             rm -rf yay
-  #           '
-  #         else
-  #           echo "yay already installed in Arch container"
-  #         fi
-  #       '';
-  #     in "${setupScript}";
-  #   };
-  # };
+    serviceConfig = {
+      Type = "oneshot";
+      RemainAfterExit = true;
+      ExecStart = let
+        setupScript = pkgs.writeShellScript "setup-arch-distrobox" ''
+          # Check if yay is already installed
+          if ! ${pkgs.distrobox}/bin/distrobox enter arch -- which yay &>/dev/null; then
+            echo "Setting up yay in Arch container..."
+            ${pkgs.distrobox}/bin/distrobox enter arch -- bash -c '
+              sudo pacman -S --needed --noconfirm git base-devel
+              cd /tmp
+              git clone https://aur.archlinux.org/yay.git
+              cd yay
+              makepkg -si --noconfirm
+              cd ..
+              rm -rf yay
+            '
+          else
+            echo "yay already installed in Arch container"
+          fi
+        '';
+      in "${setupScript}";
+    };
+  };
 }
