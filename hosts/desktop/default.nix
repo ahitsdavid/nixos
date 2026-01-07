@@ -6,6 +6,7 @@
       # Profiles
       (import ../../profiles/base { inherit inputs username; })
       (import ../../profiles/development { inherit inputs username; })
+      (import ../../profiles/work { inherit inputs username; })
       (import ../../core/drivers/nvidia.nix)
     ];
 
