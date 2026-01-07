@@ -20,6 +20,7 @@ let
     "qt6-tools"          # Qt6 development tools (qmake, etc.)
     "qt6-declarative"    # Qt Quick/QML
     "qt6-wayland"        # Qt6 Wayland plugin (required for GUI on Wayland)
+    "xorg-server-xwayland"  # XWayland for X11 app compatibility
     "cmake"              # Build system
     "ninja"              # Fast build tool (optional, used by CMake)
     "clang"              # C++ compiler + clangd LSP
