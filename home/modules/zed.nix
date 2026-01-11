@@ -2,7 +2,7 @@
 
 {
   programs.zed-editor = {
-    enable = true;
+    enable = false;
 
     ## This populates the userSettings "auto_install_extensions"
     extensions = ["nix" "toml" "elixir" "make"];
