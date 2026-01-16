@@ -10,6 +10,8 @@
     # Hardware acceleration libraries
     libva              # VA-API support for hardware decoding
     libvdpau           # VDPAU support (Nvidia hardware acceleration)
+    libva-utils        # VA-API diagnostic tools (vainfo)
+    vdpauinfo          # VDPAU diagnostic tools
 
     # GStreamer plugins for additional codec support
     gst_all_1.gstreamer           # GStreamer multimedia framework

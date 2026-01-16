@@ -32,20 +32,26 @@
 
   # VLC configuration file with hardware acceleration
   xdg.configFile."vlc/vlcrc".text = ''
-    # Hardware acceleration - use VDPAU for Nvidia GPU
-    avcodec-hw=vdpau
+    # Hardware acceleration - let VLC auto-detect best method
+    # Options: any, vdpau, vaapi, none
+    # Using "any" allows VLC to choose the best available method
+    avcodec-hw=any
 
-    # Video output - use Wayland
-    vout=wayland
+    # Video output - auto-detect best method
+    # Using "auto" instead of forcing "wayland" to avoid compatibility issues
+    vout=auto
 
     # Privacy settings
     qt-privacy-ask=0
     metadata-network-access=1
 
-    # Performance settings
-    file-caching=300
-    network-caching=1000
-    disc-caching=300
+    # Performance settings - increased caching for network shares
+    file-caching=1000
+    network-caching=3000
+    disc-caching=1000
+
+    # SMB-specific caching (helps with network share playback)
+    smb-caching=3000
 
     # Interface settings
     qt-updates-notif=0
@@ -57,5 +63,8 @@
     # Audio settings
     volume=256
     volume-save=1
+
+    # Force skip loop filter for H.264 (can help with some playback issues)
+    avcodec-skiploopfilter=0
   '';
 }
