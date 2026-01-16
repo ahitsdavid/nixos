@@ -30,16 +30,14 @@
     };
   };
 
-  # VLC configuration file with hardware acceleration
+  # VLC configuration file - conservative settings for stability
   xdg.configFile."vlc/vlcrc".text = ''
-    # Hardware acceleration - let VLC auto-detect best method
-    # Options: any, vdpau, vaapi, none
-    # Using "any" allows VLC to choose the best available method
-    avcodec-hw=any
+    # Hardware acceleration - DISABLED for stability
+    # Can re-enable later once basic playback works
+    avcodec-hw=none
 
-    # Video output - auto-detect best method
-    # Using "auto" instead of forcing "wayland" to avoid compatibility issues
-    vout=auto
+    # Video output - use OpenGL for better compatibility
+    vout=gl
 
     # Privacy settings
     qt-privacy-ask=0
@@ -63,8 +61,12 @@
     # Audio settings
     volume=256
     volume-save=1
-
-    # Force skip loop filter for H.264 (can help with some playback issues)
-    avcodec-skiploopfilter=0
   '';
+
+  # Force VLC to use XWayland instead of native Wayland
+  # This fixes Qt interface issues on Wayland with Nvidia
+  home.sessionVariables = {
+    # Force VLC to use X11/XWayland backend
+    VLC_QT_QPA_PLATFORM = "xcb";
+  };
 }
