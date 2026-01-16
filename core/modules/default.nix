@@ -13,6 +13,7 @@
     ( import ./steam.nix )
     #( import ./stylix.nix )
     ( import ./tailscale.nix )
+    ( import ./vlc.nix )
     ( import ./yubikey.nix )
   ];
 

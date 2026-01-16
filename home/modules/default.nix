@@ -17,6 +17,7 @@
     (import ./obs.nix )
     (import ./thunar.nix )
     (import ./virtualization.nix )
+    (import ./vlc.nix )
     (import ./vscode.nix )
     (import ./zed.nix )
     (import ./spicetify.nix )

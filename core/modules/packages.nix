@@ -35,7 +35,6 @@
     unrar                 # .rar file tool
     unzip                 # .zip file tool
     usbutils              # USB Device tool
-    vlc                   # Media player and streaming server
     wget                  # Network downloader
     zip                   # File compression utility
     inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
