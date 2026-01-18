@@ -25,7 +25,7 @@ in
       "$mod, M, Toggle media controls, global, quickshell:mediaControlsToggle" # Toggle media controls
       "CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle" # Toggle session menu
     ];
-    
+
     bind = [
       # QuickShell bindings
       #"$mod, Super_L, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel" # [hidden] Launcher (fallback)
@@ -40,7 +40,7 @@ in
       "$mod+ALT, A, global, quickshell:sidebarLeftToggleDetach" # [hidden]
       "$mod, B, global, quickshell:sidebarLeftToggle" # [hidden]
       "$mod, O, global, quickshell:sidebarLeftToggle" # [hidden]
-      
+
       # APPS
       # VSCode
       "$mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh"
