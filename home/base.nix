@@ -31,6 +31,9 @@
     plex-desktop  # Plex desktop client (official)
     jellyfin-media-player  # Jellyfin desktop client
 
+    # Local media player
+    mpv  # Lightweight video player for MKV and other formats
+
     # Photo editing and RAW file management
     darktable  # Professional RAW photo workflow application
     gimp  # General-purpose image editor with RAW support
