@@ -30,22 +30,26 @@
     };
   };
 
-  # VLC configuration file with hardware acceleration
+  # VLC configuration file - conservative settings for stability
   xdg.configFile."vlc/vlcrc".text = ''
-    # Hardware acceleration - use VDPAU for Nvidia GPU
-    avcodec-hw=vdpau
+    # Hardware acceleration - DISABLED for stability
+    # Can re-enable later once basic playback works
+    avcodec-hw=none
 
-    # Video output - use Wayland
-    vout=wayland
+    # Video output - use OpenGL for better compatibility
+    vout=gl
 
     # Privacy settings
     qt-privacy-ask=0
     metadata-network-access=1
 
-    # Performance settings
-    file-caching=300
-    network-caching=1000
-    disc-caching=300
+    # Performance settings - increased caching for network shares
+    file-caching=1000
+    network-caching=3000
+    disc-caching=1000
+
+    # SMB-specific caching (helps with network share playback)
+    smb-caching=3000
 
     # Interface settings
     qt-updates-notif=0
@@ -58,4 +62,11 @@
     volume=256
     volume-save=1
   '';
+
+  # Force VLC to use XWayland instead of native Wayland
+  # This fixes Qt interface issues on Wayland with Nvidia
+  home.sessionVariables = {
+    # Force VLC to use X11/XWayland backend
+    VLC_QT_QPA_PLATFORM = "xcb";
+  };
 }

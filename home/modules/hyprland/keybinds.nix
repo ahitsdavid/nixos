@@ -25,7 +25,7 @@ in
       "$mod, M, Toggle media controls, global, quickshell:mediaControlsToggle" # Toggle media controls
       "CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle" # Toggle session menu
     ];
-    
+
     bind = [
       # QuickShell bindings (non-Super bindings stay as regular binds)
       "CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
