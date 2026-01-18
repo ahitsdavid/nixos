@@ -173,8 +173,8 @@ in
   # This enables catchall functionality that was disabled in 0.52+
   wayland.windowManager.hyprland.extraConfig = ''
     submap = super_held
-    bind = , catchall, global, quickshell:overviewToggleReleaseInterrupt
-    bind = , catchall, submap, reset
+    bind = , escape, submap, reset
+    bind = , catchall, exec, qs ipc call quickshell:overviewToggleReleaseInterrupt; hyprctl dispatch submap reset
     submap = reset
   '';
 }
