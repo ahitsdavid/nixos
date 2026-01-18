@@ -28,7 +28,8 @@ in
     
     bind = [
       # QuickShell bindings
-      #"$mod, Super_L, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel" # [hidden] Launcher (fallback)
+      "$mod, Super_L, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel" # [hidden] Launcher (fallback)
+      "CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:272, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:273, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:274, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
@@ -145,11 +146,11 @@ in
     
     # QuickShell special bindings that need specific bind types
     bindid = [
-      # "$mod, Super_L, Toggle overview, global, quickshell:overviewToggleRelease" # Toggle overview/launcher
+      "$mod, Super_L, Toggle overview, global, quickshell:overviewToggleRelease" # Toggle overview/launcher
     ];
-    
+
     binditn = [
-      # "$mod, catchall, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
+      # "$mod, catchall, global, quickshell:overviewToggleReleaseInterrupt" # [hidden] - catchall only works in submaps
     ];
     
     bindit = [

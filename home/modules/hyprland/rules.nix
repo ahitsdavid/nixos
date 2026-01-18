@@ -33,6 +33,11 @@
         "size 45%, class:^(nm-connection-editor)$"
         "center, class:^(nm-connection-editor)$"
 
+        # Quickshell Settings
+        "float, title:^(Quickshell Settings)$"
+        "size 70% 80%, title:^(Quickshell Settings)$"
+        "center, title:^(Quickshell Settings)$"
+
         # Tiling
         "tile, class:^dev\\.warp\\.Warp$"
 
@@ -112,6 +117,24 @@
         "ignorealpha 0.6, indicator.*"
         "blur, osk[0-9]*"
         "ignorealpha 0.6, osk[0-9]*"
+
+        # Quickshell-specific namespace rules
+        "blurpopups, quickshell:.*"
+        "blur, quickshell:.*"
+        "ignorealpha 0.79, quickshell:.*"
+        "animation slide, quickshell:bar"
+        "animation fade, quickshell:screenCorners"
+        "animation slide right, quickshell:sidebarRight"
+        "animation slide left, quickshell:sidebarLeft"
+        "animation slide bottom, quickshell:osk"
+        "animation slide bottom, quickshell:dock"
+        "blur, quickshell:session"
+        "noanim, quickshell:session"
+        "ignorealpha 0, quickshell:session"
+        "animation fade, quickshell:notificationPopup"
+        "blur, quickshell:backgroundWidgets"
+        "ignorealpha 0.05, quickshell:backgroundWidgets"
+        "noanim, quickshell:overview"  # Launchers need to be FAST
       ];
     };
   };
