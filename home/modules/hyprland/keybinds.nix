@@ -27,9 +27,21 @@ in
     ];
     
     bind = [
+      # QuickShell bindings (non-Super bindings stay as regular binds)
+      "CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
+      # Window cycling
+      "ALT, Tab, cyclenext,"
+      "ALT, Tab, bringactivetotop,"
+      # Basic media controls
+      ", XF86AudioPlay, exec, playerctl play-pause"
+      ", XF86AudioNext, exec, playerctl next"
+      ", XF86AudioPrev, exec, playerctl previous"
+    ];
+
+    # Universal binds - work across all submaps including super_held
+    bindu = [
       # QuickShell bindings
       "$mod, Super_L, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel" # [hidden] Launcher (fallback)
-      "CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:272, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:273, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
       "$mod, mouse:274, global, quickshell:overviewToggleReleaseInterrupt" # [hidden]
@@ -41,7 +53,7 @@ in
       "$mod+ALT, A, global, quickshell:sidebarLeftToggleDetach" # [hidden]
       "$mod, B, global, quickshell:sidebarLeftToggle" # [hidden]
       "$mod, O, global, quickshell:sidebarLeftToggle" # [hidden]
-      
+
       # APPS
       # VSCode
       "$mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh"
@@ -105,13 +117,6 @@ in
       "$mod ALT, 9, movetoworkspacesilent, 9"
       "$mod ALT, 0, movetoworkspacesilent, 10"
       "$mod ALT, S, movetoworkspacesilent, special"
-      # Window cycling
-      "ALT, Tab, cyclenext,"
-      "ALT, Tab, bringactivetotop,"
-      # Basic media controls
-      ", XF86AudioPlay, exec, playerctl play-pause"
-      ", XF86AudioNext, exec, playerctl next"
-      ", XF86AudioPrev, exec, playerctl previous"
     ];
     
     # Continuous hold bindings
@@ -150,11 +155,26 @@ in
     ];
 
     binditn = [
-      # "$mod, catchall, global, quickshell:overviewToggleReleaseInterrupt" # [hidden] - catchall only works in submaps
+      # Now implemented using submap catchall below
     ];
-    
+
     bindit = [
+      ", Super_L, submap, super_held" # [hidden] Enter super_held submap to enable catchall
       ", Super_L, global, quickshell:workspaceNumber" # [hidden]
     ];
+
+    # Exit super_held submap when Super_L is released
+    bindrt = [
+      ", Super_L, submap, reset" # [hidden] Exit super_held submap on Super release
+    ];
   };
+
+  # Submap for catching all keypresses while Super is held
+  # This enables catchall functionality that was disabled in 0.52+
+  wayland.windowManager.hyprland.extraConfig = ''
+    submap = super_held
+    bind = , catchall, global, quickshell:overviewToggleReleaseInterrupt
+    bind = , catchall, submap, reset
+    submap = reset
+  '';
 }
