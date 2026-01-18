@@ -89,6 +89,7 @@
         "no_anim on, match:namespace hyprpicker"
         "no_anim on, match:namespace noanim"
         "blur on, match:namespace gtk-layer-shell"
+        "ignore_alpha 0, match:namespace gtk-layer-shell"
         "blur on, match:namespace launcher"
         "ignore_alpha 0.5, match:namespace launcher"
         "blur on, match:namespace notifications"
