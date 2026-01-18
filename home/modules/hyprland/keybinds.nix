@@ -174,7 +174,7 @@ in
   wayland.windowManager.hyprland.extraConfig = ''
     submap = super_held
     bind = , escape, submap, reset
-    bind = , catchall, exec, qs ipc call quickshell:overviewToggleReleaseInterrupt; hyprctl dispatch submap reset
+    bind = , catchall, exec, qs ipc call quickshell:overviewToggleReleaseInterrupt
     submap = reset
   '';
 }
