@@ -10,7 +10,7 @@ in {
     (import ./hyprlock.nix)
     (import ./general.nix )
     (import ./colors.nix )
-    # (import ./keybinds.nix ) # Disabled - using keybinds-with-sections.conf instead for cheatsheet compatibility
+    (import ./keybinds.nix ) # Now includes both submap changes and cheatsheet compatibility
     (import ./execs.nix )
     (import ./rules.nix )
   ] ++ lib.optionals isDesktop [

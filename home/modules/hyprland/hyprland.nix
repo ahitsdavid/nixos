@@ -38,6 +38,10 @@
       source = ./scripts/open_vscode_here.sh;
       executable = true;
     };
+    ".config/hypr/scripts/super_launcher.sh" = {
+      source = ./scripts/super_launcher.sh;
+      executable = true;
+    };
 
     # Generate separate config files from Nix
     ".config/hypr/rules.conf".text = ''
@@ -194,127 +198,6 @@
       exec-once = hypridle
     '';
 
-    # Keybinds with section headers for cheatsheet
-    # This overrides the keybinds defined in keybinds.nix
-    ".config/hypr/keybinds-with-sections.conf".text = ''
-      # Lines ending with `# [hidden]` won't be shown on cheatsheet
-      # Lines starting with ##! are section headings
-
-      # Define modifier variables
-      $mod = SUPER
-      $modifier = SUPER
-
-      ##! Shell
-      bindd = $mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
-      bindd = $mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
-      bindd = $mod, Tab, Toggle overview, global, quickshell:overviewToggle # Toggle overview
-      bindd = $mod, A, Toggle left sidebar, global, quickshell:sidebarLeftToggle # Toggle left sidebar
-      bindd = $mod, N, Toggle right sidebar, global, quickshell:sidebarRightToggle # Toggle right sidebar
-      bindd = $mod, Slash, Toggle cheatsheet, global, quickshell:cheatsheetToggle # Toggle cheatsheet
-      bindd = $mod, K, Toggle on-screen keyboard, global, quickshell:oskToggle # Toggle on-screen keyboard
-      bindd = $mod, M, Toggle media controls, global, quickshell:mediaControlsToggle # Toggle media controls
-      bindd = CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
-
-      # QuickShell internal bindings
-      bind = $mod, mouse:272, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse:273, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse:274, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse:275, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse:276, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse:277, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse_up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod, mouse_down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-      bind = $mod+ALT, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
-      bind = $mod, B, global, quickshell:sidebarLeftToggle # [hidden]
-      bind = $mod, O, global, quickshell:sidebarLeftToggle # [hidden]
-      bindit = , Super_L, global, quickshell:workspaceNumber # [hidden]
-
-      ##! Apps
-      bind = $mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh # VSCode
-      bind = $mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh 'kitty' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # Terminal
-      bind = $mod, T, exec, ~/.config/hypr/scripts/open_terminal_here.sh # Terminal here
-      bind = $mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh 'firefox' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera' # Browser
-      bind = $mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh 'yazi' 'dolphin' 'nautilus' 'nemo' 'thunar' # File manager
-      bind = $mod, Space, exec, pkill -x rofi || rofi -show drun # Launcher
-
-      ##! Window
-      bindm = $mod, mouse:272, movewindow # Move
-      bindm = $mod, mouse:273, resizewindow # Resize
-      bind = $mod, Left, movefocus, l # [hidden]
-      bind = $mod, Right, movefocus, r # [hidden]
-      bind = $mod, Up, movefocus, u # [hidden]
-      bind = $mod, Down, movefocus, d # [hidden]
-      bind = $mod, bracketleft, movefocus, l # [hidden]
-      bind = $mod, bracketright, movefocus, r # [hidden]
-      bind = $mod, Q, killactive, # Close
-      bind = $mod SHIFT, Left, movewindow, l # [hidden]
-      bind = $mod SHIFT, Right, movewindow, r # [hidden]
-      bind = $mod SHIFT, Up, movewindow, u # [hidden]
-      bind = $mod SHIFT, Down, movewindow, d # [hidden]
-      bind = $mod SHIFT, Space, togglefloating, # Float/Tile
-      bind = $mod, F, fullscreen, 0 # Fullscreen
-      bind = $mod, D, fullscreen, 1 # Maximize
-      bind = $mod, P, pin # Pin
-
-      ##! Workspace
-      bind = $mod, 1, workspace, 1 # [hidden]
-      bind = $mod, 2, workspace, 2 # [hidden]
-      bind = $mod, 3, workspace, 3 # [hidden]
-      bind = $mod, 4, workspace, 4 # [hidden]
-      bind = $mod, 5, workspace, 5 # [hidden]
-      bind = $mod, 6, workspace, 6 # [hidden]
-      bind = $mod, 7, workspace, 7 # [hidden]
-      bind = $mod, 8, workspace, 8 # [hidden]
-      bind = $mod, 9, workspace, 9 # [hidden]
-      bind = $mod, 0, workspace, 10 # [hidden]
-      bind = $mod, mouse_up, workspace, +1 # [hidden]
-      bind = $mod, mouse_down, workspace, -1 # [hidden]
-      bind = $mod CONTROL, Right, workspace, r+1 # [hidden]
-      bind = $mod CONTROL, Left, workspace, r-1 # [hidden]
-      bind = $mod, Page_Down, workspace, +1 # [hidden]
-      bind = $mod, Page_Up, workspace, -1 # [hidden]
-      bind = $mod CONTROL, Page_Down, workspace, r+1 # [hidden]
-      bind = $mod CONTROL, Page_Up, workspace, r-1 # [hidden]
-      bind = $mod, S, togglespecialworkspace, # Toggle scratchpad
-
-      bind = $mod ALT, 1, movetoworkspacesilent, 1 # [hidden]
-      bind = $mod ALT, 2, movetoworkspacesilent, 2 # [hidden]
-      bind = $mod ALT, 3, movetoworkspacesilent, 3 # [hidden]
-      bind = $mod ALT, 4, movetoworkspacesilent, 4 # [hidden]
-      bind = $mod ALT, 5, movetoworkspacesilent, 5 # [hidden]
-      bind = $mod ALT, 6, movetoworkspacesilent, 6 # [hidden]
-      bind = $mod ALT, 7, movetoworkspacesilent, 7 # [hidden]
-      bind = $mod ALT, 8, movetoworkspacesilent, 8 # [hidden]
-      bind = $mod ALT, 9, movetoworkspacesilent, 9 # [hidden]
-      bind = $mod ALT, 0, movetoworkspacesilent, 10 # [hidden]
-      bind = $mod ALT, S, movetoworkspacesilent, special # [hidden]
-
-      bind = ALT, Tab, cyclenext, # [hidden]
-      bind = ALT, Tab, bringactivetotop, # [hidden]
-
-      ##! Session
-      bind = $modifier,L,exec,loginctl lock-session # Lock
-      bind = $modifier SHIFT,L,exec,loginctl lock-session # [hidden]
-
-      ##! Media
-      bind = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
-      bind = , XF86AudioNext, exec, playerctl next # [hidden]
-      bind = , XF86AudioPrev, exec, playerctl previous # [hidden]
-
-      binde = $mod, minus, splitratio, -0.1 # [hidden]
-      binde = $mod, equal, splitratio, +0.1 # [hidden]
-      binde = $mod, semicolon, splitratio, -0.1 # [hidden]
-      binde = $mod, apostrophe, splitratio, +0.1 # [hidden]
-      binde = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
-      binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
-
-      bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle # [hidden]
-      bindl = $mod, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
-      bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,disable' # [hidden]
-      bindl = , switch:off:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,preferred,auto,1' # [hidden]
-
-      bindr = $mod CONTROL ALT, R, exec, hyprctl reload # [hidden]
-    '';
   };
 
   wayland.windowManager.hyprland = {
@@ -335,7 +218,7 @@
       source = ~/.config/hypr/rules.conf
       source = ~/.config/hypr/env.conf
       source = ~/.config/hypr/exec.conf
-      source = ~/.config/hypr/keybinds-with-sections.conf
+      # Keybinds are now defined in keybinds.nix
     '';
   };
 
