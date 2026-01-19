@@ -57,7 +57,7 @@
   #remotePlay.openFirewall = true;
   # dedicatedServer.openFirewall = true;
   #};
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
   # Desktop utilities
   environment.systemPackages = with pkgs; [
     # Monitoring tools

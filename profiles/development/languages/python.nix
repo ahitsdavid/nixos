@@ -9,6 +9,7 @@
     python3Packages.pylint
     python3Packages.pywayland
     python3Packages.setproctitle
-    poetry
+    # poetry  # Temporarily disabled due to pbs-installer version conflict (2026.1.13 > 2026.0.0)
+    # Alternative: use python3Packages.poetry-core if you need poetry functionality
   ];
 }
