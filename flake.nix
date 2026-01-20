@@ -71,7 +71,7 @@
     username = "davidthach";
     
     # Create a function to make a NixOS configuration with common modules
-    mkNixosConfiguration = { hostname, extraModules ? [] }:
+    mkNixosConfiguration = { hostname, extraModules ? [], includeGaming ? true }:
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
@@ -108,9 +108,8 @@
                 catppuccin.homeModules.catppuccin
                 inputs.spicetify-nix.homeManagerModules.default
                 ./home/base.nix
-                ./home/gaming.nix
-                # Add any extra home-manager modules
-              ] ++ (extraModules.homeModules or []);
+              ] ++ (if includeGaming then [ ./home/gaming.nix ] else [])
+                ++ (extraModules.homeModules or []);
             };
           }
         ] ++ (extraModules.systemModules or []);
@@ -129,7 +128,13 @@
       thinkpad = mkNixosConfiguration {
         hostname = "thinkpad";
       };
-      
+
+      # Work Intel Configuration (no gaming)
+      work-intel = mkNixosConfiguration {
+        hostname = "work-intel";
+        includeGaming = false;
+      };
+
       # Desktop Configuration
       desktop = mkNixosConfiguration {
         hostname = "desktop";
@@ -154,7 +159,7 @@
     
     # ISO image for desktop installation
     packages.${system} = {
-      desktop-iso = nixpkgs.lib.nixosSystem {
+      desktop-iso = (nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
         modules = [
@@ -163,7 +168,7 @@
           catppuccin.nixosModules.catppuccin
           ./iso.nix
         ];
-      };
+      }).config.system.build.isoImage;
     };
   };
 }
