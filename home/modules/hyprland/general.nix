@@ -2,6 +2,7 @@
 { pkgs, config, lib, hostname ? "unknown", ... }:
 let
   isDesktop = hostname == "desktop";
+  isWorkIntel = hostname == "work-intel";
 in
 {
   wayland.windowManager.hyprland = {
@@ -10,6 +11,10 @@ in
         # Desktop setup: Larger ultrawide on left, smaller vertical on right
         "DP-5,3440x1440@100,0x0,1"           # Samsung CF791 ultrawide on left
         "DP-4,1920x1080@180,3440x0,1,transform,3"  # Samsung LS27DG30X vertical on right (90° counterclockwise)
+      ] else if isWorkIntel then [
+        # Dell XPS high-res display (~35cm / 13-14") - scale 1.5 for HiDPI
+        # Adjust scale: 1.5 for QHD+/3K, 2.0 for 4K if text is still too small
+        ",preferred,auto,1.5"
       ] else [
         ",preferred,auto,1"
         # Uncomment the following line to enable HDMI mirroring
