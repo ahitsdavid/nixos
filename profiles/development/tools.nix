@@ -19,6 +19,9 @@
     # Docker utilities
     lazydocker    # TUI for Docker management
     dive          # Explore Docker image layers
+
+    # Language servers
+    nil           # Nix LSP
   ];
 
   virtualisation = {

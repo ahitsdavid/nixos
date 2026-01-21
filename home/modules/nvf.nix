@@ -88,6 +88,14 @@
         })
       '';
 
+      # Auto-reload files when changed externally (e.g., by Claude Code)
+      luaConfigRC.auto-reload = ''
+        vim.o.autoread = true
+        vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
+          command = "checktime",
+        })
+      '';
+
       spellcheck = {
         enable = false;
       };
@@ -244,6 +252,14 @@
           "<leader>gb" = {
             action = ":Git blame<CR>";
             desc = "Git blame";
+          };
+          "<leader>gd" = {
+            action = ":Git diff<CR>";
+            desc = "Git diff";
+          };
+          "<leader>gl" = {
+            action = ":Git log --oneline<CR>";
+            desc = "Git log";
           };
         };
 

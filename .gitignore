@@ -1,4 +1,5 @@
-CLAUDE.md
+# Markdown files
+*.md
 
 # Age keys - NEVER COMMIT YOUR PRIVATE KEYS!
 **/*age/keys.txt
