@@ -29,6 +29,9 @@
         markdown.enable = true;
         ts.enable = true;
         html.enable = true;
+        bash.enable = true;
+        yaml.enable = true;
+        lua.enable = true;
       };
 
       options = {
@@ -93,7 +96,23 @@
         enable = true;
         gitsigns.enable = true;
         gitsigns.codeActions.enable = false; # throws an annoying debug message
+        vim-fugitive.enable = true;
       };
+
+      debugger.nvim-dap = {
+        enable = true;
+        ui.enable = true;
+      };
+
+      utility = {
+        surround.enable = true;
+        motion.leap.enable = true;
+      };
+
+      comments.comment-nvim.enable = true;
+      autopairs.nvim-autopairs.enable = true;
+      tabline.nvimBufferline.enable = true;
+      notify.nvim-notify.enable = true;
 
       # Custom keybinds for Claude Code and terminal
       maps = {
