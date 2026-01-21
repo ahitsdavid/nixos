@@ -16,6 +16,10 @@
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
     ]}"
+    # NVIDIA Wayland environment variables for proper EGL initialization
+    "GBM_BACKEND=nvidia-drm"
+    "__GLX_VENDOR_LIBRARY_NAME=nvidia"
+    "LIBVA_DRIVER_NAME=nvidia"
   ];
 
   # Add QML import paths as session variables

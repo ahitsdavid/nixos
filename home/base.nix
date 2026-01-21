@@ -39,6 +39,9 @@
     gimp  # General-purpose image editor with RAW support
     digikam  # Professional photo management with RAW support
     shotwell  # Photo manager with RAW support
+
+    # Note-taking
+    obsidian  # Markdown-based knowledge base
   ];
 
   # Place Files Inside Home Directory

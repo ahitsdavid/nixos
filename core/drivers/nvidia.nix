@@ -30,7 +30,8 @@ in {
       powerManagement.finegrained = false;
 
       # Use the open source version of the kernel module (only for RTX 20xx and newer)
-      open = true;
+      # Disabled: open modules have EGL/Wayland issues (eglCreateImage failures)
+      open = false;
 
       # Enable the Nvidia settings menu
       nvidiaSettings = true;
@@ -42,6 +43,7 @@ in {
     # Enable nvidia-vaapi-driver for hardware acceleration
     environment.systemPackages = with pkgs; [
       nvidia-vaapi-driver
+      egl-wayland  # Required for EGL on Wayland with NVIDIA
     ];
 
     # Environment variables for Wayland/Hyprland
