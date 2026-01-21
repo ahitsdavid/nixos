@@ -30,6 +30,12 @@
     nvidiaBusId = "PCI:1:0:0";
   };
 
+  # Power down NVIDIA GPU when not in use (Turing+ only)
+  hardware.nvidia.powerManagement = {
+    enable = lib.mkForce true;
+    finegrained = lib.mkForce true;
+  };
+
   # Override nvidia.nix env vars - use Intel by default for offload mode
   environment.sessionVariables = lib.mkForce {
     LIBVA_DRIVER_NAME = "iHD";  # Intel for hardware video accel
@@ -40,6 +46,9 @@
 
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
+  boot.kernelParams = [
+    "mem_sleep_default=deep"  # Force S3 deep sleep instead of s2idle
+  ];
 
   # Bootloader
   boot.loader.systemd-boot.enable = true;
@@ -55,12 +64,24 @@
   # GNOME Desktop Environment (SDDM from core modules handles login)
   services.desktopManager.gnome.enable = true;
 
-  # TLP for power management
+  # TLP for power management (aggressive thermal settings for i9)
   services.tlp = {
     enable = true;
     settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
+      CPU_SCALING_GOVERNOR_ON_AC = "powersave";
       CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
+
+      # Energy performance policy (balance_performance still allows some boost)
+      CPU_ENERGY_PERF_POLICY_ON_AC = "balance_power";
+      CPU_ENERGY_PERF_POLICY_ON_BAT = "power";
+
+      # Disable turbo boost (biggest heat reduction)
+      CPU_BOOST_ON_AC = 0;
+      CPU_BOOST_ON_BAT = 0;
+
+      # Disable Intel HWP dynamic boost
+      CPU_HWP_DYN_BOOST_ON_AC = 0;
+      CPU_HWP_DYN_BOOST_ON_BAT = 0;
 
       # Battery charge thresholds for longevity
       START_CHARGE_THRESH_BAT0 = 75;
@@ -107,6 +128,7 @@
     lm_sensors
     powertop
     acpi
+    s-tui        # CPU stress test + temp/freq/power monitoring TUI
 
     # Keyboard backlight
     acpilight
@@ -121,8 +143,8 @@
     nvtopPackages.nvidia  # GPU monitoring with NVIDIA support
   ];
 
-  # Intel throttling fix
-  services.throttled.enable = true;
+  # Intel thermal management (thermald is better for XPS than throttled)
+  services.thermald.enable = true;
 
   # Firmware updates
   services.fwupd.enable = true;
