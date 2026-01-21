@@ -19,6 +19,10 @@
     # Docker utilities
     lazydocker    # TUI for Docker management
     dive          # Explore Docker image layers
+    ctop          # Container metrics (htop for containers)
+    hadolint      # Dockerfile linter
+    trivy         # Container security scanner
+    skopeo        # Copy/inspect images without pulling
 
     # Language servers
     nil           # Nix LSP
