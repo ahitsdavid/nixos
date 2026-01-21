@@ -48,7 +48,10 @@
       };
 
 
-      statusline.lualine.enable = true;
+      statusline.lualine = {
+        enable = true;
+        theme = lib.mkForce "catppuccin";
+      };
       telescope.enable = true;
       autocomplete.nvim-cmp.enable = true;
       projects.project-nvim.enable = true;

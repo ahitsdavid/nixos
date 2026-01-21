@@ -193,6 +193,8 @@ in
     binde = $mod, apostrophe, splitratio, +0.1 # [hidden]
     binde = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
     binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
+    binde = , XF86MonBrightnessUp, exec, brightnessctl set 5%+ # [hidden]
+    binde = , XF86MonBrightnessDown, exec, brightnessctl set 5%- # [hidden]
 
     bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle # [hidden]
     bindl = $mod, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]

@@ -49,6 +49,9 @@
   # Disable power-profiles-daemon when using TLP
   services.power-profiles-daemon.enable = false;
 
+  # Backlight control (allows brightnessctl without root)
+  programs.light.enable = true;
+
   # Input devices
   services.libinput.enable = true;
 
