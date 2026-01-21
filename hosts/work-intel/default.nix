@@ -94,6 +94,13 @@
   services.hardware.bolt.enable = true;
   hardware.enableAllFirmware = true;
 
+  # Disable USB autosuspend for Dell dock (prevents monitor freezing)
+  services.udev.extraRules = ''
+    # Dell dock devices - disable autosuspend to prevent disconnects
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="413c", ATTR{power/autosuspend}="-1"
+    ACTION=="add", SUBSYSTEM=="usb", ATTR{idVendor}=="0bda", ATTR{power/autosuspend}="-1"
+  '';
+
   # System packages
   environment.systemPackages = with pkgs; [
     # Monitoring

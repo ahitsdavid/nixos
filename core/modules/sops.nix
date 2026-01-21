@@ -145,6 +145,11 @@ in
           owner = "davidthach";
           mode = "0400";
         };
+        "work/gitlab/additional-hosts" = {
+          sopsFile = workSecretsPath;
+          owner = "davidthach";
+          mode = "0400";
+        };
       })
     ];
   };
