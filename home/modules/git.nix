@@ -1,0 +1,92 @@
+{ config, pkgs, lib, username, ... }:
+
+let
+  # Check if GitLab work secrets exist (fork-friendly)
+  hasGitlabSecrets = (lib.hasAttr "work/gitlab/token" (config.sops.secrets or {}));
+in
+{
+  programs.git = {
+    enable = true;
+
+    # Use work email from sops when cloning from work GitLab
+    # Personal commits will use this as default (can override per-repo)
+    extraConfig = lib.mkMerge [
+      # Global git settings
+      {
+        init.defaultBranch = "main";
+        pull.rebase = false;
+        push.autoSetupRemote = true;
+      }
+
+      # Work GitLab credential helper (only if secrets exist)
+      (lib.mkIf hasGitlabSecrets {
+        credential = {
+          helper = "${config.home.homeDirectory}/.local/bin/git-credential-work-gitlab";
+          useHttpPath = true;
+        };
+      })
+    ];
+  };
+
+  # Create credential helper script that reads from SOPS
+  home.file = lib.mkIf hasGitlabSecrets {
+    ".local/bin/git-credential-work-gitlab" = {
+      executable = true;
+      text = ''
+        #!/bin/sh
+        # Git credential helper for work GitLab
+        # Reads credentials from SOPS secrets
+
+        GITLAB_HOST=$(cat /run/secrets/work/gitlab/host 2>/dev/null | sed 's|https://||' | sed 's|/$||')
+        GITLAB_USERNAME=$(cat /run/secrets/work/gitlab/username 2>/dev/null)
+        GITLAB_TOKEN=$(cat /run/secrets/work/gitlab/token 2>/dev/null)
+
+        # Only respond to "get" requests
+        if [ "$1" != "get" ]; then
+          exit 0
+        fi
+
+        # Read the request from stdin
+        host=""
+        protocol=""
+        while IFS='=' read -r key value; do
+          case "$key" in
+            host) host="$value" ;;
+            protocol) protocol="$value" ;;
+          esac
+        done
+
+        # Only provide credentials for our work GitLab host
+        if [ "$host" = "$GITLAB_HOST" ]; then
+          echo "protocol=$protocol"
+          echo "host=$host"
+          echo "username=$GITLAB_USERNAME"
+          echo "password=$GITLAB_TOKEN"
+        fi
+      '';
+    };
+  };
+
+  # Set work email for commits when in work gitlab repos
+  # This creates a script to easily configure a repo to use work identity
+  home.file.".local/bin/git-work-identity" = lib.mkIf hasGitlabSecrets {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      # Configure current repo to use work identity
+      WORK_EMAIL=$(cat /run/secrets/work/gitlab/email 2>/dev/null)
+      WORK_USERNAME=$(cat /run/secrets/work/gitlab/username 2>/dev/null)
+
+      if [ -z "$WORK_EMAIL" ] || [ -z "$WORK_USERNAME" ]; then
+        echo "Error: Work secrets not available"
+        exit 1
+      fi
+
+      git config user.email "$WORK_EMAIL"
+      git config user.name "$WORK_USERNAME"
+      echo "Configured repo to use work identity:"
+      echo "  Email: $WORK_EMAIL"
+      echo "  Name: $WORK_USERNAME"
+    '';
+  };
+}

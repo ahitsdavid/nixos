@@ -6,6 +6,7 @@
     #(import ./dolphin.nix )
     (import ./claude.nix )
     (import ./eza.nix )
+    (import ./git.nix )
     (import ./kitty.nix )
     (import ./nvf.nix )
     (import ./yazi.nix )

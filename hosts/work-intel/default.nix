@@ -9,10 +9,34 @@
 
     # Intel integrated graphics
     ../../core/drivers/intel.nix
+    # NVIDIA discrete graphics
+    ../../core/drivers/nvidia.nix
   ];
 
   # Enable Intel graphics driver
   drivers.intel.enable = true;
+
+  # Enable NVIDIA driver for hybrid graphics
+  drivers.nvidia.enable = true;
+
+  # NVIDIA Prime for hybrid GPU switching (offload mode saves power)
+  hardware.nvidia.prime = {
+    offload = {
+      enable = true;
+      enableOffloadCmd = true;  # Provides nvidia-offload command
+    };
+    # Run `lspci | grep -E 'VGA|3D'` to verify these bus IDs
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
+
+  # Override nvidia.nix env vars - use Intel by default for offload mode
+  environment.sessionVariables = lib.mkForce {
+    LIBVA_DRIVER_NAME = "iHD";  # Intel for hardware video accel
+  };
+
+  # Use X11 for SDDM (Wayland SDDM has rendering issues)
+  services.displayManager.sddm.wayland.enable = lib.mkForce false;
 
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -85,7 +109,9 @@
 
     # Graphics
     mesa
-    mesa-demos
+    mesa-demos  # includes glxinfo
+    vulkan-tools
+    nvtopPackages.nvidia  # GPU monitoring with NVIDIA support
   ];
 
   # Intel throttling fix

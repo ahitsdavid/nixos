@@ -124,6 +124,27 @@ in
           owner = "root";
           mode = "0600";
         };
+        # GitLab credentials
+        "work/gitlab/host" = {
+          sopsFile = workSecretsPath;
+          owner = "davidthach";
+          mode = "0400";
+        };
+        "work/gitlab/token" = {
+          sopsFile = workSecretsPath;
+          owner = "davidthach";
+          mode = "0400";
+        };
+        "work/gitlab/email" = {
+          sopsFile = workSecretsPath;
+          owner = "davidthach";
+          mode = "0400";
+        };
+        "work/gitlab/username" = {
+          sopsFile = workSecretsPath;
+          owner = "davidthach";
+          mode = "0400";
+        };
       })
     ];
   };
