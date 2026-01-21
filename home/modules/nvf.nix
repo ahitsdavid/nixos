@@ -38,6 +38,11 @@
         tabstop = 2;
         shiftwidth = 2;
         wrap = false;
+        mouse = "a";           # Enable mouse support
+        number = true;         # Line numbers
+        relativenumber = true; # Relative line numbers
+        signcolumn = "yes";    # Always show sign column
+        cursorline = true;     # Highlight current line
       };
       
       visuals = {
@@ -114,28 +119,163 @@
       tabline.nvimBufferline.enable = true;
       notify.nvim-notify.enable = true;
 
-      # Custom keybinds for Claude Code and terminal
+      # User-friendly keybinds
       maps = {
         normal = {
+          # === Claude Code ===
           "<leader>cc" = {
             action = ":vsplit | terminal claude<CR>";
-            desc = "Open Claude Code in vertical split";
+            desc = "Claude Code (vertical)";
           };
           "<leader>ch" = {
             action = ":split | terminal claude<CR>";
-            desc = "Open Claude Code in horizontal split";
+            desc = "Claude Code (horizontal)";
           };
+
+          # === Terminal ===
           "<leader>tv" = {
             action = ":vsplit | terminal<CR>";
-            desc = "Open terminal in vertical split";
+            desc = "Terminal (vertical)";
           };
           "<leader>th" = {
             action = ":split | terminal<CR>";
-            desc = "Open terminal in horizontal split";
+            desc = "Terminal (horizontal)";
           };
           "<leader>tt" = {
             action = ":tabnew | terminal<CR>";
-            desc = "Open terminal in new tab";
+            desc = "Terminal (new tab)";
+          };
+
+          # === File operations (familiar shortcuts) ===
+          "<C-s>" = {
+            action = ":w<CR>";
+            desc = "Save file";
+          };
+          "<C-q>" = {
+            action = ":q<CR>";
+            desc = "Close window";
+          };
+
+          # === File/Project navigation ===
+          "<C-p>" = {
+            action = ":Telescope find_files<CR>";
+            desc = "Find files";
+          };
+          "<C-f>" = {
+            action = ":Telescope live_grep<CR>";
+            desc = "Search in project";
+          };
+          "<leader>e" = {
+            action = ":Neotree toggle<CR>";
+            desc = "Toggle file tree";
+          };
+          "<leader>o" = {
+            action = ":Neotree focus<CR>";
+            desc = "Focus file tree";
+          };
+
+          # === Buffer navigation ===
+          "<Tab>" = {
+            action = ":bnext<CR>";
+            desc = "Next buffer";
+          };
+          "<S-Tab>" = {
+            action = ":bprevious<CR>";
+            desc = "Previous buffer";
+          };
+          "<leader>x" = {
+            action = ":bdelete<CR>";
+            desc = "Close buffer";
+          };
+          "<leader>b" = {
+            action = ":Telescope buffers<CR>";
+            desc = "List buffers";
+          };
+
+          # === Window navigation ===
+          "<C-h>" = {
+            action = "<C-w>h";
+            desc = "Move to left window";
+          };
+          "<C-j>" = {
+            action = "<C-w>j";
+            desc = "Move to bottom window";
+          };
+          "<C-k>" = {
+            action = "<C-w>k";
+            desc = "Move to top window";
+          };
+          "<C-l>" = {
+            action = "<C-w>l";
+            desc = "Move to right window";
+          };
+
+          # === LSP shortcuts ===
+          "gd" = {
+            action = ":lua vim.lsp.buf.definition()<CR>";
+            desc = "Go to definition";
+          };
+          "gr" = {
+            action = ":Telescope lsp_references<CR>";
+            desc = "Find references";
+          };
+          "K" = {
+            action = ":lua vim.lsp.buf.hover()<CR>";
+            desc = "Show hover info";
+          };
+          "<leader>rn" = {
+            action = ":lua vim.lsp.buf.rename()<CR>";
+            desc = "Rename symbol";
+          };
+          "<leader>ca" = {
+            action = ":lua vim.lsp.buf.code_action()<CR>";
+            desc = "Code actions";
+          };
+          "<leader>d" = {
+            action = ":lua vim.diagnostic.open_float()<CR>";
+            desc = "Show diagnostics";
+          };
+
+          # === Git ===
+          "<leader>gg" = {
+            action = ":Git<CR>";
+            desc = "Git status (fugitive)";
+          };
+          "<leader>gb" = {
+            action = ":Git blame<CR>";
+            desc = "Git blame";
+          };
+        };
+
+        # Insert mode
+        insert = {
+          "<C-s>" = {
+            action = "<Esc>:w<CR>";
+            desc = "Save file";
+          };
+        };
+
+        # Terminal mode - easy escape
+        terminal = {
+          "<Esc>" = {
+            action = "<C-\\><C-n>";
+            desc = "Exit terminal mode";
+          };
+          "<C-h>" = {
+            action = "<C-\\><C-n><C-w>h";
+            desc = "Move to left window";
+          };
+          "<C-j>" = {
+            action = "<C-\\><C-n><C-w>j";
+            desc = "Move to bottom window";
+          };
+          "<C-k>" = {
+            action = "<C-\\><C-n><C-w>k";
+            desc = "Move to top window";
+          };
+          "<C-l>" = {
+            action = "<C-\\><C-n><C-w>l";
+            desc = "Move to right window";
           };
         };
       };
