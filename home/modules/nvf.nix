@@ -1,4 +1,4 @@
-{ inputs, config, lib, ... }:
+{ inputs, config, lib, pkgs, ... }:
 {
 
   imports = [inputs.nvf.homeManagerModules.default];
@@ -93,6 +93,25 @@
         vim.o.autoread = true
         vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
           command = "checktime",
+        })
+      '';
+
+      # QML language server setup
+      luaConfigRC.qmlls = ''
+        -- Register QML filetype
+        vim.filetype.add({
+          extension = {
+            qml = "qml",
+            qmljs = "qml",
+          },
+        })
+
+        -- Setup qmlls (Qt QML Language Server)
+        local lspconfig = require("lspconfig")
+        lspconfig.qmlls.setup({
+          cmd = { "${pkgs.kdePackages.qtdeclarative}/bin/qmlls" },
+          filetypes = { "qml", "qmljs" },
+          root_dir = lspconfig.util.root_pattern("CMakeLists.txt", ".git", "*.qmlproject"),
         })
       '';
 
