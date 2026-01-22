@@ -1,9 +1,10 @@
 # Hyprland default.nix
-{ pkgs, config, lib, hostname ? "unknown", ... }: 
+{ pkgs, config, lib, hostname ? "unknown", ... }:
 let
-  isDesktop = hostname == "desktop";
+  # Hosts with NVIDIA GPUs that need NVIDIA-specific env vars
+  hasNvidia = hostname == "desktop" || hostname == "legion";
 in {
-  
+
   imports = [
     (import ./hypridle.nix )
     (import ./hyprland.nix )
@@ -13,9 +14,9 @@ in {
     (import ./keybinds.nix ) # Now includes both submap changes and cheatsheet compatibility
     (import ./execs.nix )
     (import ./rules.nix )
-  ] ++ lib.optionals isDesktop [
+  ] ++ lib.optionals hasNvidia [
     (import ./env-nvidia.nix )
-  ] ++ lib.optionals (!isDesktop) [
+  ] ++ lib.optionals (!hasNvidia) [
     (import ./env.nix )
   ];
 

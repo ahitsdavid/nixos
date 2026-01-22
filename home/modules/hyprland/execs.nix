@@ -17,6 +17,7 @@ in
       "swww-daemon --format xrgb --no-cache"
       "sleep 0.5 && swww img ${config.home.homeDirectory}/${wallpaper}"
       "hypridle"
+      "qs -n -d"
     ];
   };
 }

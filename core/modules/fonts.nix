@@ -11,6 +11,8 @@
       powerline-fonts
       nerd-fonts.jetbrains-mono
       nerd-fonts.symbols-only
+      material-symbols
+      rubik
     ];
     fontconfig = {
       enable = true;

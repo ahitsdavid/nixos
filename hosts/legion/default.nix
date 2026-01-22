@@ -7,7 +7,7 @@
     (import ../../profiles/development { inherit inputs username; })
     (import ../../profiles/work { inherit inputs username; })
 
-    # Both drivers for hybrid graphics
+    # Hybrid graphics (BIOS set to Dynamic/Hybrid)
     ../../core/drivers/intel.nix
     ../../core/drivers/nvidia.nix
   ];
@@ -16,13 +16,11 @@
   drivers.intel.enable = true;
   drivers.nvidia.enable = true;
 
-  # NVIDIA Prime SYNC mode - NVIDIA as primary renderer
-  # (different from work-intel's offload mode)
+  # NVIDIA Prime - Intel handles displays, NVIDIA for compute/gaming
   hardware.nvidia.prime = {
-    sync.enable = true;  # NVIDIA renders everything, routes through Intel
-    # Bus IDs - verify with: lspci | grep -E 'VGA|3D'
-    intelBusId = "PCI:0:2:0";      # UPDATE after lspci check
-    nvidiaBusId = "PCI:1:0:0";     # UPDATE after lspci check
+    sync.enable = true;
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
   };
 
   # Kernel - latest for best NVIDIA support
@@ -46,9 +44,6 @@
     HandleLidSwitchExternalPower = "ignore";
     HandleLidSwitchDocked = "ignore";
   };
-
-  # GNOME Desktop Environment (SDDM from core modules handles login)
-  services.desktopManager.gnome.enable = true;
 
   # Hardware acceleration for gaming
   hardware.graphics = {
