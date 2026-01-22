@@ -135,6 +135,17 @@
         includeGaming = false;
       };
 
+      # Lenovo Legion Configuration (gaming + work laptop)
+      legion = mkNixosConfiguration {
+        hostname = "legion";
+        includeGaming = true;  # Games allowed
+        extraModules = {
+          systemModules = [
+            { drivers.nvidia.enable = true; }
+          ];
+        };
+      };
+
       # Desktop Configuration
       desktop = mkNixosConfiguration {
         hostname = "desktop";
