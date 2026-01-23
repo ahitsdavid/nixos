@@ -7,6 +7,7 @@
       wl-clipboard
       brightnessctl
       fuzzel
+      grim
       grimblast
       hyprland-qt-support
       hyprland-qtutils

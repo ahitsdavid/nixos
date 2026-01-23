@@ -106,6 +106,7 @@ in
     bind = $mod+ALT, 9, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod+ALT, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod+ALT, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, minus, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, equal, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, semicolon, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
@@ -122,6 +123,9 @@ in
     bind = $mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera' # Browser
     bind = $mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar' # File manager
     bind = $mod, Space, exec, pkill -x rofi || rofi -show drun # Launcher
+
+    ##! Utilities
+    bindd = $mod SHIFT, A, OCR text >> Google search, exec, ~/.config/quickshell/scripts/ocr/ocr-search.sh # OCR Search
 
     ##! Window
     bindm = $mod, mouse:272, movewindow # Move
