@@ -106,12 +106,20 @@
           },
         })
 
-        -- Setup qmlls (Qt QML Language Server)
-        local lspconfig = require("lspconfig")
-        lspconfig.qmlls.setup({
-          cmd = { "${pkgs.kdePackages.qtdeclarative}/bin/qmlls" },
-          filetypes = { "qml", "qmljs" },
-          root_dir = lspconfig.util.root_pattern("CMakeLists.txt", ".git", "*.qmlproject"),
+        -- Setup qmlls (Qt QML Language Server) - deferred to after plugins load
+        vim.api.nvim_create_autocmd("User", {
+          pattern = "VeryLazy",
+          once = true,
+          callback = function()
+            local ok, lspconfig = pcall(require, "lspconfig")
+            if ok then
+              lspconfig.qmlls.setup({
+                cmd = { "${pkgs.kdePackages.qtdeclarative}/bin/qmlls" },
+                filetypes = { "qml", "qmljs" },
+                root_dir = lspconfig.util.root_pattern("CMakeLists.txt", ".git", "*.qmlproject"),
+              })
+            end
+          end,
         })
       '';
 
