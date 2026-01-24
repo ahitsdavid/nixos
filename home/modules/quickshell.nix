@@ -130,5 +130,6 @@
   ];
 
   # Use quickshell config from dots-hyprland flake input
-  home.file.".config/quickshell".source = "${inputs.dots-hyprland}/dots/.config/quickshell";
+  # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
+  home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
 }
