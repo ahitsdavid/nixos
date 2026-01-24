@@ -107,6 +107,7 @@ in
     bind = $mod+ALT, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod+ALT, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod+SHIFT, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, T, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, minus, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, equal, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
     bind = $mod, semicolon, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
@@ -126,6 +127,7 @@ in
 
     ##! Utilities
     bindd = $mod SHIFT, A, OCR text >> Google search, exec, ~/.config/quickshell/scripts/ocr/ocr-search.sh # OCR Search
+    bindd = $mod SHIFT, T, Choose wallpaper, exec, ~/.config/quickshell/scripts/colors/switchwall.sh # Wallpaper picker
 
     ##! Window
     bindm = $mod, mouse:272, movewindow # Move

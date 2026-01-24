@@ -24,6 +24,8 @@
 
       #Quickshell
       translate-shell
+      xdg-user-dirs
+      zenity
   ];
   
   home.file = {
@@ -194,8 +196,7 @@
       exec-once = wl-paste --type image --watch cliphist store
       exec-once = dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
       exec-once = systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP
-      exec-once = swww-daemon --format xrgb --no-cache
-      exec-once = sleep 0.5 && swww img ~/Pictures/wallpapers/default.jpg
+      # Wallpaper is now rendered directly by Quickshell Background module
       exec-once = hypridle
     '';
 
