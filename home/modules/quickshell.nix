@@ -129,29 +129,6 @@
     better-control
   ];
 
-  # Automatically clone/pull dotfiles from GitHub
-  home.activation.cloneDotfiles = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    DOTFILES_DIR="${config.home.homeDirectory}/dotfiles"
-    DOTFILES_REPO="https://github.com/ahitsdavid/dotfiles"
-
-    # Add openssh to PATH for git operations
-    export PATH="${pkgs.openssh}/bin:$PATH"
-
-    # Check if network is available before attempting git operations
-    if ${pkgs.iputils}/bin/ping -c 1 -W 2 github.com >/dev/null 2>&1; then
-      if [ ! -d "$DOTFILES_DIR" ]; then
-        $DRY_RUN_CMD ${pkgs.git}/bin/git clone "$DOTFILES_REPO" "$DOTFILES_DIR"
-        echo "Cloned dotfiles repository to $DOTFILES_DIR"
-      else
-        $DRY_RUN_CMD ${pkgs.git}/bin/git -C "$DOTFILES_DIR" pull
-        echo "Updated dotfiles repository at $DOTFILES_DIR"
-      fi
-    else
-      echo "Network not available, skipping dotfiles clone/pull"
-    fi
-  '';
-
-  # Create the config symlink to your dotfiles in home directory
-  # Use config.lib.file.mkOutOfStoreSymlink to properly reference home directory
-  home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dots-hyprland/dots/.config/quickshell";
+  # Use quickshell config from dots-hyprland flake input
+  home.file.".config/quickshell".source = "${inputs.dots-hyprland}/dots/.config/quickshell";
 }
