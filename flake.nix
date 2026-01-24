@@ -60,7 +60,9 @@
     };
     pokerogue-app.url = "github:Admiral-Billy/Pokerogue-App";
     dots-hyprland = {
-      url = "github:end-4/dots-hyprland";
+      type = "git";
+      url = "https://github.com/end-4/dots-hyprland";
+      submodules = true;
       flake = false;
     };
   };
