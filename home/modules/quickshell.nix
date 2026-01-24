@@ -1,20 +1,31 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
-  # Use the official Home Manager QuickShell module
+  # Use the official QuickShell from flake (has polkit support)
   programs.quickshell = {
     enable = true;
+    package = inputs.quickshell.packages.${pkgs.system}.default;
     systemd = {
       enable = true;
     };
   };
 
   # Extend the official systemd service to add environment variables
+  # Note: kirigami.unwrapped is needed because the wrapped version doesn't include QML files
   systemd.user.services.quickshell.Service.Environment = [
     "QML2_IMPORT_PATH=${lib.concatStringsSep ":" [
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
+    ]}"
+    "QML_IMPORT_PATH=${lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
     # NVIDIA Wayland environment variables for proper EGL initialization
     "GBM_BACKEND=nvidia-drm"
@@ -27,7 +38,16 @@
     QML2_IMPORT_PATH = lib.concatStringsSep ":" [
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
+    ];
+    QML_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
   };
 
@@ -36,7 +56,16 @@
     QML2_IMPORT_PATH = lib.concatStringsSep ":" [
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
+    ];
+    QML_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
   };
 
@@ -45,7 +74,16 @@
     QML2_IMPORT_PATH = lib.concatStringsSep ":" [
       "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
       "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
+    ];
+    QML_IMPORT_PATH = lib.concatStringsSep ":" [
+      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
   };
 
@@ -65,6 +103,7 @@
     
     # KDE/Qt packages
     kdePackages.syntax-highlighting
+    kdePackages.kirigami          # Kirigami framework
     libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
     qt6.qt5compat                  # Qt6 Qt5 compatibility layer
     
@@ -75,6 +114,7 @@
     # Qt6 packages (correct names)
     qt6.qtdeclarative              # Includes QtQuick
     qt6.qtquick3d
+    qt6.qtpositioning              # QtPositioning for geolocation/weather
     
     # Fonts
     material-symbols
@@ -113,5 +153,5 @@
 
   # Create the config symlink to your dotfiles in home directory
   # Use config.lib.file.mkOutOfStoreSymlink to properly reference home directory
-  home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dotfiles/.config/quickshell";
+  home.file.".config/quickshell".source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/dots-hyprland/dots/.config/quickshell";
 }
