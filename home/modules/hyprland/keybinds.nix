@@ -18,17 +18,6 @@ in
     $modifier = SUPER
 
     ##! Shell
-    # Search/launcher on Super key release
-    bindid = $mod, Super_L, Toggle search, global, quickshell:searchToggleRelease # Toggle search
-    bindid = $mod, Super_R, Toggle search, global, quickshell:searchToggleRelease # [hidden]
-    bind = $mod, Super_L, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel # [hidden] Launcher (fallback)
-    bind = $mod, Super_R, exec, qs ipc call TEST_ALIVE || pkill fuzzel || fuzzel # [hidden] Launcher (fallback)
-    binditn = $mod, catchall, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = CTRL, Super_L, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = CTRL, Super_R, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-
-    bindit = , Super_L, global, quickshell:workspaceNumber # [hidden]
-    bindit = , Super_R, global, quickshell:workspaceNumber # [hidden]
     bind = $mod, Tab, global, quickshell:overviewWorkspacesToggle # Toggle overview
     bindd = $mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
     bindd = $mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
@@ -43,47 +32,23 @@ in
     bind = $mod, G, global, quickshell:overlayToggle # Toggle overlay
     bindd = CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
     bindd = $mod, J, Toggle bar, global, quickshell:barToggle # Toggle bar
-    bind = CTRL+ALT, Delete, exec, qs ipc call TEST_ALIVE || pkill wlogout || wlogout -p layer-shell # [hidden] Session menu (fallback)
     bind = CTRL+$mod, R, exec, killall ags agsv1 gjs ydotool qs quickshell; qs & # Restart widgets
     bind = CTRL+$mod, P, global, quickshell:panelFamilyCycle # Cycle panel family
 
-    # QuickShell interrupt bindings
-    bind = $mod, mouse:272, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:273, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:274, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:275, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:276, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:277, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse_up, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse_down, global, quickshell:searchToggleReleaseInterrupt # [hidden]
-
     ##! Utilities
     # Screenshot, Record, OCR, Color picker
-    bindd = $mod, V, Copy clipboard history entry, exec, qs ipc call TEST_ALIVE || pkill fuzzel || cliphist list | fuzzel --match-mode fzf --dmenu | cliphist decode | wl-copy # [hidden] Clipboard history (fallback)
-    bindd = $mod, Period, Copy an emoji, exec, qs ipc call TEST_ALIVE || pkill fuzzel || ~/.config/hypr/scripts/fuzzel-emoji.sh copy # [hidden] Emoji (fallback)
     bind = $mod+SHIFT, S, global, quickshell:regionScreenshot # Screen snip
-    bind = $mod+SHIFT, S, exec, qs ipc call TEST_ALIVE || pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent # [hidden] Screen snip (fallback)
     bind = $mod+SHIFT, A, global, quickshell:regionSearch # Google Lens
-    bind = $mod+SHIFT, A, exec, qs ipc call TEST_ALIVE || pidof slurp || ~/.config/hypr/scripts/snip_to_search.sh # [hidden] Google Lens (fallback)
-    # OCR
     bind = $mod+SHIFT, X, global, quickshell:regionOcr # Character recognition >> clipboard
-    bind = $mod+SHIFT, X, exec, qs ipc call TEST_ALIVE || pidof slurp || grim -g "$(slurp)" "/tmp/ocr_image.png" && tesseract "/tmp/ocr_image.png" stdout | wl-copy && rm "/tmp/ocr_image.png" # [hidden]
-    # Color picker
     bindd = $mod+SHIFT, C, Color picker, exec, hyprpicker -a # Pick color (Hex) >> clipboard
-    # Fullscreen screenshot
     bindl = , Print, exec, grim - | wl-copy # Screenshot >> clipboard
-    bindln = CTRL, Print, exec, mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png # Screenshot >> file
-    bindln = CTRL, Print, exec, grim - | wl-copy # [hidden] Screenshot >> clipboard
     # Recording
     bindl = $mod+SHIFT, R, global, quickshell:regionRecord # Record region (no sound)
-    bindl = $mod+SHIFT, R, exec, qs ipc call TEST_ALIVE || ~/.config/quickshell/scripts/videos/record.sh # [hidden] Record region (fallback)
-    bindl = $mod+ALT, R, global, quickshell:regionRecord # [hidden] Record region
     bindl = CTRL+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen # Record screen (no sound)
     bindl = $mod+SHIFT+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen --sound # Record screen (with sound)
     # Wallpaper
     bindd = CTRL+$mod, T, Toggle wallpaper selector, global, quickshell:wallpaperSelectorToggle # Wallpaper selector
     bindd = CTRL+$mod+ALT, T, Select random wallpaper, global, quickshell:wallpaperSelectorRandom # Random wallpaper
-    bindd = CTRL+$mod, T, Change wallpaper, exec, qs ipc call TEST_ALIVE || ~/.config/quickshell/scripts/colors/switchwall.sh # [hidden] Change wallpaper (fallback)
 
     ##! Apps
     bind = $mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # Terminal
@@ -128,18 +93,7 @@ in
     bind = $mod, P, pin # Pin
 
     ##! Workspace
-    # Focus workspace by number (raw keycodes for international keyboard support)
-    bind = $mod, code:10, workspace, 1 # [hidden]
-    bind = $mod, code:11, workspace, 2 # [hidden]
-    bind = $mod, code:12, workspace, 3 # [hidden]
-    bind = $mod, code:13, workspace, 4 # [hidden]
-    bind = $mod, code:14, workspace, 5 # [hidden]
-    bind = $mod, code:15, workspace, 6 # [hidden]
-    bind = $mod, code:16, workspace, 7 # [hidden]
-    bind = $mod, code:17, workspace, 8 # [hidden]
-    bind = $mod, code:18, workspace, 9 # [hidden]
-    bind = $mod, code:19, workspace, 10 # [hidden]
-    # Fallback with regular number keys
+    # Focus workspace by number
     bind = $mod, 1, workspace, 1 # [hidden]
     bind = $mod, 2, workspace, 2 # [hidden]
     bind = $mod, 3, workspace, 3 # [hidden]
@@ -150,17 +104,6 @@ in
     bind = $mod, 8, workspace, 8 # [hidden]
     bind = $mod, 9, workspace, 9 # [hidden]
     bind = $mod, 0, workspace, 10 # [hidden]
-    # Keypad numbers
-    bindp = $mod, code:87, workspace, 1 # [hidden]
-    bindp = $mod, code:88, workspace, 2 # [hidden]
-    bindp = $mod, code:89, workspace, 3 # [hidden]
-    bindp = $mod, code:83, workspace, 4 # [hidden]
-    bindp = $mod, code:84, workspace, 5 # [hidden]
-    bindp = $mod, code:85, workspace, 6 # [hidden]
-    bindp = $mod, code:79, workspace, 7 # [hidden]
-    bindp = $mod, code:80, workspace, 8 # [hidden]
-    bindp = $mod, code:81, workspace, 9 # [hidden]
-    bindp = $mod, code:90, workspace, 10 # [hidden]
     # Navigation
     bind = CTRL+$mod, Right, workspace, r+1 # [hidden]
     bind = CTRL+$mod, Left, workspace, r-1 # [hidden]
@@ -182,18 +125,7 @@ in
     bind = $mod, S, togglespecialworkspace, # Toggle scratchpad
     bind = $mod, mouse:275, togglespecialworkspace, # [hidden]
     bind = CTRL+$mod, S, togglespecialworkspace, # [hidden]
-    # Send to workspace by number (raw keycodes)
-    bind = $mod+ALT, code:10, movetoworkspacesilent, 1 # [hidden]
-    bind = $mod+ALT, code:11, movetoworkspacesilent, 2 # [hidden]
-    bind = $mod+ALT, code:12, movetoworkspacesilent, 3 # [hidden]
-    bind = $mod+ALT, code:13, movetoworkspacesilent, 4 # [hidden]
-    bind = $mod+ALT, code:14, movetoworkspacesilent, 5 # [hidden]
-    bind = $mod+ALT, code:15, movetoworkspacesilent, 6 # [hidden]
-    bind = $mod+ALT, code:16, movetoworkspacesilent, 7 # [hidden]
-    bind = $mod+ALT, code:17, movetoworkspacesilent, 8 # [hidden]
-    bind = $mod+ALT, code:18, movetoworkspacesilent, 9 # [hidden]
-    bind = $mod+ALT, code:19, movetoworkspacesilent, 10 # [hidden]
-    # Fallback with regular number keys
+    # Send to workspace by number
     bind = $mod+ALT, 1, movetoworkspacesilent, 1 # [hidden]
     bind = $mod+ALT, 2, movetoworkspacesilent, 2 # [hidden]
     bind = $mod+ALT, 3, movetoworkspacesilent, 3 # [hidden]
@@ -204,17 +136,6 @@ in
     bind = $mod+ALT, 8, movetoworkspacesilent, 8 # [hidden]
     bind = $mod+ALT, 9, movetoworkspacesilent, 9 # [hidden]
     bind = $mod+ALT, 0, movetoworkspacesilent, 10 # [hidden]
-    # Keypad numbers for move
-    bind = $mod+ALT, code:87, movetoworkspacesilent, 1 # [hidden]
-    bind = $mod+ALT, code:88, movetoworkspacesilent, 2 # [hidden]
-    bind = $mod+ALT, code:89, movetoworkspacesilent, 3 # [hidden]
-    bind = $mod+ALT, code:83, movetoworkspacesilent, 4 # [hidden]
-    bind = $mod+ALT, code:84, movetoworkspacesilent, 5 # [hidden]
-    bind = $mod+ALT, code:85, movetoworkspacesilent, 6 # [hidden]
-    bind = $mod+ALT, code:79, movetoworkspacesilent, 7 # [hidden]
-    bind = $mod+ALT, code:80, movetoworkspacesilent, 8 # [hidden]
-    bind = $mod+ALT, code:81, movetoworkspacesilent, 9 # [hidden]
-    bind = $mod+ALT, code:90, movetoworkspacesilent, 10 # [hidden]
     bind = $mod+ALT, S, movetoworkspacesilent, special # Send to scratchpad
     # Move to workspace navigation
     bind = $mod+SHIFT, mouse_down, movetoworkspace, r-1 # [hidden]
@@ -238,17 +159,13 @@ in
     submap = global
 
     ##! Session
-    bindd = $mod, L, Lock, exec, loginctl lock-session # Lock
-    bindld = $mod+SHIFT, L, Suspend system, exec, systemctl suspend || loginctl suspend # Sleep
-    bindd = CTRL+SHIFT+ALT+$mod, Delete, Shutdown, exec, systemctl poweroff || loginctl poweroff # [hidden] Power off
+    bind = $mod, L, exec, loginctl lock-session # Lock
+    bindl = $mod+SHIFT, L, exec, systemctl suspend || loginctl suspend # Sleep
 
     ##! Screen
     # Zoom
-    binde = $mod, Minus, exec, ~/.config/hypr/scripts/zoom.sh decrease 0.3 # [hidden] Zoom out
-    binde = $mod, Equal, exec, ~/.config/hypr/scripts/zoom.sh increase 0.3 # [hidden] Zoom in
-    # Zoom with keypad
-    binde = $mod, code:82, exec, ~/.config/hypr/scripts/zoom.sh decrease 0.1 # [hidden] Zoom out
-    binde = $mod, code:86, exec, ~/.config/hypr/scripts/zoom.sh increase 0.1 # [hidden] Zoom in
+    binde = $mod, Minus, splitratio, -0.1 # [hidden]
+    binde = $mod, Equal, splitratio, +0.1 # [hidden]
 
     ##! Media
     bindl = $mod+SHIFT, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # Next track
@@ -259,16 +176,16 @@ in
     bindl = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
     bindl = , XF86AudioPause, exec, playerctl play-pause # [hidden]
     # Volume
-    bindle = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+ -l 1.5 # [hidden]
-    bindle = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%- # [hidden]
+    binde = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.5 # [hidden]
+    binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
     bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle # [hidden]
-    bindld = $mod+SHIFT, M, Toggle mute, exec, wpctl set-mute @DEFAULT_SINK@ toggle # [hidden]
+    bindl = $mod+SHIFT, M, exec, wpctl set-mute @DEFAULT_SINK@ toggle # Toggle mute
     bindl = ALT, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
     bindl = , XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
-    bindld = $mod+ALT, M, Toggle mic, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+    bindl = $mod+ALT, M, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # Toggle mic
     # Brightness
-    bindle = , XF86MonBrightnessUp, exec, qs ipc call brightness increment || brightnessctl s 5%+ # [hidden]
-    bindle = , XF86MonBrightnessDown, exec, qs ipc call brightness decrement || brightnessctl s 5%- # [hidden]
+    binde = , XF86MonBrightnessUp, exec, brightnessctl s 5%+ # [hidden]
+    binde = , XF86MonBrightnessDown, exec, brightnessctl s 5%- # [hidden]
 
     # Lid switch
     bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,disable' # [hidden]
@@ -276,8 +193,5 @@ in
 
     # Reload
     bindr = CTRL+$mod+ALT, R, exec, hyprctl reload # [hidden]
-
-    # Resize window
-    bind = CTRL+$mod, Backslash, resizeactive, exact 640 480 # [hidden]
   '';
 }
