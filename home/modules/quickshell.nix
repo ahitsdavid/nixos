@@ -150,7 +150,7 @@ in
 
   # Override get_keybinds.py with our patched version that handles bindd properly
   home.file.".config/quickshell/default/scripts/hyprland/get_keybinds.py" = {
-    source = ../../scripts/quickshell/hyprland/get_keybinds.py;
+    source = ../scripts/quickshell/hyprland/get_keybinds.py;
     force = true;
   };
 }
