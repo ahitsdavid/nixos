@@ -109,7 +109,8 @@
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
-            home-manager.backupFileExtension = "backup";
+            # Remove old backup before creating new one to avoid collisions
+            home-manager.backupCommand = ''rm -f "$1.backup" && mv "$1" "$1.backup"'';
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs username system; hostname = hostname; };
             home-manager.users.${username} = {
@@ -171,7 +172,7 @@
         hostname = "vm";
         extraModules.systemModules = [
           # VM-specific system modules
-          { home-manager.backupFileExtension = "backup"; }
+          { home-manager.backupCommand = ''rm -f "$1.backup" && mv "$1" "$1.backup"''; }
         ];
         # If you need VM-specific home modules:
         # extraModules.homeModules = [ ./home/vm-specific.nix ];
