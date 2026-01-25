@@ -199,12 +199,15 @@ in
   # Write keybinds to the path that quickshell expects for cheatsheet parsing
   home.file.".config/hypr/hyprland/keybinds.conf".text = keybindContent;
 
-  # Source the keybinds file in hyprland config
-  wayland.windowManager.hyprland.extraConfig = ''
-    source = ~/.config/hypr/hyprland/keybinds.conf
-  '';
+  # Put keybinds directly in extraConfig instead of sourcing
+  # This way hyprctl reload actually works!
+  wayland.windowManager.hyprland.extraConfig = keybindContent;
 
-  # Note: hyprctl reload doesn't properly re-read sourced files like keybinds.conf
-  # Keybinds will take effect on next Hyprland restart (logout/login or reboot)
-  # This is a known Hyprland limitation, not a configuration issue
+  # Reload Hyprland after activation so keybinds take effect immediately
+  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["linkGeneration"] ''
+    if command -v hyprctl >/dev/null 2>&1 && hyprctl version >/dev/null 2>&1; then
+      echo "Reloading Hyprland configuration..."
+      hyprctl reload || true
+    fi
+  '';
 }
