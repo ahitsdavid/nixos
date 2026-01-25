@@ -205,10 +205,12 @@ in
   '';
 
   # Reload Hyprland config after home-manager activation so keybinds take effect
-  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  # Run after linkGeneration to ensure new keybinds.conf is linked before reload
+  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["linkGeneration"] ''
     if pgrep Hyprland > /dev/null 2>&1; then
-      $DRY_RUN_CMD hyprctl reload 2>/dev/null || true
-      echo "Reloaded Hyprland configuration"
+      $VERBOSE_ECHO "Reloading Hyprland configuration..."
+      $DRY_RUN_CMD hyprctl reload 2>&1 || true
+      $VERBOSE_ECHO "Hyprland configuration reloaded"
     fi
   '';
 }
