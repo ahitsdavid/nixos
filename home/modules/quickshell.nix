@@ -1,5 +1,16 @@
 { config, lib, pkgs, inputs, ... }:
 
+let
+  # Create a fake venv structure for dots-hyprland scripts
+  # The get_keybinds.py script expects ILLOGICAL_IMPULSE_VIRTUAL_ENV to be set
+  fakeVenv = pkgs.runCommand "illogical-impulse-fake-venv" {} ''
+    mkdir -p $out/bin
+    # Create a noop activate script
+    echo "# Fake activate script for NixOS" > $out/bin/activate
+    # Symlink python to the system python3
+    ln -s ${pkgs.python3}/bin/python3 $out/bin/python
+  '';
+in
 {
   # Use the official QuickShell from flake (has polkit support)
   programs.quickshell = {
@@ -27,6 +38,8 @@
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
+    # Fake venv for dots-hyprland scripts (get_keybinds.py needs this)
+    "ILLOGICAL_IMPULSE_VIRTUAL_ENV=${fakeVenv}"
     # NVIDIA Wayland environment variables for proper EGL initialization
     "GBM_BACKEND=nvidia-drm"
     "__GLX_VENDOR_LIBRARY_NAME=nvidia"
@@ -49,6 +62,8 @@
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
+    # Fake venv for dots-hyprland scripts
+    ILLOGICAL_IMPULSE_VIRTUAL_ENV = "${fakeVenv}";
   };
 
   # Also add to shell profile for immediate availability
