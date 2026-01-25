@@ -148,13 +148,15 @@ in
   # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
   home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
 
-  # Deploy our patched get_keybinds.py to a separate location
-  home.file.".local/share/quickshell/scripts/get_keybinds.py".source = ../scripts/quickshell/hyprland/get_keybinds.py;
+  # Deploy our patched get_keybinds.py that handles bindd commands
+  home.file.".local/share/quickshell/scripts/get_keybinds.py" = {
+    source = ../scripts/quickshell/hyprland/get_keybinds.py;
+    executable = true;
+  };
 
-  # Copy the patched script over the symlinked one after activation
-  home.activation.patchQuickshellKeybinds = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    $DRY_RUN_CMD rm -f $HOME/.config/quickshell/default/scripts/hyprland/get_keybinds.py
-    $DRY_RUN_CMD cp -f $HOME/.local/share/quickshell/scripts/get_keybinds.py $HOME/.config/quickshell/default/scripts/hyprland/get_keybinds.py
-    $DRY_RUN_CMD chmod +x $HOME/.config/quickshell/default/scripts/hyprland/get_keybinds.py
-  '';
+  # Override HyprlandKeybinds.qml to use our patched script
+  home.file.".config/quickshell/default/services/HyprlandKeybinds.qml" = {
+    source = ../scripts/quickshell/services/HyprlandKeybinds.qml;
+    force = true;
+  };
 }
