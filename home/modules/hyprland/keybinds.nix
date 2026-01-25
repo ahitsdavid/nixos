@@ -201,7 +201,14 @@ in
 
   # Put keybinds directly in extraConfig instead of sourcing
   # This way hyprctl reload actually works!
-  wayland.windowManager.hyprland.extraConfig = keybindContent;
+  # Also include source statements that were in hyprland.nix
+  wayland.windowManager.hyprland.extraConfig = keybindContent + ''
+
+    # Source additional configuration files
+    source = ~/.config/hypr/rules.conf
+    source = ~/.config/hypr/env.conf
+    source = ~/.config/hypr/exec.conf
+  '';
 
   # Note: After nixos-rebuild, press Ctrl+Super+Alt+R to reload Hyprland config
   # (activation scripts can't reliably access the running Hyprland session)

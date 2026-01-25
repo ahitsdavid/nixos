@@ -224,13 +224,7 @@
       enable = true;
     };
     
-    extraConfig = ''
-      # Source additional configuration files
-      source = ~/.config/hypr/rules.conf
-      source = ~/.config/hypr/env.conf
-      source = ~/.config/hypr/exec.conf
-      # Keybinds are now defined in keybinds.nix
-    '';
+    # extraConfig moved to keybinds.nix to avoid conflicts
   };
 
   xdg.userDirs = {
