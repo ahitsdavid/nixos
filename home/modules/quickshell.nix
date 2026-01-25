@@ -145,7 +145,7 @@ in
   ];
 
   # Use patched quickshell config from dots-hyprland flake input
-  # Apply our bindd-aware get_keybinds.py patch
+  # Apply our bindd-aware get_keybinds.py patch and debug logging
   home.file.".config/quickshell/default".source = pkgs.runCommand "quickshell-config-patched" {} ''
     cp -r ${inputs.dots-hyprland}/dots/.config/quickshell/ii $out
     chmod -R u+w $out
@@ -153,5 +153,8 @@ in
     # Replace get_keybinds.py with our patched version that handles bindd
     cp ${../scripts/quickshell/hyprland/get_keybinds.py} $out/scripts/hyprland/get_keybinds.py
     chmod +x $out/scripts/hyprland/get_keybinds.py
+
+    # Replace HyprlandKeybinds.qml with debug version
+    cp ${../scripts/quickshell/services/HyprlandKeybinds.qml} $out/services/HyprlandKeybinds.qml
   '';
 }
