@@ -6,13 +6,9 @@ let
     terminal
     file-manager
     ;
-in
-{
-  # Keybinds translated from end-4/dots-hyprland
-  # Lines ending with `# [hidden]` won't be shown on cheatsheet
-  # Lines starting with ##! are section headings
 
-  wayland.windowManager.hyprland.extraConfig = ''
+  # Keybind configuration content - shared between the conf file and extraConfig
+  keybindContent = ''
     # Define modifier variables
     $mod = SUPER
     $modifier = SUPER
@@ -193,5 +189,18 @@ in
 
     # Reload
     bindr = CTRL+$mod+ALT, R, exec, hyprctl reload # [hidden]
+  '';
+in
+{
+  # Keybinds translated from end-4/dots-hyprland
+  # Lines ending with `# [hidden]` won't be shown on cheatsheet
+  # Lines starting with ##! are section headings
+
+  # Write keybinds to the path that quickshell expects for cheatsheet parsing
+  home.file.".config/hypr/hyprland/keybinds.conf".text = keybindContent;
+
+  # Source the keybinds file in hyprland config
+  wayland.windowManager.hyprland.extraConfig = ''
+    source = ~/.config/hypr/hyprland/keybinds.conf
   '';
 }

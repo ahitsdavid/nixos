@@ -5,6 +5,7 @@
     enable = true;
     # Remove themeFile - let Stylix handle theming
     settings = {
+      shell = "zsh";
       font_size = 12;
       font = "JetBrainsMono Nerd Font";
       wheel_scroll_min_lines = 1;

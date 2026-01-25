@@ -2,10 +2,12 @@
 {inputs, pkgs, config, lib, ... }:
 {
   home.packages = with pkgs; [
+      bc
       cava
       swww
       wl-clipboard
       brightnessctl
+      cliphist
       fuzzel
       grim
       grimblast
@@ -15,12 +17,15 @@
       hyprshot
       hyprpicker
       hyprwayland-scanner
+      jq
       networkmanagerapplet
       nwg-displays
+      playerctl
       slurp
       swappy
       tesseract
       wf-recorder
+      wlogout
 
       #Quickshell
       translate-shell
@@ -43,6 +48,10 @@
     };
     ".config/hypr/scripts/super_launcher.sh" = {
       source = ./scripts/super_launcher.sh;
+      executable = true;
+    };
+    ".config/hypr/scripts/zoom.sh" = {
+      source = ./scripts/zoom.sh;
       executable = true;
     };
 
