@@ -147,4 +147,10 @@ in
   # Use quickshell config from dots-hyprland flake input
   # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
   home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
+
+  # Override get_keybinds.py with our patched version that handles bindd properly
+  home.file.".config/quickshell/default/scripts/hyprland/get_keybinds.py" = {
+    source = ../../scripts/quickshell/hyprland/get_keybinds.py;
+    force = true;
+  };
 }
