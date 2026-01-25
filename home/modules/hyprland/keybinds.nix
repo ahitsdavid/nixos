@@ -203,4 +203,12 @@ in
   wayland.windowManager.hyprland.extraConfig = ''
     source = ~/.config/hypr/hyprland/keybinds.conf
   '';
+
+  # Reload Hyprland config after home-manager activation so keybinds take effect
+  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    if pgrep -x Hyprland > /dev/null 2>&1; then
+      $DRY_RUN_CMD ${pkgs.hyprland}/bin/hyprctl reload 2>/dev/null || true
+      echo "Reloaded Hyprland configuration"
+    fi
+  '';
 }
