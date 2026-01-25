@@ -60,6 +60,10 @@ Singleton {
                 try {
                     root.defaultKeybinds = JSON.parse(data)
                     console.log("[HyprlandKeybinds] Parsed successfully, sections:", root.defaultKeybinds.children?.length)
+                    console.log("[HyprlandKeybinds] Final merged keybinds sections:", root.keybinds.children?.length)
+                    if (root.keybinds.children?.length > 0) {
+                        console.log("[HyprlandKeybinds] First section:", root.keybinds.children[0]?.name, "keybinds:", root.keybinds.children[0]?.keybinds?.length)
+                    }
                 } catch (e) {
                     console.error("[HyprlandKeybinds] Error parsing keybinds:", e)
                     console.error("[HyprlandKeybinds] Raw data:", data)
