@@ -25,51 +25,8 @@
       enabled_layouts = "splits";
       allow_remote_control = true;
       listen_on = "unix:/tmp/kitty";
-      # Pass Super key combinations to window manager instead of capturing them
-      kitty_mod = "ctrl+shift";
     };
       extraConfig = ''
-      # Pass Super key combinations through to Hyprland (don't capture them)
-      map super+t no_op
-      map super+w no_op
-      map super+e no_op
-      map super+c no_op
-      map super+x no_op
-      map super+q no_op
-      map super+f no_op
-      map super+d no_op
-      map super+p no_op
-      map super+s no_op
-      map super+a no_op
-      map super+b no_op
-      map super+n no_op
-      map super+m no_op
-      map super+k no_op
-      map super+j no_op
-      map super+g no_op
-      map super+i no_op
-      map super+l no_op
-      map super+v no_op
-      map super+o no_op
-      map super+tab no_op
-      map super+space no_op
-      map super+return no_op
-      map super+slash no_op
-      map super+period no_op
-      map super+1 no_op
-      map super+2 no_op
-      map super+3 no_op
-      map super+4 no_op
-      map super+5 no_op
-      map super+6 no_op
-      map super+7 no_op
-      map super+8 no_op
-      map super+9 no_op
-      map super+0 no_op
-      map super+left no_op
-      map super+right no_op
-      map super+up no_op
-      map super+down no_op
 
       # Clipboard
       map ctrl+shift+v        paste_from_selection

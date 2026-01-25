@@ -8,92 +8,147 @@ let
     ;
 in
 {
-  # Keybinds translated from end-4/dots-hyprland
-  # Lines ending with `# [hidden]` won't be shown on cheatsheet
-  # Lines starting with ##! are section headings
+  # Note: All keybinds are now defined in extraConfig below for cheatsheet compatibility
+  # The Nix settings format is not used to avoid duplicate bindings
 
+  # Keybinds with section headers for cheatsheet compatibility
+  # This overrides the keybinds defined above
   wayland.windowManager.hyprland.extraConfig = ''
+    # Lines ending with `# [hidden]` won't be shown on cheatsheet
+    # Lines starting with ##! are section headings
+
     # Define modifier variables
     $mod = SUPER
     $modifier = SUPER
 
     ##! Shell
-    bind = $mod, Tab, global, quickshell:overviewWorkspacesToggle # Toggle overview
     bindd = $mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
     bindd = $mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
-    bind = $mod, A, global, quickshell:sidebarLeftToggle # Toggle left sidebar
-    bind = $mod+ALT, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
-    bind = $mod, B, global, quickshell:sidebarLeftToggle # [hidden]
-    bind = $mod, O, global, quickshell:sidebarLeftToggle # [hidden]
+    bindd = $mod, Tab, Toggle overview, global, quickshell:overviewToggle # Toggle overview
+    bindd = $mod, A, Toggle left sidebar, global, quickshell:sidebarLeftToggle # Toggle left sidebar
     bindd = $mod, N, Toggle right sidebar, global, quickshell:sidebarRightToggle # Toggle right sidebar
     bindd = $mod, Slash, Toggle cheatsheet, global, quickshell:cheatsheetToggle # Toggle cheatsheet
     bindd = $mod, K, Toggle on-screen keyboard, global, quickshell:oskToggle # Toggle on-screen keyboard
     bindd = $mod, M, Toggle media controls, global, quickshell:mediaControlsToggle # Toggle media controls
-    bind = $mod, G, global, quickshell:overlayToggle # Toggle overlay
     bindd = CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
-    bindd = $mod, J, Toggle bar, global, quickshell:barToggle # Toggle bar
-    bind = CTRL+$mod, R, exec, killall ags agsv1 gjs ydotool qs quickshell; qs & # Restart widgets
-    bind = CTRL+$mod, P, global, quickshell:panelFamilyCycle # Cycle panel family
 
-    ##! Utilities
-    # Screenshot, Record, OCR, Color picker
-    bind = $mod+SHIFT, S, global, quickshell:regionScreenshot # Screen snip
-    bind = $mod+SHIFT, A, global, quickshell:regionSearch # Google Lens
-    bind = $mod+SHIFT, X, global, quickshell:regionOcr # Character recognition >> clipboard
-    bindd = $mod+SHIFT, C, Color picker, exec, hyprpicker -a # Pick color (Hex) >> clipboard
-    bindl = , Print, exec, grim - | wl-copy # Screenshot >> clipboard
-    # Recording
-    bindl = $mod+SHIFT, R, global, quickshell:regionRecord # Record region (no sound)
-    bindl = CTRL+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen # Record screen (no sound)
-    bindl = $mod+SHIFT+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen --sound # Record screen (with sound)
-    # Wallpaper
-    bindd = CTRL+$mod, T, Toggle wallpaper selector, global, quickshell:wallpaperSelectorToggle # Wallpaper selector
-    bindd = CTRL+$mod+ALT, T, Select random wallpaper, global, quickshell:wallpaperSelectorRandom # Random wallpaper
+    # QuickShell internal bindings
+    bind = $mod, mouse:272, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse:273, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse:274, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse:275, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse:276, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse:277, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse_up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, mouse_down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
+    bind = $mod, B, global, quickshell:sidebarLeftToggle # [hidden]
+    bind = $mod, O, global, quickshell:sidebarLeftToggle # [hidden]
+    bindit = , Super_L, global, quickshell:workspaceNumber # [hidden]
+    bindid = , Super_L, Toggle overview, global, quickshell:overviewToggleRelease # Toggle overview/launcher
+
+    # Interrupt bindings to prevent launcher on Super release when used in combos
+    bind = CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, V, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Period, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Tab, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, N, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Slash, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, K, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, M, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, C, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Return, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, T, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, W, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL, F, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Space, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, bracketleft, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, bracketright, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Q, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, Space, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, F, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, D, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, P, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 1, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 2, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 3, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 4, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 5, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 6, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 7, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 8, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 9, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Page_Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, Page_Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL, Page_Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL, Page_Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 1, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 2, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 3, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 4, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 5, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 6, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 7, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 8, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 9, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+ALT, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, T, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, minus, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, equal, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, semicolon, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, apostrophe, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, XF86AudioMute, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+CONTROL+ALT, R, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod, L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
+    bind = $mod+SHIFT, L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
 
     ##! Apps
+    bind = $mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh # VSCode
     bind = $mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # Terminal
-    bind = $mod, T, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # [hidden] (terminal alt)
-    bind = CTRL+ALT, T, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # [hidden] (terminal Ubuntu)
-    bind = $mod, E, exec, ~/.config/hypr/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar' # File manager
-    bind = $mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera' 'librewolf' # Browser
-    bind = $mod, C, exec, ~/.config/hypr/scripts/launch_first_available.sh 'code' 'codium' 'cursor' 'zed' 'kate' 'gnome-text-editor' 'emacs' # Code editor
-    bind = CTRL+$mod+SHIFT+ALT, W, exec, ~/.config/hypr/scripts/launch_first_available.sh 'wps' 'onlyoffice-desktopeditors' 'libreoffice' # Office software
-    bind = $mod, X, exec, ~/.config/hypr/scripts/launch_first_available.sh 'kate' 'gnome-text-editor' 'emacs' # Text editor
-    bind = CTRL+$mod, V, exec, ~/.config/hypr/scripts/launch_first_available.sh 'pavucontrol-qt' 'pavucontrol' # Volume mixer
-    bind = $mod, I, exec, XDG_CURRENT_DESKTOP=gnome ~/.config/hypr/scripts/launch_first_available.sh 'systemsettings' 'gnome-control-center' 'better-control' # Settings app
-    bind = CTRL+SHIFT, Escape, exec, ~/.config/hypr/scripts/launch_first_available.sh 'gnome-system-monitor' 'plasma-systemmonitor --page-name Processes' # Task manager
-    bind = $mod, Space, exec, pkill -x rofi || rofi -show drun # Launcher (rofi)
+    bind = $mod, T, exec, ~/.config/hypr/scripts/open_terminal_here.sh # Terminal here
+    bind = $mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera' # Browser
+    bind = $mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar' # File manager
+    bind = $mod, Space, exec, pkill -x rofi || rofi -show drun # Launcher
+
+    ##! Utilities
+    bindd = $mod SHIFT, A, OCR text >> Google search, exec, ~/.config/quickshell/scripts/ocr/ocr-search.sh # OCR Search
+    bindd = $mod SHIFT, T, Choose wallpaper, exec, ~/.config/quickshell/scripts/colors/switchwall.sh # Wallpaper picker
 
     ##! Window
     bindm = $mod, mouse:272, movewindow # Move
-    bindm = $mod, mouse:274, movewindow # [hidden]
     bindm = $mod, mouse:273, resizewindow # Resize
     bind = $mod, Left, movefocus, l # [hidden]
     bind = $mod, Right, movefocus, r # [hidden]
     bind = $mod, Up, movefocus, u # [hidden]
     bind = $mod, Down, movefocus, d # [hidden]
-    bind = $mod, BracketLeft, movefocus, l # [hidden]
-    bind = $mod, BracketRight, movefocus, r # [hidden]
-    bind = $mod+SHIFT, Left, movewindow, l # [hidden]
-    bind = $mod+SHIFT, Right, movewindow, r # [hidden]
-    bind = $mod+SHIFT, Up, movewindow, u # [hidden]
-    bind = $mod+SHIFT, Down, movewindow, d # [hidden]
-    bind = ALT, F4, killactive, # [hidden] Close (Windows)
+    bind = $mod, bracketleft, movefocus, l # [hidden]
+    bind = $mod, bracketright, movefocus, r # [hidden]
     bind = $mod, Q, killactive, # Close
-    bind = $mod+SHIFT+ALT, Q, exec, hyprctl kill # Forcefully zap a window
-    # Window split ratio
-    binde = $mod, Semicolon, splitratio, -0.1 # [hidden]
-    binde = $mod, Apostrophe, splitratio, +0.1 # [hidden]
-    # Positioning mode
-    bind = $mod+ALT, Space, togglefloating, # Float/Tile
-    bind = $mod+SHIFT, Space, togglefloating, # [hidden] Float/Tile (alt)
-    bind = $mod, D, fullscreen, 1 # Maximize
+    bind = $mod SHIFT, Left, movewindow, l # [hidden]
+    bind = $mod SHIFT, Right, movewindow, r # [hidden]
+    bind = $mod SHIFT, Up, movewindow, u # [hidden]
+    bind = $mod SHIFT, Down, movewindow, d # [hidden]
+    bind = $mod SHIFT, Space, togglefloating, # Float/Tile
     bind = $mod, F, fullscreen, 0 # Fullscreen
-    bind = $mod+ALT, F, fullscreenstate, 0 3 # Fullscreen spoof
+    bind = $mod, D, fullscreen, 1 # Maximize
     bind = $mod, P, pin # Pin
 
     ##! Workspace
-    # Focus workspace by number
     bind = $mod, 1, workspace, 1 # [hidden]
     bind = $mod, 2, workspace, 2 # [hidden]
     bind = $mod, 3, workspace, 3 # [hidden]
@@ -104,94 +159,54 @@ in
     bind = $mod, 8, workspace, 8 # [hidden]
     bind = $mod, 9, workspace, 9 # [hidden]
     bind = $mod, 0, workspace, 10 # [hidden]
-    # Navigation
-    bind = CTRL+$mod, Right, workspace, r+1 # [hidden]
-    bind = CTRL+$mod, Left, workspace, r-1 # [hidden]
-    bind = CTRL+$mod+ALT, Right, workspace, m+1 # [hidden]
-    bind = CTRL+$mod+ALT, Left, workspace, m-1 # [hidden]
-    bind = $mod, Page_Down, workspace, +1 # [hidden]
-    bind = $mod, Page_Up, workspace, -1 # [hidden]
-    bind = CTRL+$mod, Page_Down, workspace, r+1 # [hidden]
-    bind = CTRL+$mod, Page_Up, workspace, r-1 # [hidden]
     bind = $mod, mouse_up, workspace, +1 # [hidden]
     bind = $mod, mouse_down, workspace, -1 # [hidden]
-    bind = CTRL+$mod, mouse_up, workspace, r+1 # [hidden]
-    bind = CTRL+$mod, mouse_down, workspace, r-1 # [hidden]
-    bind = CTRL+$mod, BracketLeft, workspace, -1 # [hidden]
-    bind = CTRL+$mod, BracketRight, workspace, +1 # [hidden]
-    bind = CTRL+$mod, Up, workspace, r-5 # [hidden]
-    bind = CTRL+$mod, Down, workspace, r+5 # [hidden]
-    # Special workspace (scratchpad)
+    bind = $mod CONTROL, Right, workspace, r+1 # [hidden]
+    bind = $mod CONTROL, Left, workspace, r-1 # [hidden]
+    bind = $mod, Page_Down, workspace, +1 # [hidden]
+    bind = $mod, Page_Up, workspace, -1 # [hidden]
+    bind = $mod CONTROL, Page_Down, workspace, r+1 # [hidden]
+    bind = $mod CONTROL, Page_Up, workspace, r-1 # [hidden]
     bind = $mod, S, togglespecialworkspace, # Toggle scratchpad
-    bind = $mod, mouse:275, togglespecialworkspace, # [hidden]
-    bind = CTRL+$mod, S, togglespecialworkspace, # [hidden]
-    # Send to workspace by number
-    bind = $mod+ALT, 1, movetoworkspacesilent, 1 # [hidden]
-    bind = $mod+ALT, 2, movetoworkspacesilent, 2 # [hidden]
-    bind = $mod+ALT, 3, movetoworkspacesilent, 3 # [hidden]
-    bind = $mod+ALT, 4, movetoworkspacesilent, 4 # [hidden]
-    bind = $mod+ALT, 5, movetoworkspacesilent, 5 # [hidden]
-    bind = $mod+ALT, 6, movetoworkspacesilent, 6 # [hidden]
-    bind = $mod+ALT, 7, movetoworkspacesilent, 7 # [hidden]
-    bind = $mod+ALT, 8, movetoworkspacesilent, 8 # [hidden]
-    bind = $mod+ALT, 9, movetoworkspacesilent, 9 # [hidden]
-    bind = $mod+ALT, 0, movetoworkspacesilent, 10 # [hidden]
-    bind = $mod+ALT, S, movetoworkspacesilent, special # Send to scratchpad
-    # Move to workspace navigation
-    bind = $mod+SHIFT, mouse_down, movetoworkspace, r-1 # [hidden]
-    bind = $mod+SHIFT, mouse_up, movetoworkspace, r+1 # [hidden]
-    bind = $mod+ALT, mouse_down, movetoworkspace, -1 # [hidden]
-    bind = $mod+ALT, mouse_up, movetoworkspace, +1 # [hidden]
-    bind = $mod+ALT, Page_Down, movetoworkspace, +1 # [hidden]
-    bind = $mod+ALT, Page_Up, movetoworkspace, -1 # [hidden]
-    bind = $mod+SHIFT, Page_Down, movetoworkspace, r+1 # [hidden]
-    bind = $mod+SHIFT, Page_Up, movetoworkspace, r-1 # [hidden]
-    bind = CTRL+$mod+SHIFT, Right, movetoworkspace, r+1 # [hidden]
-    bind = CTRL+$mod+SHIFT, Left, movetoworkspace, r-1 # [hidden]
-    # Alt-Tab
+
+    bind = $mod ALT, 1, movetoworkspacesilent, 1 # [hidden]
+    bind = $mod ALT, 2, movetoworkspacesilent, 2 # [hidden]
+    bind = $mod ALT, 3, movetoworkspacesilent, 3 # [hidden]
+    bind = $mod ALT, 4, movetoworkspacesilent, 4 # [hidden]
+    bind = $mod ALT, 5, movetoworkspacesilent, 5 # [hidden]
+    bind = $mod ALT, 6, movetoworkspacesilent, 6 # [hidden]
+    bind = $mod ALT, 7, movetoworkspacesilent, 7 # [hidden]
+    bind = $mod ALT, 8, movetoworkspacesilent, 8 # [hidden]
+    bind = $mod ALT, 9, movetoworkspacesilent, 9 # [hidden]
+    bind = $mod ALT, 0, movetoworkspacesilent, 10 # [hidden]
+    bind = $mod ALT, S, movetoworkspacesilent, special # [hidden]
+
     bind = ALT, Tab, cyclenext, # [hidden]
     bind = ALT, Tab, bringactivetotop, # [hidden]
 
-    ##! Virtual machines
-    bind = $mod+ALT, F1, exec, notify-send 'Entered Virtual Machine submap' 'Keybinds disabled. Hit Super+Alt+F1 to escape' -a 'Hyprland' && hyprctl dispatch submap virtual-machine # Disable keybinds
-    submap = virtual-machine
-    bind = $mod+ALT, F1, exec, notify-send 'Exited Virtual Machine submap' 'Keybinds re-enabled' -a 'Hyprland' && hyprctl dispatch submap global # [hidden]
-    submap = global
-
     ##! Session
-    bind = $mod, L, exec, loginctl lock-session # Lock
-    bindl = $mod+SHIFT, L, exec, systemctl suspend || loginctl suspend # Sleep
-
-    ##! Screen
-    # Zoom
-    binde = $mod, Minus, splitratio, -0.1 # [hidden]
-    binde = $mod, Equal, splitratio, +0.1 # [hidden]
+    bind = $modifier,L,exec,loginctl lock-session # Lock
+    bind = $modifier SHIFT,L,exec,loginctl lock-session # [hidden]
 
     ##! Media
-    bindl = $mod+SHIFT, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # Next track
-    bindl = , XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # [hidden]
-    bindl = , XF86AudioPrev, exec, playerctl previous # [hidden]
-    bindl = $mod+SHIFT, B, exec, playerctl previous # Previous track
-    bindl = $mod+SHIFT, P, exec, playerctl play-pause # Play/pause media
-    bindl = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
-    bindl = , XF86AudioPause, exec, playerctl play-pause # [hidden]
-    # Volume
-    binde = , XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.5 # [hidden]
-    binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
-    bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle # [hidden]
-    bindl = $mod+SHIFT, M, exec, wpctl set-mute @DEFAULT_SINK@ toggle # Toggle mute
-    bindl = ALT, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
-    bindl = , XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
-    bindl = $mod+ALT, M, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # Toggle mic
-    # Brightness
-    binde = , XF86MonBrightnessUp, exec, brightnessctl s 5%+ # [hidden]
-    binde = , XF86MonBrightnessDown, exec, brightnessctl s 5%- # [hidden]
+    bind = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
+    bind = , XF86AudioNext, exec, playerctl next # [hidden]
+    bind = , XF86AudioPrev, exec, playerctl previous # [hidden]
 
-    # Lid switch
+    binde = $mod, minus, splitratio, -0.1 # [hidden]
+    binde = $mod, equal, splitratio, +0.1 # [hidden]
+    binde = $mod, semicolon, splitratio, -0.1 # [hidden]
+    binde = $mod, apostrophe, splitratio, +0.1 # [hidden]
+    binde = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
+    binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
+    binde = , XF86MonBrightnessUp, exec, brightnessctl set 5%+ # [hidden]
+    binde = , XF86MonBrightnessDown, exec, brightnessctl set 5%- # [hidden]
+
+    bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle # [hidden]
+    bindl = $mod, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
     bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,disable' # [hidden]
     bindl = , switch:off:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,preferred,auto,1' # [hidden]
 
-    # Reload
-    bindr = CTRL+$mod+ALT, R, exec, hyprctl reload # [hidden]
+    bindr = $mod CONTROL ALT, R, exec, hyprctl reload # [hidden]
   '';
 }
