@@ -144,19 +144,14 @@ in
     better-control
   ];
 
-  # Use quickshell config from dots-hyprland flake input
-  # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
-  home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
+  # Use patched quickshell config from dots-hyprland flake input
+  # Apply our bindd-aware get_keybinds.py patch
+  home.file.".config/quickshell/default".source = pkgs.runCommand "quickshell-config-patched" {} ''
+    cp -r ${inputs.dots-hyprland}/dots/.config/quickshell/ii $out
+    chmod -R u+w $out
 
-  # Deploy our patched get_keybinds.py that handles bindd commands
-  home.file.".local/share/quickshell/scripts/get_keybinds.py" = {
-    source = ../scripts/quickshell/hyprland/get_keybinds.py;
-    executable = true;
-  };
-
-  # Override HyprlandKeybinds.qml to use our patched script
-  home.file.".config/quickshell/default/services/HyprlandKeybinds.qml" = {
-    source = ../scripts/quickshell/services/HyprlandKeybinds.qml;
-    force = true;
-  };
+    # Replace get_keybinds.py with our patched version that handles bindd
+    cp ${../scripts/quickshell/hyprland/get_keybinds.py} $out/scripts/hyprland/get_keybinds.py
+    chmod +x $out/scripts/hyprland/get_keybinds.py
+  '';
 }
