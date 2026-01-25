@@ -1,16 +1,5 @@
 { config, lib, pkgs, inputs, ... }:
 
-let
-  # Create a fake venv structure for dots-hyprland scripts
-  # The get_keybinds.py script expects ILLOGICAL_IMPULSE_VIRTUAL_ENV to be set
-  fakeVenv = pkgs.runCommand "illogical-impulse-fake-venv" {} ''
-    mkdir -p $out/bin
-    # Create a noop activate script
-    echo "# Fake activate script for NixOS" > $out/bin/activate
-    # Symlink python to the system python3
-    ln -s ${pkgs.python3}/bin/python3 $out/bin/python
-  '';
-in
 {
   # Use the official QuickShell from flake (has polkit support)
   programs.quickshell = {
@@ -38,8 +27,6 @@ in
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
-    # Fake venv for dots-hyprland scripts (get_keybinds.py needs this)
-    "ILLOGICAL_IMPULSE_VIRTUAL_ENV=${fakeVenv}"
     # NVIDIA Wayland environment variables for proper EGL initialization
     "GBM_BACKEND=nvidia-drm"
     "__GLX_VENDOR_LIBRARY_NAME=nvidia"
@@ -62,8 +49,6 @@ in
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
-    # Fake venv for dots-hyprland scripts
-    ILLOGICAL_IMPULSE_VIRTUAL_ENV = "${fakeVenv}";
   };
 
   # Also add to shell profile for immediate availability
@@ -144,17 +129,7 @@ in
     better-control
   ];
 
-  # Use patched quickshell config from dots-hyprland flake input
-  # Apply our bindd-aware get_keybinds.py patch and debug logging
-  home.file.".config/quickshell/default".source = pkgs.runCommand "quickshell-config-patched" {} ''
-    cp -r ${inputs.dots-hyprland}/dots/.config/quickshell/ii $out
-    chmod -R u+w $out
-
-    # Replace get_keybinds.py with our patched version that handles bindd
-    cp ${../scripts/quickshell/hyprland/get_keybinds.py} $out/scripts/hyprland/get_keybinds.py
-    chmod +x $out/scripts/hyprland/get_keybinds.py
-
-    # Replace HyprlandKeybinds.qml with debug version
-    cp ${../scripts/quickshell/services/HyprlandKeybinds.qml} $out/services/HyprlandKeybinds.qml
-  '';
+  # Use quickshell config from dots-hyprland flake input
+  # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
+  home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
 }
