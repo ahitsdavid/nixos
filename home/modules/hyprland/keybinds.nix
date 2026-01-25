@@ -204,20 +204,7 @@ in
     source = ~/.config/hypr/hyprland/keybinds.conf
   '';
 
-  # Reload Hyprland config after home-manager activation so keybinds take effect
-  # Run after linkGeneration to ensure new keybinds.conf is linked before reload
-  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["linkGeneration"] ''
-    # Try multiple methods to detect and reload Hyprland
-    if pgrep -u "$USER" Hyprland > /dev/null 2>&1; then
-      echo "Detected Hyprland running, reloading configuration..."
-      $DRY_RUN_CMD hyprctl reload 2>&1 || echo "hyprctl reload failed, but continuing"
-      echo "Hyprland reload attempted"
-    elif [ -n "''${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
-      echo "Hyprland session detected via HYPRLAND_INSTANCE_SIGNATURE, reloading..."
-      $DRY_RUN_CMD hyprctl reload 2>&1 || echo "hyprctl reload failed, but continuing"
-      echo "Hyprland reload attempted"
-    else
-      echo "Hyprland not detected, skipping reload (keybinds will work after next login)"
-    fi
-  '';
+  # Note: hyprctl reload doesn't properly re-read sourced files like keybinds.conf
+  # Keybinds will take effect on next Hyprland restart (logout/login or reboot)
+  # This is a known Hyprland limitation, not a configuration issue
 }
