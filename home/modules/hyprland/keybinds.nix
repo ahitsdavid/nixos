@@ -203,11 +203,6 @@ in
   # This way hyprctl reload actually works!
   wayland.windowManager.hyprland.extraConfig = keybindContent;
 
-  # Reload Hyprland after activation so keybinds take effect immediately
-  home.activation.reloadHyprland = lib.hm.dag.entryAfter ["linkGeneration"] ''
-    if command -v hyprctl >/dev/null 2>&1 && hyprctl version >/dev/null 2>&1; then
-      echo "Reloading Hyprland configuration..."
-      hyprctl reload || true
-    fi
-  '';
+  # Note: After nixos-rebuild, press Ctrl+Super+Alt+R to reload Hyprland config
+  # (activation scripts can't reliably access the running Hyprland session)
 }
