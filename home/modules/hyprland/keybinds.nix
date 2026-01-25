@@ -15,19 +15,19 @@ let
 
     ##! Shell
     bind = $mod, Tab, global, quickshell:overviewWorkspacesToggle # Toggle overview
-    bindd = $mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
-    bindd = $mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
+    bind = $mod, V, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
+    bind = $mod, Period, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
     bind = $mod, A, global, quickshell:sidebarLeftToggle # Toggle left sidebar
     bind = $mod+ALT, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
     bind = $mod, B, global, quickshell:sidebarLeftToggle # [hidden]
     bind = $mod, O, global, quickshell:sidebarLeftToggle # [hidden]
-    bindd = $mod, N, Toggle right sidebar, global, quickshell:sidebarRightToggle # Toggle right sidebar
-    bindd = $mod, Slash, Toggle cheatsheet, global, quickshell:cheatsheetToggle # Toggle cheatsheet
-    bindd = $mod, K, Toggle on-screen keyboard, global, quickshell:oskToggle # Toggle on-screen keyboard
-    bindd = $mod, M, Toggle media controls, global, quickshell:mediaControlsToggle # Toggle media controls
+    bind = $mod, N, global, quickshell:sidebarRightToggle # Toggle right sidebar
+    bind = $mod, Slash, global, quickshell:cheatsheetToggle # Toggle cheatsheet
+    bind = $mod, K, global, quickshell:oskToggle # Toggle on-screen keyboard
+    bind = $mod, M, global, quickshell:mediaControlsToggle # Toggle media controls
     bind = $mod, G, global, quickshell:overlayToggle # Toggle overlay
-    bindd = CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
-    bindd = $mod, J, Toggle bar, global, quickshell:barToggle # Toggle bar
+    bind = CTRL+ALT, Delete, global, quickshell:sessionToggle # Toggle session menu
+    bind = $mod, J, global, quickshell:barToggle # Toggle bar
     bind = CTRL+$mod, R, exec, killall ags agsv1 gjs ydotool qs quickshell; qs & # Restart widgets
     bind = CTRL+$mod, P, global, quickshell:panelFamilyCycle # Cycle panel family
 
@@ -36,15 +36,15 @@ let
     bind = $mod+SHIFT, S, global, quickshell:regionScreenshot # Screen snip
     bind = $mod+SHIFT, A, global, quickshell:regionSearch # Google Lens
     bind = $mod+SHIFT, X, global, quickshell:regionOcr # Character recognition >> clipboard
-    bindd = $mod+SHIFT, C, Color picker, exec, hyprpicker -a # Pick color (Hex) >> clipboard
+    bind = $mod+SHIFT, C, exec, hyprpicker -a # Pick color (Hex) >> clipboard
     bindl = , Print, exec, grim - | wl-copy # Screenshot >> clipboard
     # Recording
     bindl = $mod+SHIFT, R, global, quickshell:regionRecord # Record region (no sound)
     bindl = CTRL+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen # Record screen (no sound)
     bindl = $mod+SHIFT+ALT, R, exec, ~/.config/quickshell/scripts/videos/record.sh --fullscreen --sound # Record screen (with sound)
     # Wallpaper
-    bindd = CTRL+$mod, T, Toggle wallpaper selector, global, quickshell:wallpaperSelectorToggle # Wallpaper selector
-    bindd = CTRL+$mod+ALT, T, Select random wallpaper, global, quickshell:wallpaperSelectorRandom # Random wallpaper
+    bind = CTRL+$mod, T, global, quickshell:wallpaperSelectorToggle # Wallpaper selector
+    bind = CTRL+$mod+ALT, T, global, quickshell:wallpaperSelectorRandom # Random wallpaper
 
     ##! Apps
     bind = $mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # Terminal
