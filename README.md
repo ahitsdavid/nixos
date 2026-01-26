@@ -200,16 +200,6 @@ nixos-rebuild build --flake .#desktop
 nixos-rebuild build --flake .#desktop && nvd diff /run/current-system result
 ```
 
-### Git Workflow
-
-Always commit changes before rebuilding:
-
-```bash
-git add .
-git commit -m "Description of changes"
-nixos-rebuild switch --flake .#<hostname>
-```
-
 ---
 
 ## Key Dependencies
