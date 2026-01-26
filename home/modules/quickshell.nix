@@ -211,6 +211,10 @@
     cp ${customOverrides}/modules/ii/cheatsheet/Cheatsheet.qml $out/modules/ii/cheatsheet/Cheatsheet.qml
     cp ${customOverrides}/modules/ii/cheatsheet/CheatsheetNvim.qml $out/modules/ii/cheatsheet/CheatsheetNvim.qml
     cp ${customOverrides}/modules/ii/cheatsheet/CheatsheetTerminal.qml $out/modules/ii/cheatsheet/CheatsheetTerminal.qml
+
+    # Override lock screen to include wallpaper background
+    # (WlSessionLockSurface blocks other layers, so wallpaper must be rendered directly)
+    cp ${customOverrides}/modules/ii/lock/LockSurface.qml $out/modules/ii/lock/LockSurface.qml
   '';
 
   # illogical-impulse config directory structure
