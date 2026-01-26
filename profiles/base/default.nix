@@ -76,6 +76,7 @@
     };
     extraPortals = with pkgs; [
         xdg-desktop-portal-gtk
+        xdg-desktop-portal-gnome  # Provides Settings interface for quickshell
     ];
   };
 

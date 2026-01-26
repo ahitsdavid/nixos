@@ -11,19 +11,18 @@
   };
 
   # Extend the official systemd service to add environment variables
-  # Note: kirigami.unwrapped is needed because the wrapped version doesn't include QML files
   systemd.user.services.quickshell.Service.Environment = [
     "QML2_IMPORT_PATH=${lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
     "QML_IMPORT_PATH=${lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
@@ -31,105 +30,154 @@
     "GBM_BACKEND=nvidia-drm"
     "__GLX_VENDOR_LIBRARY_NAME=nvidia"
     "LIBVA_DRIVER_NAME=nvidia"
+    # Virtual environment for Python scripts
+    "ILLOGICAL_IMPULSE_VIRTUAL_ENV=${config.home.homeDirectory}/.local/state/quickshell/.venv"
   ];
 
-  # Add QML import paths as session variables
+  # Add session variables
   home.sessionVariables = {
     QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
     QML_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ];
-  };
-
-  # Also add to shell profile for immediate availability
-  programs.bash.sessionVariables = {
-    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
-    QML_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
-  };
-
-  # And for zsh if you use it
-  programs.zsh.sessionVariables = {
-    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
-    QML_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.libsForQt5.qtgraphicaleffects}/${pkgs.libsForQt5.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qt5compat}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.qt6.qtpositioning}/${pkgs.qt6.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
+    # Virtual environment for Python scripts used by quickshell
+    ILLOGICAL_IMPULSE_VIRTUAL_ENV = "${config.home.homeDirectory}/.local/state/quickshell/.venv";
   };
 
   # Install additional packages that QuickShell needs
   home.packages = with pkgs; [
     # System tools
     gammastep
-    geoclue2
+    (geoclue2.override { withDemoAgent = true; })
     playerctl
     wireplumber
+    pipewire
     libdbusmenu-gtk3
     ddcutil
-    
+    brightnessctl
+    upower
+
+    # Security/keyring
+    libsecret      # Provides secret-tool for keyring storage
+    gnome-keyring  # Credential storage
+    kdePackages.polkit-kde-agent-1  # Polkit authentication agent
+
+    # CLI utilities used by quickshell scripts
+    jq
+    ripgrep
+    wl-clipboard
+    cliphist
+    bc
+    imagemagick
+    curl
+    wget
+    rsync
+
+    # Color/theming
+    matugen  # Material You color generation
+
+    # Python with material-color-utilities for theming
+    (python3.withPackages (ps: with ps; [
+      pywayland
+      pillow
+      setuptools-scm
+      material-color-utilities
+    ]))
+
+    # Hyprland utilities
+    hyprsunset
+    hypridle
+    hyprpicker
+    hyprlock
+    hyprshot
+    slurp
+    swappy
+    wf-recorder
+
+    # Terminals (foot is used in quickshell config)
+    foot
+    kitty
+
+    # Launchers/widgets
+    fuzzel
+    wlogout
+
+    # Other utilities
+    libqalculate  # Calculator
+    translate-shell
+    wtype
+    ydotool
+    mpv
+    mpvpaper
+    libcava  # Audio visualizer
+
     # GNOME tools
     gnome-control-center
     gnome-usage
-    
-    # KDE/Qt packages
+
+    # KDE/Qt packages - use kdePackages for consistency
+    kdePackages.kdialog
+    kdePackages.qt5compat
+    kdePackages.qtbase
+    kdePackages.qtdeclarative
+    kdePackages.qtimageformats
+    kdePackages.qtmultimedia
+    kdePackages.qtpositioning
+    kdePackages.qtquicktimeline
+    kdePackages.qtsensors
+    kdePackages.qtsvg
+    kdePackages.qttools
+    kdePackages.qttranslations
+    kdePackages.qtvirtualkeyboard
+    kdePackages.qtwayland
     kdePackages.syntax-highlighting
-    kdePackages.kirigami          # Kirigami framework
-    libsForQt5.qtgraphicaleffects  # Qt5 GraphicalEffects module
-    qt6.qt5compat                  # Qt6 Qt5 compatibility layer
-    
-    # Qt5 packages
-    libsForQt5.qtquickcontrols2
-    libsForQt5.qtquickcontrols
-    
-    # Qt6 packages (correct names)
-    qt6.qtdeclarative              # Includes QtQuick
-    qt6.qtquick3d
-    qt6.qtpositioning              # QtPositioning for geolocation/weather
-    
+    kdePackages.kirigami
+    kdePackages.dolphin
+    kdePackages.systemsettings
+    kdePackages.bluedevil
+    kdePackages.plasma-nm
+
     # Fonts
     material-symbols
     rubik
     nerd-fonts.space-mono
-    
-    # Theme engines
-    libsForQt5.qtstyleplugin-kvantum
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.ubuntu
+    nerd-fonts.fantasque-sans-mono
+    twemoji-color-font
+    noto-fonts
+    liberation_ttf
+
+    # Theme engines and icons
     kdePackages.qtstyleplugin-kvantum
-    
+    adw-gtk3
+    adwaita-icon-theme
+    morewaita-icon-theme
+
     # Other tools
     better-control
+    axel
   ];
 
   # Use quickshell config from dots-hyprland flake input
   # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
   home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
+
+  # illogical-impulse config directory structure
+  # The translations subdirectory is for AI-generated translations (optional)
+  # Linking to built-in translations as fallback to prevent errors
+  home.file.".config/illogical-impulse/translations".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii/translations";
+
+  # Matugen config for color generation (required for quickshell theming)
+  home.file.".config/matugen".source = "${inputs.dots-hyprland}/dots/.config/matugen";
 }
