@@ -1,196 +1,232 @@
-# NixOS Configuration
+# Personal NixOS Configuration
 
-This repository contains my personal NixOS configuration with multiple host profiles and a custom ISO for desktop installation.
+My personal NixOS configuration with Hyprland and QuickShell, managing multiple machines from a single Nix flake. This repository contains a complete, reproducible system configuration for daily driving NixOS across different hardware profiles.
 
-## Host Profiles
+## Disclaimer
 
-- **thinkpad**: ThinkPad T480 with Intel graphics and power management optimizations
-- **desktop**: Intel i7-8700K + Nvidia 3070Ti with Hyprland and gaming support
-- **sb1**: Secondary system configuration
-- **vm**: Virtual machine configuration
+**This is a personal configuration repository.** It is tailored specifically for my hardware and workflow. If you choose to use or reference any part of this configuration, you do so entirely at your own risk. I am not responsible for any issues, data loss, or system problems that may arise from using this configuration.
 
-## Desktop Installation ISO
+## Credits
 
-### Building the ISO
+This configuration heavily utilizes and builds upon:
 
-```bash
-NIXPKGS_ALLOW_UNFREE=1 nix build --impure .#packages.x86_64-linux.desktop-iso.config.system.build.isoImage
-```
+- **[end-4/dots-hyprland](https://github.com/end-4/dots-hyprland)** - The QuickShell/AGS configuration that powers the desktop widgets, bar, and UI components. Huge thanks to end-4 for the incredible work on this project.
+- **[QuickShell](https://git.outfoxxed.me/quickshell/quickshell)** - The Qt6/QML shell framework
 
-The ISO will be generated at: `result/iso/nixos-minimal-*.iso` (~4.1GB)
+---
 
-### ISO Features
+## Overview
 
-**Hardware Support:**
-- Nvidia 3070Ti drivers pre-loaded with Wayland optimization
-- Intel i7-8700K CPU support with microcode updates
-- Complete multi-filesystem support (ext4, btrfs, xfs, f2fs, zfs, bcachefs)
+This is a flake-based NixOS configuration supporting multiple hosts with shared modules and profiles. The configuration emphasizes:
 
-**Desktop Environment:**
-- Hyprland (Wayland compositor) with Nvidia-specific optimizations
-- GNOME (fallback desktop environment)
-- GDM display manager
+- **Reproducibility** - Entire system declared in Nix, version controlled
+- **Multi-host support** - Same codebase for laptops, desktops, and VMs
+- **Modularity** - Composable profiles and modules for different use cases
+- **Modern desktop** - Hyprland Wayland compositor with polished UI
 
-**Installation Tools:**
-- **Partitioning**: gparted (GUI), cfdisk, gdisk
-- **Filesystems**: Complete toolset for any filesystem choice
-- **Network**: NetworkManager for WiFi/ethernet
-- **Helper**: `/etc/install-desktop.sh` with step-by-step instructions
+### Supported Hosts
 
-### Installation Process
+| Host         | Hardware       | GPU                | Purpose                                  |
+|--------------|----------------|--------------------|------------------------------------------|
+| `desktop`    | AMD 7800X3D    | NVIDIA 3070Ti      | Primary workstation, dual ultrawide      |
+| `thinkpad`   | ThinkPad T480  | Intel integrated   | Portable development                     |
+| `legion`     | Intel + NVIDIA | Hybrid (Prime)     | Gaming laptop                            |
+| `work-intel` | Intel          | Intel integrated   | Work system (no gaming)                  |
+| `vm`         | Virtual        | —                  | Testing and sandbox                      |
 
-1. **Create Installation Media**
-   ```bash
-   # Copy ISO to a convenient location
-   cp result/iso/nixos-minimal-*.iso ~/Downloads/nixos-desktop.iso
-   
-   # Flash to USB (replace /dev/sdX with your USB device)
-   sudo dd if=~/Downloads/nixos-desktop.iso of=/dev/sdX bs=4M status=progress && sync
-   ```
+---
 
-2. **Boot from USB**
-   - Login credentials: `nixos` / `nixos` or `root` / `nixos`
-   - Choose Hyprland or GNOME desktop environment
+## Features
 
-3. **Connect to Network**
-   - WiFi: Use NetworkManager GUI or `nmtui`
-   - Ethernet: Usually auto-configured
+### Desktop Environment
 
-4. **Partition Disks**
-   - GUI: Launch `gparted`
-   - CLI: Use `cfdisk` or `gdisk`
-   - Create EFI boot partition (~512MB, FAT32)
-   - Create root partition (remaining space, your choice of filesystem)
+- **Hyprland** - Wayland compositor with animations, workspaces, and tiling
+- **QuickShell** - Qt6/QML-based panel and widgets (end-4 dots-hyprland)
+- **Rofi** - Application launcher with custom theming
+- **Hyprlock/Hypridle** - Lock screen and idle management
+- **NVIDIA optimization** - Wayland-compatible NVIDIA driver configuration
 
-5. **Format Filesystems**
-   ```bash
-   # Examples for different filesystems:
-   mkfs.ext4 /dev/sdX2      # ext4 (standard)
-   mkfs.btrfs /dev/sdX2     # btrfs (snapshots, compression)
-   mkfs.xfs /dev/sdX2       # xfs (high performance)
-   mkfs.f2fs /dev/sdX2      # f2fs (SSD optimized)
-   zpool create rpool /dev/sdX2  # zfs (enterprise features)
-   bcachefs format /dev/sdX2     # bcachefs (next-gen)
-   
-   # Boot partition (always FAT32)
-   mkfs.fat -F 32 /dev/sdX1
-   ```
+### Custom Cheatsheet System
 
-6. **Mount Filesystems**
-   ```bash
-   mount /dev/sdX2 /mnt
-   mkdir -p /mnt/boot
-   mount /dev/sdX1 /mnt/boot
-   ```
+A key customization built on top of end-4's QuickShell configuration. The cheatsheet provides an in-app overlay displaying keyboard shortcuts from multiple sources:
 
-7. **Copy Configuration**
-   ```bash
-   # Copy desktop configuration
-   cp -r /etc/nixos/desktop-config/* /mnt/etc/nixos/
-   
-   # Generate hardware configuration
-   nixos-generate-config --root /mnt
-   ```
+| Tab        | Source               | Description                                        |
+|------------|----------------------|----------------------------------------------------|
+| Keybinds   | `keybinds.nix`       | Hyprland window manager shortcuts                  |
+| Neovim     | `nvf.nix`            | Neovim keybinds by mode (Normal, Insert, etc.)     |
+| Terminal   | `kitty.nix`, `zsh/`  | Kitty terminal shortcuts and shell aliases         |
+| Elements   | end-4                | Periodic table (from upstream)                     |
 
-8. **Install System**
-   ```bash
-   nixos-install --flake /mnt/etc/nixos#desktop
-   ```
+Custom Python parsers extract keybinds directly from Nix configuration files, so the cheatsheet always reflects the actual configured shortcuts.
 
-9. **Reboot**
-   ```bash
-   reboot
-   ```
+### Development Environment
 
-### Post-Installation
+- **Editors** - Neovim (nvf), VS Code, Zed, Claude Code
+- **Languages** - Python, C/C++, JavaScript/TypeScript, Go, Nix
+- **Containers** - Docker and Docker Compose
+- **Tools** - Git, LSP servers, build systems
 
-After reboot, your system will have:
-- **Hyprland** with Nvidia acceleration
-- **Gaming support** (Steam pre-installed)
-- **Development tools** from the development profile
-- **All your dotfiles** and configurations
-- **Automatic Nvidia environment variables** for Wayland/Hyprland
+### System Features
 
-## Configuration Structure
+- **SOPS-nix** - Encrypted secrets management (SSH keys, API tokens, credentials)
+- **Home Manager** - Declarative user environment and dotfiles
+- **PipeWire** - Modern audio with ALSA, PulseAudio, and JACK compatibility
+- **Tailscale** - Mesh VPN for connecting machines
+- **Gaming** - Steam with Proton, NVIDIA acceleration (optional per-host)
+
+### Applications
+
+- **Browsers** - Firefox (with extensions), Zen Browser, Chromium
+- **Media** - Spotify (Spicetify themed), VLC, OBS Studio
+- **Productivity** - LibreOffice, Obsidian, Bitwarden
+- **Terminals** - Kitty, Zsh with plugins and completions
+
+---
+
+## Project Structure
 
 ```
 .
-├── core/               # Core system modules
-│   ├── drivers/        # Hardware drivers (intel.nix, nvidia.nix)
-│   └── modules/        # System modules (bootloader, networking, etc.)
-├── home/               # Home Manager configurations
-│   ├── modules/        # User-space modules
-│   └── users/          # User-specific configs
-├── hosts/              # Host-specific configurations
-│   ├── desktop/        # Desktop profile (Intel + Nvidia)
-│   ├── thinkpad/       # ThinkPad profile (Intel graphics)
-│   └── vm/             # VM profile
-├── profiles/           # Reusable configuration profiles
-│   ├── base/           # Base system configuration
-│   ├── development/    # Development tools and languages
-│   └── work/           # Work-specific configurations
-└── iso.nix            # Custom installation ISO configuration
+├── flake.nix                 # Main flake: inputs, outputs, host definitions
+├── flake.lock                # Locked dependency versions
+│
+├── core/                     # System-level configuration
+│   ├── drivers/              # Hardware drivers
+│   │   ├── nvidia.nix        # NVIDIA with Wayland optimization
+│   │   └── intel.nix         # Intel integrated graphics
+│   └── modules/              # Core system services
+│       ├── bootloader.nix    # systemd-boot, EFI
+│       ├── networking.nix    # NetworkManager, DNS
+│       ├── pipewire.nix      # Audio stack
+│       ├── sops.nix          # Secrets management
+│       └── ...
+│
+├── home/                     # Home Manager configuration
+│   ├── base.nix              # Main home config entry point
+│   ├── gaming.nix            # Gaming-specific config
+│   └── modules/              # User application configs
+│       ├── hyprland/         # Hyprland compositor
+│       │   ├── keybinds.nix  # All keyboard shortcuts
+│       │   ├── rules.nix     # Window rules
+│       │   ├── scripts/      # Keybind parser scripts
+│       │   └── quickshell-overrides/
+│       ├── quickshell.nix    # QuickShell + end-4 integration
+│       ├── nvf.nix           # Neovim configuration
+│       ├── firefox/          # Firefox with extensions
+│       ├── zsh/              # Zsh shell config
+│       ├── kitty.nix         # Terminal emulator
+│       └── ...
+│
+├── hosts/                    # Host-specific configurations
+│   ├── desktop/              # AMD + NVIDIA workstation
+│   ├── thinkpad/             # ThinkPad T480
+│   ├── legion/               # Gaming laptop (hybrid GPU)
+│   ├── work-intel/           # Work machine
+│   └── vm/                   # Virtual machine
+│
+├── profiles/                 # Reusable configuration profiles
+│   ├── base/                 # Essential system config (all hosts)
+│   ├── development/          # Development tools and languages
+│   └── work/                 # Work environment (office, printing)
+│
+├── secrets/                  # SOPS-encrypted secrets
+│   ├── system.yaml           # System credentials
+│   ├── personal.yaml         # Personal API keys
+│   └── work.yaml             # Work credentials
+│
+└── docs/                     # Documentation
+    └── PASSWORD_MANAGEMENT.md
 ```
 
-## Key Features
+For comprehensive documentation, see [PROJECT_STRUCTURE.md](PROJECT_STRUCTURE.md).
 
-- **Conditional Hyprland Config**: Automatically uses Nvidia-optimized settings on desktop
-- **Multi-host Support**: Same codebase for laptop, desktop, VM, and server
-- **Comprehensive Filesystem Support**: Install with any modern filesystem
-- **Gaming Ready**: Steam and gaming optimizations included
-- **Development Environment**: Full development stack with modern tools
-- **Secure**: SOPS-nix for secrets management
+---
 
-## Building Individual Hosts
+## End-4 QuickShell Integration
+
+This configuration uses [end-4/dots-hyprland](https://github.com/end-4/dots-hyprland) as the base for the desktop shell, with local customizations layered on top.
+
+### How It Works
+
+1. **Base configuration** is pulled from `dots-hyprland` flake input
+2. **Local overrides** in `quickshell-overrides/` are merged at build time
+3. **Custom services** provide data from Nix configs to QML components
+
+### My Customizations
+
+| Component                   | Description                                          |
+|-----------------------------|------------------------------------------------------|
+| `Cheatsheet.qml`            | Extended with Neovim and Terminal tabs               |
+| `CheatsheetNvim.qml`        | New component displaying Neovim keybinds by mode     |
+| `CheatsheetTerminal.qml`    | New component for Kitty shortcuts and shell aliases  |
+| `NvimKeybinds.qml`          | QML service that runs Python parser for nvf.nix      |
+| `TerminalKeybinds.qml`      | QML service that runs Python parser for terminals    |
+| `get_keybinds.py`           | Enhanced parser supporting all Hyprland bind types   |
+| `get_nvim_keybinds.py`      | Parser extracting keybinds from nvf.nix              |
+| `get_terminal_keybinds.py`  | Parser for Kitty and shell alias definitions         |
+
+---
+
+## Usage
+
+### Rebuild System
 
 ```bash
-# Build specific host configuration
+# Rebuild and switch to new configuration
+nixos-rebuild switch --flake .#<hostname>
+
+# Example
 nixos-rebuild switch --flake .#desktop
 nixos-rebuild switch --flake .#thinkpad
-nixos-rebuild switch --flake .#vm
 ```
 
-## IMPORTANT: Git Workflow for System Changes
+### Update Dependencies
 
-**⚠️ CRITICAL RULE: Always commit configuration changes before rebuilding NixOS ⚠️**
+```bash
+# Update all flake inputs
+nix flake update
 
-When making changes to this NixOS configuration:
+# Update specific input
+nix flake lock --update-input nixpkgs
+```
 
-1. **Review changes**: Check what files were modified
-   ```bash
-   git status
-   git diff
-   ```
+### Build Without Switching
 
-2. **Stage changes**: Add files to git tracking
-   ```bash
-   git add .
-   # OR selectively add specific files
-   git add path/to/modified/file.nix
-   ```
+```bash
+# Test build
+nixos-rebuild build --flake .#desktop
 
-3. **Get permission before commit**: Always review the commit message and changes
-   ```bash
-   git commit -m "Description of changes made"
-   ```
+# Build and show diff
+nixos-rebuild build --flake .#desktop && nvd diff /run/current-system result
+```
 
-4. **NEVER rebuild with dirty git tree**: NixOS rebuild should only happen after clean commits
-   ```bash
-   # ❌ BAD: Will show "warning: Git tree is dirty"
-   sudo nixos-rebuild switch --flake .#thinkpad
-   
-   # ✅ GOOD: Clean git tree
-   git add . && git commit -m "Add docker GUI support" 
-   sudo nixos-rebuild switch --flake .#thinkpad
-   ```
+### Git Workflow
 
-5. **Push changes**: Keep remote in sync
-   ```bash
-   git push origin main
-   ```
+Always commit changes before rebuilding:
 
-**Why this matters:**
-- Dirty git trees can cause build failures
-- Changes might be lost if not committed
-- Other systems won't get the updates
-- Rollback becomes impossible without proper git history
+```bash
+git add .
+git commit -m "Description of changes"
+nixos-rebuild switch --flake .#<hostname>
+```
+
+---
+
+## Key Dependencies
+
+| Input          | Purpose                       |
+|----------------|-------------------------------|
+| `nixpkgs`      | nixos-unstable packages       |
+| `home-manager` | User environment management   |
+| `hyprland`     | Wayland compositor            |
+| `quickshell`   | Qt6/QML shell framework       |
+| `dots-hyprland`| end-4's shell configuration   |
+| `nvf`          | Neovim framework              |
+| `sops-nix`     | Secrets management            |
+| `catppuccin`   | Color scheme                  |
+
+---
+
+## License
+
+This configuration is provided as-is for reference purposes. The end-4 dots-hyprland components retain their original licensing. Use at your own discretion.
