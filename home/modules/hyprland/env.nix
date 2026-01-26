@@ -1,67 +1,58 @@
-# env.nix
+# env.nix - Common environment variables for all hosts
 { config, lib, pkgs, ... }:
 
 {
-  wayland.windowManager.hyprland = {
-    settings = {
-      env = [
-        "NIXOS_OZONE_WL, 1"
-        "NIXPKGS_ALLOW_UNFREE, 1"
-        "XDG_SESSION_TYPE, wayland"
-        "XDG_SESSION_DESKTOP, Hyprland"
-        "XDG_CURRENT_DESKTOP, Hyprland"
-        "GDK_BACKEND, wayland, x11"
-        "CLUTTER_BACKEND, wayland"
-        "QT_QPA_PLATFORM=wayland;xcb"
-        "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
-        "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
-        "SDL_VIDEODRIVER, x11"
-        "MOZ_ENABLE_WAYLAND, 1"
-        "GDK_SCALE,1"
-        "QT_SCALE_FACTOR,1"
+  wayland.windowManager.hyprland.settings.env = [
+    # Wayland
+    "NIXOS_OZONE_WL,1"
+    "NIXPKGS_ALLOW_UNFREE,1"
+    "XDG_SESSION_TYPE,wayland"
+    "XDG_SESSION_DESKTOP,Hyprland"
+    "XDG_CURRENT_DESKTOP,Hyprland"
+    "GDK_BACKEND,wayland,x11"
+    "CLUTTER_BACKEND,wayland"
+    "MOZ_ENABLE_WAYLAND,1"
 
-        # Input method
-        "QT_IM_MODULE, fcitx"
-        "XMODIFIERS, @im=fcitx"
-        # "GTK_IM_MODULE, wayland"   # Crashes electron apps in xwayland
-        # "GTK_IM_MODULE, fcitx"     # My Gtk apps no longer require this to work with fcitx5 hmm
-        "SDL_IM_MODULE, fcitx"
-        "GLFW_IM_MODULE, ibus"
-        "INPUT_METHOD, fcitx"
-        
-        # Themes - let Stylix handle GTK theme names
-        "QT_QPA_PLATFORM, wayland"
-        "QT_QPA_PLATFORMTHEME, gtk3"  # Override qt5ct to prevent kvantum style loading
-        "QT_STYLE_OVERRIDE, "  # Clear any kvantum style override
-        "WLR_NO_HARDWARE_CURSORS, 1"
-        
-        # HYPRCURSOR
-        "HYPRCURSOR_THEME, rose-pine-hyprcursor"
-        "HYPRCURSOR_SIZE, 40"
-        
-        # XCURSOR (for X11/XWayland apps like Zen browser)
-        "XCURSOR_THEME, rose-pine-hyprcursor"
-        "XCURSOR_SIZE, 40"
+    # Qt
+    "QT_QPA_PLATFORM,wayland;xcb"
+    "QT_WAYLAND_DISABLE_WINDOWDECORATION,1"
+    "QT_AUTO_SCREEN_SCALE_FACTOR,1"
+    "QT_QPA_PLATFORMTHEME,gtk3"
 
-        # DEFAULTS
-        "EDITOR, nvim"
-        "BROWSER, firefox"
-        "TERMINAL, kitty"
-        "XDG_TERMINAL_EMULATOR,kitty"
+    # SDL
+    "SDL_VIDEODRIVER,x11"
 
-        # QUICKSHELL
-        "QML2_IMPORT_PATH, qmlImportPath"
+    # Scaling
+    "GDK_SCALE,1"
+    "QT_SCALE_FACTOR,1"
 
-        # QEMU
-        "LIBVIRT_DEFAULT_URI, qemu:///system"
+    # Input method (fcitx)
+    "QT_IM_MODULE,fcitx"
+    "XMODIFIERS,@im=fcitx"
+    "SDL_IM_MODULE,fcitx"
+    "GLFW_IM_MODULE,ibus"
+    "INPUT_METHOD,fcitx"
 
-        # VSCODE
-        "ELECTRON_OZONE_PLATFORM_HINT, wayland"
+    # Cursor
+    "WLR_NO_HARDWARE_CURSORS,1"
+    "HYPRCURSOR_THEME,rose-pine-hyprcursor"
+    "HYPRCURSOR_SIZE,40"
+    "XCURSOR_THEME,rose-pine-hyprcursor"
+    "XCURSOR_SIZE,40"
 
-        # Screen tearing
-        # "WLR_DRM_NO_ATOMIC, 1"
-        
-      ];
-    };
-  };
+    # Defaults
+    "EDITOR,nvim"
+    "BROWSER,firefox"
+    "TERMINAL,kitty"
+    "XDG_TERMINAL_EMULATOR,kitty"
+
+    # Quickshell
+    "QML2_IMPORT_PATH,qmlImportPath"
+
+    # QEMU
+    "LIBVIRT_DEFAULT_URI,qemu:///system"
+
+    # Electron
+    "ELECTRON_OZONE_PLATFORM_HINT,wayland"
+  ];
 }

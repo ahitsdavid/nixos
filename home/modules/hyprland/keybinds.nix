@@ -8,10 +8,8 @@ let
     ;
 in
 {
-  # Note: All keybinds are now defined in extraConfig below for cheatsheet compatibility
-  # Updated from end-4/dots-hyprland keybinds.conf
-  # Hyprland 0.53.1 compatible
-
+  # Keybinds defined in extraConfig for cheatsheet parsing (get_keybinds.py reads this directly)
+  # Comment syntax: ##! = section heading, # [hidden] = hide from cheatsheet, #/# = comment bind
   wayland.windowManager.hyprland.extraConfig = ''
     # Lines ending with `# [hidden]` won't be shown on cheatsheet
     # Lines starting with ##! are section headings

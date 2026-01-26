@@ -179,9 +179,39 @@
     axel
   ];
 
-  # Use quickshell config from dots-hyprland flake input
-  # The ii subdirectory contains shell.qml - link it as "default" so quickshell finds it
-  home.file.".config/quickshell/default".source = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
+  # Clean up old quickshell config before linking new one
+  # This handles the transition from symlink to directory or vice versa
+  home.activation.cleanQuickshellConfig = lib.hm.dag.entryBefore [ "linkGeneration" ] ''
+    rm -rf "$HOME/.config/quickshell/default"
+  '';
+
+  # Use quickshell config from dots-hyprland flake input with custom overrides
+  home.file.".config/quickshell/default".source = let
+    baseConfig = "${inputs.dots-hyprland}/dots/.config/quickshell/ii";
+    customScripts = ./hyprland/scripts;
+    customOverrides = ./hyprland/quickshell-overrides;
+  in pkgs.runCommand "quickshell-config-merged" {} ''
+    # Copy base config
+    cp -rL ${baseConfig} $out
+    chmod -R u+w $out
+
+    # Override with our custom keybind parsers
+    cp ${customScripts}/get_keybinds.py $out/scripts/hyprland/get_keybinds.py
+    chmod +x $out/scripts/hyprland/get_keybinds.py
+    cp ${customScripts}/get_nvim_keybinds.py $out/scripts/hyprland/get_nvim_keybinds.py
+    chmod +x $out/scripts/hyprland/get_nvim_keybinds.py
+    cp ${customScripts}/get_terminal_keybinds.py $out/scripts/hyprland/get_terminal_keybinds.py
+    chmod +x $out/scripts/hyprland/get_terminal_keybinds.py
+
+    # Add custom services
+    cp ${customOverrides}/services/NvimKeybinds.qml $out/services/NvimKeybinds.qml
+    cp ${customOverrides}/services/TerminalKeybinds.qml $out/services/TerminalKeybinds.qml
+
+    # Override cheatsheet with custom tabs
+    cp ${customOverrides}/modules/ii/cheatsheet/Cheatsheet.qml $out/modules/ii/cheatsheet/Cheatsheet.qml
+    cp ${customOverrides}/modules/ii/cheatsheet/CheatsheetNvim.qml $out/modules/ii/cheatsheet/CheatsheetNvim.qml
+    cp ${customOverrides}/modules/ii/cheatsheet/CheatsheetTerminal.qml $out/modules/ii/cheatsheet/CheatsheetTerminal.qml
+  '';
 
   # illogical-impulse config directory structure
   # The translations subdirectory is for AI-generated translations (optional)

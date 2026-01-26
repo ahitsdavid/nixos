@@ -14,13 +14,12 @@ in {
     (import ./hyprlock.nix)
     (import ./general.nix )
     (import ./colors.nix )
-    (import ./keybinds.nix ) # Now includes both submap changes and cheatsheet compatibility
+    (import ./keybinds.nix )
     (import ./execs.nix )
     (import ./rules.nix )
+    (import ./env.nix )  # Common env vars for all hosts
   ] ++ lib.optionals hasNvidia [
-    (import ./env-nvidia.nix )
-  ] ++ lib.optionals (!hasNvidia) [
-    (import ./env.nix )
+    (import ./env-nvidia.nix )  # NVIDIA-specific env vars
   ];
 
 }

@@ -4,25 +4,28 @@
 {
   wayland.windowManager.hyprland = {
     settings = {
-      # Window rules v2 (opacity rules moved here for Hyprland 0.52.0+ compatibility)
+      # Window rules v2
       windowrulev2 = [
-        # VSCode - blur and opacity
+        # Opacity - editors
         "opacity 0.8 0.8 1, class:^(code)$"
         "opacity 0.8 0.8 1, class:^([Cc]ode)$"
         "opacity 0.8 0.8 1, class:^(code-url-handler)$"
         "opacity 0.8 0.8 1, class:^(dev.zed.Zed)$"
         "opacity 0.8 0.8 1, class:^(zed)$"
 
-        # Uncomment to apply global transparency to all windows:
-        # "opacity 0.89 override 0.89 override, class:.*"
+        # Opacity - discord clients
+        "opacity 0.80 0.80 1, class:^(vesktop)$"
+        "opacity 0.80 0.80 1, class:^(discord)$"
+        "opacity 0.80 0.80 1, class:^(WebCord)$"
+        "opacity 0.80 0.80 1, class:^(ArmCord)$"
 
-        # Disable blur for XWayland windows (or context menus with shadow would look weird)
+        # Disable blur for XWayland windows
         "noblur, xwayland:1"
 
-        # Floating
+        # Floating - system utilities
         "float, class:^(blueberry\\.py)$"
         "float, class:^(steam)$"
-        "float, class:^(guifetch)$"   # FlafyDev/guifetch
+        "float, class:^(guifetch)$"
         "float, class:^(pavucontrol)$"
         "size 45%, class:^(pavucontrol)$"
         "center, class:^(pavucontrol)$"
@@ -32,6 +35,53 @@
         "float, class:^(nm-connection-editor)$"
         "size 45%, class:^(nm-connection-editor)$"
         "center, class:^(nm-connection-editor)$"
+        "float, class:^(blueman-manager)$"
+        "float, class:^(nm-applet)$"
+
+        # Floating - KDE apps
+        "float, class:^(org.kde.dolphin)$, title:^(Progress Dialog — Dolphin)$"
+        "float, class:^(org.kde.dolphin)$, title:^(Copying — Dolphin)$"
+        "float, class:^(org.kde.ark)$"
+        "float, class:^(org.kde.polkit-kde-authentication-agent-1)$"
+
+        # Floating - various apps
+        "float, class:^(vlc)$"
+        "float, class:^(kvantummanager)$"
+        "float, class:^(qt5ct)$"
+        "float, class:^(qt6ct)$"
+        "float, class:^(nwg-look)$"
+        "float, class:^(Signal)$"
+        "float, class:^(com.github.rafostar.Clapper)$"
+        "float, class:^(app.drey.Warp)$"
+        "float, class:^(net.davidotek.pupgui2)$"
+        "float, class:^(yad)$"
+        "float, class:^(eog)$"
+        "float, class:^(io.github.alainm23.planify)$"
+        "float, class:^(io.gitlab.theevilskeleton.Upscaler)$"
+        "float, class:^(com.github.unrud.VideoDownloader)$"
+        "float, class:^(io.gitlab.adhami3310.Impression)$"
+        "float, class:^(io.missioncenter.MissionCenter)$"
+
+        # Floating - Firefox
+        "float, title:^(About Mozilla Firefox)$"
+        "float, class:^(firefox)$, title:^(Picture-in-Picture)$"
+        "float, class:^(firefox)$, title:^(Library)$"
+
+        # Floating - kitty
+        "float, class:^(kitty)$, title:^(top)$"
+        "float, class:^(kitty)$, title:^(btop)$"
+        "float, class:^(kitty)$, title:^(htop)$"
+
+        # Common modals
+        "float, title:^(Open)$"
+        "float, title:^(Authentication Required)$"
+        "float, title:^(Add Folder to Workspace)$"
+        "float, title:^(Choose Files)$"
+        "float, title:^(Confirm to replace files)$"
+        "float, title:^(File Operation Progress)$"
+        "float, class:^([Xx]dg-desktop-portal-gtk)$"
+        "float, class:^(.*dialog.*)$"
+        "float, title:^(.*dialog.*)$"
 
         # Quickshell Settings
         "float, title:^(Quickshell Settings)$"
@@ -46,17 +96,9 @@
         "keepaspectratio, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$"
         "move 73% 72%, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$"
         "size 25%, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$"
-        "float, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$"
         "pin, title:^([Pp]icture[-\\s]?[Ii]n[-\\s]?[Pp]icture)(.*)$"
 
-        # Dialog windows – float+center these windows.
-        "center, title:^(Open File)(.*)$"
-        "center, title:^(Select a File)(.*)$"
-        "center, title:^(Choose wallpaper)(.*)$"
-        "center, title:^(Open Folder)(.*)$"
-        "center, title:^(Save As)(.*)$"
-        "center, title:^(Library)(.*)$"
-        "center, title:^(File Upload)(.*)$"
+        # File dialogs
         "float, title:^(Open File)(.*)$"
         "float, title:^(Select a File)(.*)$"
         "float, title:^(Choose wallpaper)(.*)$"
@@ -64,17 +106,26 @@
         "float, title:^(Save As)(.*)$"
         "float, title:^(Library)(.*)$"
         "float, title:^(File Upload)(.*)$"
+        "center, title:^(Open File)(.*)$"
+        "center, title:^(Select a File)(.*)$"
+        "center, title:^(Choose wallpaper)(.*)$"
+        "center, title:^(Open Folder)(.*)$"
+        "center, title:^(Save As)(.*)$"
+        "center, title:^(Library)(.*)$"
+        "center, title:^(File Upload)(.*)$"
 
-        # --- Tearing ---
+        # Gaming - tearing
         "immediate, title:.*\\.exe"
         "immediate, class:^(steam_app)"
 
-        # No shadow for tiled windows (matches windows that are not floating).
+        # No shadow for tiled windows
         "noshadow, floating:0"
       ];
 
       # Workspace rules
-      workspace = "special:special, gapsout:30";
+      workspace = [
+        "special:special, gapsout:30"
+      ];
 
       # Layer rules - Updated for Hyprland 0.53.0+
       # New syntax requires explicit "on" values and "match:namespace" selectors
