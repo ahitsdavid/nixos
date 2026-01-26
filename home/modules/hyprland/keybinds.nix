@@ -9,204 +9,254 @@ let
 in
 {
   # Note: All keybinds are now defined in extraConfig below for cheatsheet compatibility
-  # The Nix settings format is not used to avoid duplicate bindings
+  # Updated from end-4/dots-hyprland keybinds.conf
+  # Hyprland 0.53.1 compatible
 
-  # Keybinds with section headers for cheatsheet compatibility
-  # This overrides the keybinds defined above
   wayland.windowManager.hyprland.extraConfig = ''
     # Lines ending with `# [hidden]` won't be shown on cheatsheet
     # Lines starting with ##! are section headings
 
-    # Define modifier variables
-    $mod = SUPER
-    $modifier = SUPER
-
+    #!
     ##! Shell
-    bindd = $mod, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
-    bindd = $mod, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
-    bindd = $mod, Tab, Toggle overview, global, quickshell:overviewToggle # Toggle overview
-    bindd = $mod, A, Toggle left sidebar, global, quickshell:sidebarLeftToggle # Toggle left sidebar
-    bindd = $mod, N, Toggle right sidebar, global, quickshell:sidebarRightToggle # Toggle right sidebar
-    bindd = $mod, Slash, Toggle cheatsheet, global, quickshell:cheatsheetToggle # Toggle cheatsheet
-    bindd = $mod, K, Toggle on-screen keyboard, global, quickshell:oskToggle # Toggle on-screen keyboard
-    bindd = $mod, M, Toggle media controls, global, quickshell:mediaControlsToggle # Toggle media controls
-    bindd = CTRL+ALT, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
+    # Overview/app launcher via Super+Tab
+    bind = Super, Tab, global, quickshell:overviewWorkspacesToggle # Toggle overview
+    bindd = Super, V, Clipboard history >> clipboard, global, quickshell:overviewClipboardToggle # Clipboard history >> clipboard
+    bindd = Super, Period, Emoji >> clipboard, global, quickshell:overviewEmojiToggle # Emoji >> clipboard
+    bind = Super, A, global, quickshell:sidebarLeftToggle # Toggle left sidebar
+    bind = Super+Alt, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
+    bind = Super, B, global, quickshell:sidebarLeftToggle # [hidden]
+    bind = Super, O, global, quickshell:sidebarLeftToggle # [hidden]
+    bindd = Super, N, Toggle right sidebar, global, quickshell:sidebarRightToggle # Toggle right sidebar
+    bindd = Super, Slash, Toggle cheatsheet, global, quickshell:cheatsheetToggle # Toggle cheatsheet
+    bindd = Super, K, Toggle on-screen keyboard, global, quickshell:oskToggle # Toggle on-screen keyboard
+    bindd = Super, M, Toggle media controls, global, quickshell:mediaControlsToggle # Toggle media controls
+    bind = Super, G, global, quickshell:overlayToggle # Toggle overlay
+    bindd = Ctrl+Alt, Delete, Toggle session menu, global, quickshell:sessionToggle # Toggle session menu
+    bindd = Super, J, Toggle bar, global, quickshell:barToggle # Toggle bar
+    bind = Ctrl+Alt, Delete, exec, qs -c $qsConfig ipc call TEST_ALIVE || pkill wlogout || wlogout -p layer-shell # [hidden] Session menu (fallback)
+    bind = Shift+Super+Alt, Slash, exec, qs -p ~/.config/quickshell/$qsConfig/welcome.qml # [hidden] Launch welcome app
 
-    # QuickShell internal bindings
-    bind = $mod, mouse:272, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:273, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:274, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:275, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:276, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse:277, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse_up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, mouse_down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, A, global, quickshell:sidebarLeftToggleDetach # [hidden]
-    bind = $mod, B, global, quickshell:sidebarLeftToggle # [hidden]
-    bind = $mod, O, global, quickshell:sidebarLeftToggle # [hidden]
-    bindit = , Super_L, global, quickshell:workspaceNumber # [hidden]
-    bindid = , Super_L, Toggle overview, global, quickshell:overviewToggleRelease # Toggle overview/launcher
+    bindle=, XF86MonBrightnessUp, exec, qs -c $qsConfig ipc call brightness increment || brightnessctl s 5%+ # [hidden]
+    bindle=, XF86MonBrightnessDown, exec, qs -c $qsConfig ipc call brightness decrement || brightnessctl s 5%- # [hidden]
+    bindle=, XF86AudioRaiseVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%+ -l 1.5# [hidden]
+    bindle=, XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 2%- # [hidden]
 
-    # Interrupt bindings to prevent launcher on Super release when used in combos
-    bind = CTRL, Super_L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, V, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Period, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Tab, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, N, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Slash, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, K, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, M, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, C, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Return, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, T, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, W, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL, F, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Space, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, bracketleft, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, bracketright, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Q, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, Space, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, F, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, D, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, P, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 1, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 2, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 3, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 4, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 5, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 6, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 7, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 8, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 9, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL, Right, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL, Left, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Page_Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, Page_Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL, Page_Down, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL, Page_Up, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 1, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 2, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 3, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 4, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 5, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 6, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 7, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 8, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 9, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, 0, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+ALT, S, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, A, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, T, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, minus, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, equal, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, semicolon, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, apostrophe, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, XF86AudioMute, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+CONTROL+ALT, R, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod, L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-    bind = $mod+SHIFT, L, global, quickshell:overviewToggleReleaseInterrupt # [hidden]
-
-    ##! Apps
-    bind = $mod, C, exec, ~/.config/hypr/scripts/open_vscode_here.sh # VSCode
-    bind = $mod, Return, exec, ~/.config/hypr/scripts/launch_first_available.sh '${terminal}' 'kitty -1' 'foot' 'alacritty' 'wezterm' 'konsole' 'kgx' 'uxterm' 'xterm' # Terminal
-    bind = $mod, T, exec, ~/.config/hypr/scripts/open_terminal_here.sh # Terminal here
-    bind = $mod, W, exec, ~/.config/hypr/scripts/launch_first_available.sh '${browser}' 'zen-browser' 'firefox' 'brave' 'chromium' 'google-chrome-stable' 'microsoft-edge-stable' 'opera' # Browser
-    bind = $mod+CONTROL, F, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh '${file-manager}' 'dolphin' 'nautilus' 'nemo' 'thunar' # File manager
-    bind = $mod, Space, exec, pkill -x rofi || rofi -show drun # Launcher
+    bindl = ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_SINK@ toggle # [hidden]
+    bindld = Super+Shift,M, Toggle mute, exec, wpctl set-mute @DEFAULT_SINK@ toggle # [hidden]
+    bindl = Alt ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+    bindl = ,XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+    bindld = Super+Alt,M, Toggle mic, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
+    bindd = Ctrl+Super, T, Toggle wallpaper selector, global, quickshell:wallpaperSelectorToggle # Wallpaper selector
+    bindd = Ctrl+Super+Alt, T, Select random wallpaper, global, quickshell:wallpaperSelectorRandom # Random wallpaper
+    bindd = Ctrl+Super, T, Change wallpaper, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/quickshell/$qsConfig/scripts/colors/switchwall.sh # [hidden] Change wallpaper (fallback)
+    bind = Ctrl+Super, R, exec, killall ags agsv1 gjs ydotool qs quickshell; qs -c $qsConfig & # Restart widgets
+    bind = Ctrl+Super, P, global, quickshell:panelFamilyCycle # Cycle panel family
 
     ##! Utilities
-    bindd = $mod SHIFT, A, OCR text >> Google search, exec, ~/.config/quickshell/scripts/ocr/ocr-search.sh # OCR Search
-    bindd = $mod SHIFT, T, Choose wallpaper, exec, ~/.config/quickshell/scripts/colors/switchwall.sh # Wallpaper picker
+    # Screenshot, Record, OCR, Color picker, Clipboard history
+    bindd = Super, V, Copy clipboard history entry, exec, qs -c $qsConfig ipc call TEST_ALIVE || pkill fuzzel || cliphist list | fuzzel --match-mode fzf --dmenu | cliphist decode | wl-copy # [hidden] Clipboard history >> clipboard (fallback)
+    bindd = Super, Period, Copy an emoji, exec, qs -c $qsConfig ipc call TEST_ALIVE || pkill fuzzel || ~/.config/hypr/hyprland/scripts/fuzzel-emoji.sh copy # [hidden] Emoji >> clipboard (fallback)
+    bind = Super+Shift, S, global, quickshell:regionScreenshot # Screen snip
+    bind = Super+Shift, S, exec, qs -c $qsConfig ipc call TEST_ALIVE || pidof slurp || hyprshot --freeze --clipboard-only --mode region --silent # [hidden] Screen snip (fallback)
+    bind = Super+Shift, A, global, quickshell:regionSearch # Google Lens
+    bind = Super+Shift, A, exec, qs -c $qsConfig ipc call TEST_ALIVE || pidof slurp || ~/.config/hypr/hyprland/scripts/snip_to_search.sh # [hidden] Google Lens (fallback)
+    # OCR
+    bind = Super+Shift, X, global, quickshell:regionOcr # Character recognition >> clipboard
+    bind = Super+Shift, T, global, quickshell:regionOcr # [hidden]
+    bind = Super+Shift, X,exec, qs -c $qsConfig ipc call TEST_ALIVE || pidof slurp || grim -g "$(slurp $SLURP_ARGS)" "/tmp/ocr_image.png" && tesseract "/tmp/ocr_image.png" stdout -l $(tesseract --list-langs | awk 'NR>1{print $1}' | tr '\n' '+' | sed 's/\+$/\n/') | wl-copy && rm "/tmp/ocr_image.png" # [hidden]
+    bind = Super+Shift, T,exec, qs -c $qsConfig ipc call TEST_ALIVE || pidof slurp || grim -g "$(slurp $SLURP_ARGS)" "/tmp/ocr_image.png" && tesseract "/tmp/ocr_image.png" stdout -l $(tesseract --list-langs | awk 'NR>1{print $1}' | tr '\n' '+' | sed 's/\+$/\n/') | wl-copy && rm "/tmp/ocr_image.png" # [hidden]
+    # Color picker
+    bindd = Super+Shift, C, Color picker, exec, hyprpicker -a # Pick color (Hex) >> clipboard
+    # Fullscreen screenshot
+    bindl = ,Print,exec,grim - | wl-copy # Screenshot >> clipboard
+    bindln = Ctrl,Print, exec, mkdir -p $(xdg-user-dir PICTURES)/Screenshots && grim $(xdg-user-dir PICTURES)/Screenshots/Screenshot_"$(date '+%Y-%m-%d_%H.%M.%S')".png # Screenshot >> clipboard & file (file)
+    bindln = Ctrl,Print,exec,grim - | wl-copy # [hidden] Screenshot >> clipboard & file (clipboard)
+    # Recording stuff
+    bindl = Super+Shift, R, global, quickshell:regionRecord # Record region (no sound)
+    bindl = Super+Shift, R, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/quickshell/$qsConfig/scripts/videos/record.sh # [hidden] Record region (no sound) (fallback)
+    bindl = Super+Alt, R, global, quickshell:regionRecord # [hidden] Record region (no sound)
+    bindl = Super+Alt, R, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/quickshell/$qsConfig/scripts/videos/record.sh # [hidden] Record region (no sound) (fallback)
+    bindl = Ctrl+Alt, R, exec, ~/.config/quickshell/$qsConfig/scripts/videos/record.sh --fullscreen # [hidden] Record screen (no sound)
+    bindl = Super+Shift+Alt, R, exec, ~/.config/quickshell/$qsConfig/scripts/videos/record.sh --fullscreen --sound # Record screen (with sound)
+    # AI
+    bindd = Super+Shift+Alt, mouse:273, Generate AI summary for selected text, exec, ~/.config/hypr/hyprland/scripts/ai/primary-buffer-query.sh # [hidden] AI summary for selected text
 
+    #!
     ##! Window
-    bindm = $mod, mouse:272, movewindow # Move
-    bindm = $mod, mouse:273, resizewindow # Resize
-    bind = $mod, Left, movefocus, l # [hidden]
-    bind = $mod, Right, movefocus, r # [hidden]
-    bind = $mod, Up, movefocus, u # [hidden]
-    bind = $mod, Down, movefocus, d # [hidden]
-    bind = $mod, bracketleft, movefocus, l # [hidden]
-    bind = $mod, bracketright, movefocus, r # [hidden]
-    bind = $mod, Q, killactive, # Close
-    bind = $mod SHIFT, Left, movewindow, l # [hidden]
-    bind = $mod SHIFT, Right, movewindow, r # [hidden]
-    bind = $mod SHIFT, Up, movewindow, u # [hidden]
-    bind = $mod SHIFT, Down, movewindow, d # [hidden]
-    bind = $mod SHIFT, Space, togglefloating, # Float/Tile
-    bind = $mod, F, fullscreen, 0 # Fullscreen
-    bind = $mod, D, fullscreen, 1 # Maximize
-    bind = $mod, P, pin # Pin
+    # Focusing
+    bindm = Super, mouse:272, movewindow # Move
+    bindm = Super, mouse:274, movewindow # [hidden]
+    bindm = Super, mouse:273, resizewindow # Resize
+    #/# bind = Super, ←/↑/→/↓,, # Focus in direction
+    bind = Super, Left, movefocus, l # [hidden]
+    bind = Super, Right, movefocus, r # [hidden]
+    bind = Super, Up, movefocus, u # [hidden]
+    bind = Super, Down, movefocus, d # [hidden]
+    bind = Super, BracketLeft, movefocus, l # [hidden]
+    bind = Super, BracketRight, movefocus, r # [hidden]
+    #/# bind = Super+Shift, ←/↑/→/↓,, # Move in direction
+    bind = Super+Shift, Left, movewindow, l # [hidden]
+    bind = Super+Shift, Right, movewindow, r # [hidden]
+    bind = Super+Shift, Up, movewindow, u # [hidden]
+    bind = Super+Shift, Down, movewindow, d # [hidden]
+    bind = Alt, F4, killactive, # [hidden] Close (Windows)
+    bind = Super, Q, killactive, # Close
+    bind = Super+Shift+Alt, Q, exec, hyprctl kill # Forcefully zap a window
+
+    # Window split ratio
+    #/# binde = Super, ;/',, # Adjust split ratio
+    binde = Super, Semicolon, splitratio, -0.1 # [hidden]
+    binde = Super, Apostrophe, splitratio, +0.1 # [hidden]
+    # Positioning mode
+    bind = Super+Alt, Space, togglefloating, # Float/Tile
+    bind = Super, D, fullscreen, 1 # Maximize
+    bind = Super, F, fullscreen, 0 # Fullscreen
+    bind = Super+Alt, F, fullscreenstate, 0 3 # Fullscreen spoof
+    bind = Super, P, pin # Pin
+
+    #/# bind = Super+Alt, Hash,, # Send to workspace # (1, 2, 3,...)
+    # We use raw keycodes because some keyboard layouts register number keys as different chars. The codes can be verified with `wev`
+    bind = Super+Alt, code:10, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 1 # [hidden]
+    bind = Super+Alt, code:11, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 2 # [hidden]
+    bind = Super+Alt, code:12, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 3 # [hidden]
+    bind = Super+Alt, code:13, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 4 # [hidden]
+    bind = Super+Alt, code:14, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 5 # [hidden]
+    bind = Super+Alt, code:15, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 6 # [hidden]
+    bind = Super+Alt, code:16, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 7 # [hidden]
+    bind = Super+Alt, code:17, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 8 # [hidden]
+    bind = Super+Alt, code:18, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 9 # [hidden]
+    bind = Super+Alt, code:19, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 10 # [hidden]
+    # keypad numbers
+    bind = Super+Alt, code:87, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 1  # [hidden]
+    bind = Super+Alt, code:88, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 2  # [hidden]
+    bind = Super+Alt, code:89, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 3  # [hidden]
+    bind = Super+Alt, code:83, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 4  # [hidden]
+    bind = Super+Alt, code:84, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 5  # [hidden]
+    bind = Super+Alt, code:85, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 6  # [hidden]
+    bind = Super+Alt, code:79, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 7  # [hidden]
+    bind = Super+Alt, code:80, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 8  # [hidden]
+    bind = Super+Alt, code:81, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 9  # [hidden]
+    bind = Super+Alt, code:90, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh movetoworkspacesilent 10 # [hidden]
+
+    # #/# bind = Super+Shift, Scroll ↑/↓,, # Send to workspace left/right
+    bind = Super+Shift, mouse_down, movetoworkspace, r-1 # [hidden]
+    bind = Super+Shift, mouse_up, movetoworkspace, r+1 # [hidden]
+    bind = Super+Alt, mouse_down, movetoworkspace, -1 # [hidden]
+    bind = Super+Alt, mouse_up, movetoworkspace, +1 # [hidden]
+
+    #/# bind = Super+Shift, Page_↑/↓,, # Send to workspace left/right
+    bind = Super+Alt, Page_Down, movetoworkspace, +1 # [hidden]
+    bind = Super+Alt, Page_Up, movetoworkspace, -1 # [hidden]
+    bind = Super+Shift, Page_Down, movetoworkspace, r+1  # [hidden]
+    bind = Super+Shift, Page_Up, movetoworkspace, r-1  # [hidden]
+    bind = Ctrl+Super+Shift, Right, movetoworkspace, r+1 # [hidden]
+    bind = Ctrl+Super+Shift, Left, movetoworkspace, r-1 # [hidden]
+
+    bind = Super+Alt, S, movetoworkspacesilent, special # Send to scratchpad
+
+    bind = Ctrl+Super, S, togglespecialworkspace, # [hidden]
 
     ##! Workspace
-    bind = $mod, 1, workspace, 1 # [hidden]
-    bind = $mod, 2, workspace, 2 # [hidden]
-    bind = $mod, 3, workspace, 3 # [hidden]
-    bind = $mod, 4, workspace, 4 # [hidden]
-    bind = $mod, 5, workspace, 5 # [hidden]
-    bind = $mod, 6, workspace, 6 # [hidden]
-    bind = $mod, 7, workspace, 7 # [hidden]
-    bind = $mod, 8, workspace, 8 # [hidden]
-    bind = $mod, 9, workspace, 9 # [hidden]
-    bind = $mod, 0, workspace, 10 # [hidden]
-    bind = $mod, mouse_up, workspace, +1 # [hidden]
-    bind = $mod, mouse_down, workspace, -1 # [hidden]
-    bind = $mod CONTROL, Right, workspace, r+1 # [hidden]
-    bind = $mod CONTROL, Left, workspace, r-1 # [hidden]
-    bind = $mod, Page_Down, workspace, +1 # [hidden]
-    bind = $mod, Page_Up, workspace, -1 # [hidden]
-    bind = $mod CONTROL, Page_Down, workspace, r+1 # [hidden]
-    bind = $mod CONTROL, Page_Up, workspace, r-1 # [hidden]
-    bind = $mod, S, togglespecialworkspace, # Toggle scratchpad
+    # Switching
+    #/# bind = Super, Hash,, # Focus workspace # (1, 2, 3,...)
+    # We use raw keycodes because some keyboard layouts register number keys as different chars. The codes can be verified with `wev`
+    bind = Super, code:10, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 1 # [hidden]
+    bind = Super, code:11, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 2 # [hidden]
+    bind = Super, code:12, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 3 # [hidden]
+    bind = Super, code:13, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 4 # [hidden]
+    bind = Super, code:14, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 5 # [hidden]
+    bind = Super, code:15, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 6 # [hidden]
+    bind = Super, code:16, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 7 # [hidden]
+    bind = Super, code:17, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 8 # [hidden]
+    bind = Super, code:18, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 9 # [hidden]
+    bind = Super, code:19, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 10 # [hidden]
+    # keypad numbers
+    bindp = Super, code:87, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 1  # [hidden]
+    bindp = Super, code:88, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 2  # [hidden]
+    bindp = Super, code:89, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 3  # [hidden]
+    bindp = Super, code:83, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 4  # [hidden]
+    bindp = Super, code:84, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 5  # [hidden]
+    bindp = Super, code:85, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 6  # [hidden]
+    bindp = Super, code:79, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 7  # [hidden]
+    bindp = Super, code:80, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 8  # [hidden]
+    bindp = Super, code:81, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 9  # [hidden]
+    bindp = Super, code:90, exec, ~/.config/hypr/hyprland/scripts/workspace_action.sh workspace 10 # [hidden]
 
-    bind = $mod ALT, 1, movetoworkspacesilent, 1 # [hidden]
-    bind = $mod ALT, 2, movetoworkspacesilent, 2 # [hidden]
-    bind = $mod ALT, 3, movetoworkspacesilent, 3 # [hidden]
-    bind = $mod ALT, 4, movetoworkspacesilent, 4 # [hidden]
-    bind = $mod ALT, 5, movetoworkspacesilent, 5 # [hidden]
-    bind = $mod ALT, 6, movetoworkspacesilent, 6 # [hidden]
-    bind = $mod ALT, 7, movetoworkspacesilent, 7 # [hidden]
-    bind = $mod ALT, 8, movetoworkspacesilent, 8 # [hidden]
-    bind = $mod ALT, 9, movetoworkspacesilent, 9 # [hidden]
-    bind = $mod ALT, 0, movetoworkspacesilent, 10 # [hidden]
-    bind = $mod ALT, S, movetoworkspacesilent, special # [hidden]
+    #/# bind = Ctrl+Super, ←/→,, # Focus left/right
+    bind = Ctrl+Super, Right, workspace, r+1 # [hidden]
+    bind = Ctrl+Super, Left, workspace, r-1 # [hidden]
+    #/# bind = Ctrl+Super+Alt, ←/→,, # [hidden] Focus busy left/right
+    bind = Ctrl+Super+Alt, Right, workspace, m+1 # [hidden]
+    bind = Ctrl+Super+Alt, Left, workspace, m-1 # [hidden]
+    #/# bind = Super, Page_↑/↓,, # Focus left/right
+    bind = Super, Page_Down, workspace, +1 # [hidden]
+    bind = Super, Page_Up, workspace, -1 # [hidden]
+    bind = Ctrl+Super, Page_Down, workspace, r+1 # [hidden]
+    bind = Ctrl+Super, Page_Up, workspace, r-1 # [hidden]
+    #/# bind = Super, Scroll ↑/↓,, # Focus left/right
+    bind = Super, mouse_up, workspace, +1 # [hidden]
+    bind = Super, mouse_down, workspace, -1 # [hidden]
+    bind = Ctrl+Super, mouse_up, workspace, r+1 # [hidden]
+    bind = Ctrl+Super, mouse_down, workspace, r-1 # [hidden]
+    ## Special
+    bind = Super, S, togglespecialworkspace, # Toggle scratchpad
+    bind = Super, mouse:275, togglespecialworkspace, # [hidden]
+    bind = Ctrl+Super, BracketLeft, workspace, -1 # [hidden]
+    bind = Ctrl+Super, BracketRight, workspace, +1 # [hidden]
+    bind = Ctrl+Super, Up, workspace, r-5 # [hidden]
+    bind = Ctrl+Super, Down, workspace, r+5 # [hidden]
 
-    bind = ALT, Tab, cyclenext, # [hidden]
-    bind = ALT, Tab, bringactivetotop, # [hidden]
+    ##! Virtual machines
+    #bind = Super+Alt, F1, exec, notify-send 'Entered Virtual Machine submap' 'Keybinds disabled. Hit Super+Alt+F1 to escape' -a 'Hyprland' && hyprctl dispatch submap virtual-machine # Disable keybinds
+    #submap = virtual-machine
+    #bind = Super+Alt, F1, exec, notify-send 'Exited Virtual Machine submap' 'Keybinds re-enabled' -a 'Hyprland' && hyprctl dispatch submap global # [hidden]
+    #submap = global
 
+    #!
     ##! Session
-    bind = $modifier,L,exec,loginctl lock-session # Lock
-    bind = $modifier SHIFT,L,exec,loginctl lock-session # [hidden]
+    bindd = Super, L, Lock, exec, loginctl lock-session # Lock
+    bindld = Super+Shift, L, Suspend system, exec, systemctl suspend || loginctl suspend # Sleep
+    # bindl=,switch:on:Lid Switch, exec, systemctl suspend || loginctl suspend # [hidden] Suspend when laptop lid is closed, uncomment if for whatever reason it's not the default behavior
+    bindd = Ctrl+Shift+Alt+Super, Delete, Shutdown, exec, systemctl poweroff || loginctl poweroff # [hidden] Power off
+
+    ##! Screen
+    # Zoom
+    binde = Super, Minus, exec, qs -c $qsConfig ipc call zoom zoomOut # Zoom out
+    binde = Super, Equal, exec, qs -c $qsConfig ipc call zoom zoomIn # Zoom in
+    binde = Super, Minus, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/hypr/hyprland/scripts/zoom.sh decrease 0.1 # [hidden] Zoom out
+    binde = Super, Equal, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/hypr/hyprland/scripts/zoom.sh increase 0.1 # [hidden] Zoom in
+    # Zoom with keypad
+    binde = Super, code:82, exec, qs -c $qsConfig ipc call zoom zoomOut # [hidden] Zoom out
+    binde = Super, code:86, exec, qs -c $qsConfig ipc call zoom zoomIn # [hidden] Zoom in
+    binde = Super, code:82, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/hypr/hyprland/scripts/zoom.sh decrease 0.1 # [hidden] Zoom out
+    binde = Super, code:86, exec, qs -c $qsConfig ipc call TEST_ALIVE || ~/.config/hypr/hyprland/scripts/zoom.sh increase 0.1 # [hidden] Zoom in
 
     ##! Media
-    bind = , XF86AudioPlay, exec, playerctl play-pause # [hidden]
-    bind = , XF86AudioNext, exec, playerctl next # [hidden]
-    bind = , XF86AudioPrev, exec, playerctl previous # [hidden]
+    bindl= Super+Shift, N, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # Next track
+    bindl= ,XF86AudioNext, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # [hidden]
+    bindl= ,XF86AudioPrev, exec, playerctl previous # [hidden]
+    bind = Super+Shift+Alt, mouse:275, exec, playerctl previous # [hidden]
+    bind = Super+Shift+Alt, mouse:276, exec, playerctl next || playerctl position `bc <<< "100 * $(playerctl metadata mpris:length) / 1000000 / 100"` # [hidden]
+    bindl= Super+Shift, B, exec, playerctl previous # Previous track
+    bindl= Super+Shift, P, exec, playerctl play-pause # Play/pause media
+    bindl= ,XF86AudioPlay, exec, playerctl play-pause # [hidden]
+    bindl= ,XF86AudioPause, exec, playerctl play-pause # [hidden]
 
-    binde = $mod, minus, splitratio, -0.1 # [hidden]
-    binde = $mod, equal, splitratio, +0.1 # [hidden]
-    binde = $mod, semicolon, splitratio, -0.1 # [hidden]
-    binde = $mod, apostrophe, splitratio, +0.1 # [hidden]
-    binde = , XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+ # [hidden]
-    binde = , XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%- # [hidden]
-    binde = , XF86MonBrightnessUp, exec, brightnessctl set 5%+ # [hidden]
-    binde = , XF86MonBrightnessDown, exec, brightnessctl set 5%- # [hidden]
+    ##! Apps
+    bind = Super, Return, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "${terminal}" "kitty -1" "foot" "alacritty" "wezterm" "konsole" "kgx" "uxterm" "xterm" # Terminal
+    bind = Super, T, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh  "${terminal}" "kitty -1" "foot" "alacritty" "wezterm" "konsole" "kgx" "uxterm" "xterm" # [hidden] (terminal) (alt) 
+    bind = Ctrl+Alt, T, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "${terminal}" "kitty -1" "foot" "alacritty" "wezterm" "konsole" "kgx" "uxterm" "xterm" # [hidden] (terminal) (for Ubuntu people)
+    bind = Super, E, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "${file-manager}" "dolphin" "nautilus" "nemo" "thunar" "${terminal}" "kitty -1 fish -c yazi" # File manager
+    bind = Super, W, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "${browser}" "google-chrome-stable" "zen-browser" "firefox" "brave" "chromium" "microsoft-edge-stable" "opera" "librewolf" # Browser  
+    bind = Super, C, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "code" "codium" "cursor" "zed" "zedit" "zeditor" "kate" "gnome-text-editor" "emacs" "command -v nvim && kitty -1 nvim" "command -v micro && kitty -1 micro" # Code editor
+    bind = Ctrl+Super+Shift+Alt, W, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "wps" "onlyoffice-desktopeditors" "libreoffice" # Office software
+    bind = Super, X, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "kate" "gnome-text-editor" "emacs" # Text editor
+    bind = Ctrl+Super, V, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "pavucontrol-qt" "pavucontrol" # Volume mixer
+    bind = Super, I, exec, XDG_CURRENT_DESKTOP=gnome ~/.config/hypr/hyprland/scripts/launch_first_available.sh "qs -p ~/.config/quickshell/$qsConfig/settings.qml" "systemsettings" "gnome-control-center" "better-control" # Settings app
+    bind = Ctrl+Shift, Escape, exec, ~/.config/hypr/hyprland/scripts/launch_first_available.sh "gnome-system-monitor" "plasma-systemmonitor --page-name Processes" "command -v btop && kitty -1 fish -c btop" # Task manager
 
-    bindl = , XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle # [hidden]
-    bindl = $mod, XF86AudioMute, exec, wpctl set-mute @DEFAULT_SOURCE@ toggle # [hidden]
-    bindl = , switch:on:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,disable' # [hidden]
-    bindl = , switch:off:Lid Switch, exec, hyprctl keyword monitor 'eDP-1,preferred,auto,1' # [hidden]
-
-    bindr = $mod CONTROL ALT, R, exec, hyprctl reload # [hidden]
+    # Cursed stuff
+    ## Make window not amogus large
+    bind = Ctrl+Super, Backslash, resizeactive, exact 640 480 # [hidden]
   '';
 }

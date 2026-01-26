@@ -1,10 +1,20 @@
 { config, lib, pkgs, inputs, ... }:
 
 {
+  # Persist GNOME dark mode setting - required for matugen to generate dark colors
+  # The end-4 quickshell uses switchwall.sh which checks this gsettings value
+  # to determine whether to generate dark or light Material You colors
+  dconf.settings = {
+    "org/gnome/desktop/interface" = {
+      color-scheme = lib.mkForce "prefer-dark";
+      gtk-theme = lib.mkForce "adw-gtk3-dark";
+    };
+  };
+
   # Use the official QuickShell from flake (has polkit support)
   programs.quickshell = {
     enable = true;
-    package = inputs.quickshell.packages.${pkgs.system}.default;
+    package = inputs.quickshell.packages.${pkgs.stdenv.hostPlatform.system}.default;
     systemd = {
       enable = true;
     };
@@ -154,7 +164,7 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.ubuntu
     nerd-fonts.fantasque-sans-mono
-    twemoji-color-font
+    noto-fonts-color-emoji  # Don't use twemoji-color-font - broken fontconfig makes emoji primary font
     noto-fonts
     liberation_ttf
 

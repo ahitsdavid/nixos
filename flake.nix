@@ -109,7 +109,9 @@
           # home-manager NixOS module
           home-manager.nixosModules.home-manager {
             home-manager.useGlobalPkgs = true;
+            # Overwrite existing .backup files instead of failing
             home-manager.backupFileExtension = "backup";
+            home-manager.backupCommand = "mv -f";
             home-manager.useUserPackages = true;
             home-manager.extraSpecialArgs = { inherit inputs username system; hostname = hostname; };
             home-manager.users.${username} = {

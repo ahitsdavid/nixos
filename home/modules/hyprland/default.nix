@@ -1,9 +1,12 @@
 # Hyprland default.nix
-{ pkgs, config, lib, hostname ? "unknown", ... }:
+{ pkgs, config, lib, inputs, hostname ? "unknown", ... }:
 let
   # Hosts with NVIDIA GPUs that need NVIDIA-specific env vars
   hasNvidia = hostname == "desktop" || hostname == "legion";
 in {
+
+  # Symlink hyprland scripts from end-4 dots
+  home.file.".config/hypr/hyprland/scripts".source = "${inputs.dots-hyprland}/dots/.config/hypr/hyprland/scripts";
 
   imports = [
     (import ./hypridle.nix )

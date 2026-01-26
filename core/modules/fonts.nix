@@ -6,7 +6,7 @@
       source-code-pro
       noto-fonts
       noto-fonts-cjk-sans
-      twitter-color-emoji
+      noto-fonts-color-emoji  # Don't use twitter-color-emoji - it has broken fontconfig that makes emoji the primary font
       font-awesome
       powerline-fonts
       nerd-fonts.jetbrains-mono
@@ -20,8 +20,6 @@
         enable = true;
         autohint = true;
       };
-      # Let Stylix handle default fonts
-      # defaultFonts will be managed by Stylix configuration
     };
   };
 }

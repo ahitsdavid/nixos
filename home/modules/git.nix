@@ -11,7 +11,7 @@ in
 
     # Use work email from sops when cloning from work GitLab
     # Personal commits will use this as default (can override per-repo)
-    extraConfig = lib.mkMerge [
+    settings = lib.mkMerge [
       # Global git settings
       {
         init.defaultBranch = "main";
