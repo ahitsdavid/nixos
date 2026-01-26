@@ -1,5 +1,5 @@
-# Markdown files
-*.md
+# Claude Code project file (local only)
+CLAUDE.md
 
 # Age keys - NEVER COMMIT YOUR PRIVATE KEYS!
 **/*age/keys.txt
