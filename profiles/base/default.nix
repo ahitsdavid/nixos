@@ -88,4 +88,19 @@
   # Configure AccountsService which handles user icons
   services.accounts-daemon.enable = true;
 
+  # Ensure /etc/nixos symlinks to the flake directory for quickshell scripts
+  system.activationScripts.symlinkNixosConfig = {
+    text = ''
+      # Target directory where the flake config lives
+      FLAKE_DIR="/home/${username}/nixos"
+
+      # Only create symlink if not already correct
+      if [ ! -L /etc/nixos ] || [ "$(readlink /etc/nixos)" != "$FLAKE_DIR" ]; then
+        echo "Setting up /etc/nixos symlink to $FLAKE_DIR..."
+        rm -rf /etc/nixos
+        ln -sf "$FLAKE_DIR" /etc/nixos
+      fi
+    '';
+  };
+
 }
