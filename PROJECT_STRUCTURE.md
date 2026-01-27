@@ -174,14 +174,18 @@ This is a multi-host NixOS configuration using Nix Flakes. The repository suppor
 | File | Purpose |
 |------|---------|
 | `zsh/default.nix` | Zsh with plugins, aliases, completions |
-| `kitty.nix` | Kitty terminal emulator |
+| `kitty.nix` | Kitty terminal + kittens (kitty_grab, kitty-scrollback.nvim) |
 | `bash.nix` | Bash configuration |
+
+**Kitty Kittens:**
+- `kitty_grab` (`Alt+G`) - Vim-style visual text selection
+- `kitty-scrollback.nvim` (`Ctrl+Shift+H`) - Browse scrollback in Neovim
 
 #### Editors & Development
 
 | File | Purpose |
 |------|---------|
-| `nvf.nix` | Neovim (nvf framework) with LSP, Treesitter |
+| `nvf.nix` | Neovim (nvf framework) with LSP, Treesitter, kitty-scrollback |
 | `vscode.nix` | VS Code with extensions |
 | `zed.nix` | Zed editor (Rust-based) |
 | `claude.nix` | Claude Code CLI |
@@ -331,7 +335,7 @@ Custom tabbed help overlay displaying keyboard shortcuts:
 |--------|---------|--------|
 | `get_keybinds.py` | Hyprland keybind parser | `keybinds.nix` |
 | `get_nvim_keybinds.py` | Neovim keybind parser | `nvf.nix` |
-| `get_terminal_keybinds.py` | Terminal keybind parser | `kitty.nix`, `zsh/`, `eza.nix`, `claude.nix` |
+| `get_terminal_keybinds.py` | Terminal keybind parser | `kitty.nix` (incl. kitty_grab), `zsh/`, `eza.nix`, `claude.nix` |
 
 **Features:**
 - Extracts keybinds from Nix `extraConfig` blocks

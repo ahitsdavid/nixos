@@ -10,6 +10,9 @@
     # Hybrid graphics (BIOS set to Dynamic/Hybrid)
     ../../core/drivers/intel.nix
     ../../core/drivers/nvidia.nix
+
+    # Waydroid - uses Intel iGPU for proper GPU acceleration
+    ../../core/modules/waydroid.nix
   ];
 
   # Enable both graphics drivers

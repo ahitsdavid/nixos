@@ -54,7 +54,7 @@ A key customization built on top of end-4's QuickShell configuration. The cheats
 |------------|----------------------|----------------------------------------------------|
 | Keybinds   | `keybinds.nix`       | Hyprland window manager shortcuts                  |
 | Neovim     | `nvf.nix`            | Neovim keybinds by mode (Normal, Insert, etc.)     |
-| Terminal   | `kitty.nix`, `zsh/`  | Kitty terminal shortcuts and shell aliases         |
+| Terminal   | `kitty.nix`, `zsh/`  | Kitty shortcuts, kittens (kitty_grab, scrollback), shell aliases |
 | Elements   | end-4                | Periodic table (from upstream)                     |
 
 Custom Python parsers extract keybinds directly from Nix configuration files, so the cheatsheet always reflects the actual configured shortcuts.
@@ -79,7 +79,7 @@ Custom Python parsers extract keybinds directly from Nix configuration files, so
 - **Browsers** - Firefox (with extensions), Zen Browser, Chromium
 - **Media** - Spotify (Spicetify themed), VLC, OBS Studio
 - **Productivity** - LibreOffice, Obsidian, Bitwarden
-- **Terminals** - Kitty, Zsh with plugins and completions
+- **Terminals** - Kitty (with kittens: kitty_grab, kitty-scrollback.nvim), Zsh with plugins
 
 ---
 
@@ -163,7 +163,7 @@ This configuration uses [end-4/dots-hyprland](https://github.com/end-4/dots-hypr
 | `TerminalKeybinds.qml`      | QML service that runs Python parser for terminals    |
 | `get_keybinds.py`           | Enhanced parser supporting all Hyprland bind types   |
 | `get_nvim_keybinds.py`      | Parser extracting keybinds from nvf.nix              |
-| `get_terminal_keybinds.py`  | Parser for Kitty and shell alias definitions         |
+| `get_terminal_keybinds.py`  | Parser for Kitty keybinds, kittens, and shell aliases |
 
 ---
 
