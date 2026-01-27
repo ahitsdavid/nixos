@@ -13,6 +13,7 @@
     insomnia
     git-lfs
     meld
+    antigravity        # Google's AI-first IDE (VS Code fork)
   ];
 
   # Allow unfree packages moved to flake.nix to avoid home-manager warning
