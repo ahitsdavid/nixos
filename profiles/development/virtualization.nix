@@ -10,6 +10,7 @@
       runAsRoot = true;
       swtpm.enable = true;  # TPM emulation for Windows 11
       # OVMF (UEFI) is now available by default
+      vhostUserPackages = [ pkgs.virtiofsd ];  # For shared folders
     };
   };
 
