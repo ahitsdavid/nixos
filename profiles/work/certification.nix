@@ -15,29 +15,40 @@ let
 
   # Full paths to p7b files
   p7bPaths = map (f: "${certsDir}/${f}") p7bFiles;
-in 
+in
 {
   # Add PEM certificates to the system certificate store if available
-  security.pki.certificates = if hasPemCert 
+  security.pki.certificates = if hasPemCert
                              then [ (builtins.readFile pemFile) ]
                              else [];
 
+  # CAC/Smart Card packages
+  environment.systemPackages = with pkgs; [
+    opensc       # Smart card utilities and PKCS#11 module
+    ccid         # USB CCID smart card driver
+    pcsc-tools   # pcsc_scan and other diagnostic tools
+  ];
+
   # CAC settings
   services.pcscd.enable = true;
+
+  # Create a stable symlink for opensc-pkcs11.so that survives garbage collection
+  environment.etc."opensc-pkcs11.so".source = "${pkgs.opensc}/lib/opensc-pkcs11.so";
+
   environment.etc."pkcs11/modules/opensc.module" = {
     text = ''
-      module: ${pkgs.opensc}/lib/opensc-pkcs11.so
+      module: /etc/opensc-pkcs11.so
       critical: yes
       enable-in: p11-kit-trust
     '';
     mode = "0444";
   };
 
-  # Install Firefox policies manually
+  # Install Firefox policies manually (using stable symlink path)
   environment.etc."firefox/policies/policies.json".text = builtins.toJSON {
     policies = {
       SecurityDevices = {
-        "CAC Reader" = "${pkgs.opensc}/lib/opensc-pkcs11.so";
+        "CAC Reader" = "/etc/opensc-pkcs11.so";
       };
       Certificates = {
         ImportEnterpriseRoots = true;
@@ -50,7 +61,7 @@ in
   environment.etc."zen/policies/policies.json".text = builtins.toJSON {
     policies = {
       SecurityDevices = {
-        "CAC Reader" = "${pkgs.opensc}/lib/opensc-pkcs11.so";
+        "CAC Reader" = "/etc/opensc-pkcs11.so";
       };
       Certificates = {
         ImportEnterpriseRoots = true;
