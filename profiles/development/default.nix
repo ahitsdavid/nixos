@@ -5,6 +5,7 @@
     (import ./languages { inherit inputs; })
     (import ./tools.nix { inherit inputs; })
     (import ./containers.nix { inherit inputs; })
+    (import ./virtualization.nix { inherit inputs; })
   ];
 
   # Common development packages
