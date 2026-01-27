@@ -7,6 +7,7 @@ let
     rev = "969e363295b48f62fdcbf29987c77ac222109c41";
     hash = "sha256-DamZpYkyVjxRKNtW5LTLX1OU47xgd/ayiimDorVSamE=";
   };
+  kitty-scrollback = pkgs.vimPlugins.kitty-scrollback-nvim;
 in
 {
   # Kitty grab kitten for vim-style text selection
@@ -83,6 +84,10 @@ in
       # Kitty grab - vim-style visual selection
       map alt+g kitten kitty_grab/grab.py
 
+      # Kitty scrollback - browse scrollback in Neovim
+      action_alias kitty_scrollback_nvim kitten ${kitty-scrollback}/python/kitty_scrollback_nvim.py
+      map ctrl+shift+h kitty_scrollback_nvim
+
       # Clipboard
       map ctrl+shift+v        paste_from_selection
       map shift+insert        paste_from_selection
@@ -96,7 +101,7 @@ in
       map ctrl+shift+page_down scroll_page_down
       map ctrl+shift+home      scroll_home
       map ctrl+shift+end       scroll_end
-      map ctrl+shift+h         show_scrollback
+      # show_scrollback replaced by kitty_scrollback_nvim above
 
       # Window management
       map alt+n               new_window_with_cwd       #open in current dir

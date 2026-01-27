@@ -7,6 +7,9 @@
     enable = true;
     settings.vim = {
       vimAlias = true;
+
+      # Extra plugins not in nvf
+      startPlugins = [ pkgs.vimPlugins.kitty-scrollback-nvim ];
       viAlias = true;
       withNodeJs = true;
       lsp.enable = true;
@@ -121,6 +124,11 @@
             end
           end,
         })
+      '';
+
+      # Kitty scrollback - browse terminal scrollback in Neovim
+      luaConfigRC.kitty-scrollback = ''
+        require('kitty-scrollback').setup()
       '';
 
       spellcheck = {

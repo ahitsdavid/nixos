@@ -232,7 +232,12 @@ def format_kitty_action(action: str, args: str) -> str:
     if action == 'kitten':
         if 'kitty_grab' in args:
             return 'Vim-style visual selection'
+        if 'kitty_scrollback' in args:
+            return 'Browse scrollback in Neovim'
         return f'Kitten: {args}'
+
+    if action == 'kitty_scrollback_nvim':
+        return 'Browse scrollback in Neovim'
 
     return action.replace('_', ' ').title()
 
