@@ -100,6 +100,84 @@ def parse_kitty_key(key: str) -> tuple:
     return mods, main_key
 
 
+def parse_kitty_grab_keybinds(content: str) -> List[Dict[str, Any]]:
+    """Parse kitty_grab keybinds from grab.conf defined in kitty.nix."""
+    keybinds = []
+
+    # Find grab.conf content in home.file definition
+    grab_match = re.search(
+        r'home\.file\.".config/kitty/grab\.conf"\.text\s*=\s*\'\'(.*?)\'\';',
+        content,
+        re.DOTALL
+    )
+    if not grab_match:
+        return keybinds
+
+    grab_content = grab_match.group(1)
+    current_section = "General"
+
+    for line in grab_content.split('\n'):
+        line = line.strip()
+
+        # Check for section comments
+        if line.startswith('#') and not line.startswith('# '):
+            continue
+        if line.startswith('# '):
+            section_text = line[2:].strip()
+            if section_text and len(section_text) < 30:
+                current_section = section_text
+            continue
+
+        # Parse map statements: map <key> <action> [args...]
+        map_match = re.match(r'^map\s+(\S+)\s+(.+)$', line)
+        if map_match:
+            key = map_match.group(1)
+            action_full = map_match.group(2).strip()
+
+            # Generate description
+            comment = format_grab_action(action_full)
+
+            mods, main_key = parse_kitty_key(key)
+
+            keybinds.append({
+                "mods": mods,
+                "key": main_key,
+                "action": action_full,
+                "comment": comment,
+                "section": current_section
+            })
+
+    return keybinds
+
+
+def format_grab_action(action: str) -> str:
+    """Generate human-readable description for kitty_grab actions."""
+    action_map = {
+        'quit': 'Quit without copying',
+        'confirm': 'Copy selection and quit',
+        'move left': 'Move left',
+        'move down': 'Move down',
+        'move up': 'Move up',
+        'move right': 'Move right',
+        'move word': 'Move to next word',
+        'move word_end': 'Move to word end',
+        'move word_end left': 'Move to previous word',
+        'move first': 'Move to line start',
+        'move last': 'Move to line end',
+        'move top': 'Move to top',
+        'move bottom': 'Move to bottom',
+        'move page up': 'Page up',
+        'move page down': 'Page down',
+        'set_mode visual': 'Enter visual mode',
+        'set_mode block': 'Enter block select mode',
+        'select stream left first': 'Select entire line',
+        'scroll up': 'Scroll up',
+        'scroll down': 'Scroll down',
+    }
+
+    return action_map.get(action, action.replace('_', ' ').title())
+
+
 def format_kitty_action(action: str, args: str) -> str:
     """Generate human-readable description for kitty actions."""
     action_map = {
@@ -150,6 +228,11 @@ def format_kitty_action(action: str, args: str) -> str:
         elif '--location=vsplit' in args:
             return 'Vertical split'
         return f'Launch: {args}'
+
+    if action == 'kitten':
+        if 'kitty_grab' in args:
+            return 'Vim-style visual selection'
+        return f'Kitten: {args}'
 
     return action.replace('_', ' ').title()
 
@@ -212,6 +295,16 @@ def main():
                 "name": "Kitty",
                 "keybinds": [],
                 "children": kitty_sections
+            })
+
+        # Parse kitty_grab keybinds from same file
+        grab_keybinds = parse_kitty_grab_keybinds(kitty_content)
+        if grab_keybinds:
+            grab_sections = group_keybinds_by_section(grab_keybinds)
+            result["children"].append({
+                "name": "Kitty Grab (Alt+G)",
+                "keybinds": [],
+                "children": grab_sections
             })
 
     # Parse shell aliases from various sources
