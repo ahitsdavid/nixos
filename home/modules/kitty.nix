@@ -1,6 +1,57 @@
-#home/modules/kitty.nix 
+#home/modules/kitty.nix
 { pkgs, lib, ... } :
+let
+  kitty_grab = pkgs.fetchFromGitHub {
+    owner = "yurikhan";
+    repo = "kitty_grab";
+    rev = "969e363295b48f62fdcbf29987c77ac222109c41";
+    hash = "sha256-DamZpYkyVjxRKNtW5LTLX1OU47xgd/ayiimDorVSamE=";
+  };
+in
 {
+  # Kitty grab kitten for vim-style text selection
+  home.file.".config/kitty/kitty_grab".source = kitty_grab;
+
+  # Vim-style grab config
+  home.file.".config/kitty/grab.conf".text = ''
+    # Vim-style kitty_grab config
+
+    # Colors
+    selection_foreground #1e1e2e
+    selection_background #89b4fa
+
+    # Quit/confirm
+    map q quit
+    map Escape quit
+    map y confirm
+
+    # Movement (vim-style)
+    map h move left
+    map j move down
+    map k move up
+    map l move right
+    map w move word
+    map b move word_end left
+    map e move word_end
+    map 0 move first
+    map $ move last
+    map g move top
+    map G move bottom
+    map ctrl+u move page up
+    map ctrl+d move page down
+
+    # Visual mode (stream selection)
+    map v set_mode visual
+    map V select stream left first
+
+    # Block selection
+    map ctrl+v set_mode block
+
+    # Scrolling
+    map ctrl+y scroll up
+    map ctrl+e scroll down
+  '';
+
   programs.kitty = {
     enable = true;
     # Remove themeFile - let Stylix handle theming
@@ -28,6 +79,9 @@
       listen_on = "unix:/tmp/kitty";
     };
       extraConfig = ''
+
+      # Kitty grab - vim-style visual selection
+      map alt+g kitten kitty_grab/grab.py
 
       # Clipboard
       map ctrl+shift+v        paste_from_selection
