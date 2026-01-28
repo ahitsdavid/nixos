@@ -102,5 +102,63 @@ in
         echo "  Name: $WORK_USERNAME"
       '';
     };
+
+    # Auto-detect work remote and set up identity (silent mode available)
+    ".local/bin/git-work-setup" = {
+      executable = true;
+      text = ''
+        #!/bin/sh
+        # Auto-detect if current repo is a work GitLab and set up identity
+        # Usage: git-work-setup [--quiet]
+        QUIET=""
+        [ "$1" = "--quiet" ] || [ "$1" = "-q" ] && QUIET=1
+
+        # Check if we're in a git repo
+        git rev-parse --git-dir >/dev/null 2>&1 || exit 0
+
+        # Check if already configured for this repo
+        CURRENT_EMAIL=$(git config --local user.email 2>/dev/null)
+        WORK_EMAIL=$(cat /run/secrets/work/gitlab/email 2>/dev/null)
+        [ "$CURRENT_EMAIL" = "$WORK_EMAIL" ] && exit 0
+
+        GITLAB_HOST=$(cat /run/secrets/work/gitlab/host 2>/dev/null | sed 's|https://||' | sed 's|/$||')
+        ADDITIONAL_HOSTS=$(cat /run/secrets/work/gitlab/additional-hosts 2>/dev/null)
+        WORK_USERNAME=$(cat /run/secrets/work/gitlab/username 2>/dev/null)
+
+        [ -z "$WORK_EMAIL" ] || [ -z "$WORK_USERNAME" ] && exit 0
+
+        REMOTE=$(git remote get-url origin 2>/dev/null)
+        [ -z "$REMOTE" ] && exit 0
+
+        is_work=false
+        for host in $GITLAB_HOST $ADDITIONAL_HOSTS; do
+          if echo "$REMOTE" | grep -q "$host"; then
+            is_work=true
+            break
+          fi
+        done
+
+        if [ "$is_work" = "true" ]; then
+          git config user.email "$WORK_EMAIL"
+          git config user.name "$WORK_USERNAME"
+          [ -z "$QUIET" ] && echo "Work GitLab detected. Identity set to $WORK_EMAIL"
+        fi
+      '';
+    };
   };
+
+  # Add ~/.local/bin to PATH for git helper scripts
+  home.sessionPath = lib.mkIf hasGitlabSecrets [ "${config.home.homeDirectory}/.local/bin" ];
+
+  # Shell hook for auto-detecting work repos on cd
+  programs.zsh.initExtra = lib.mkIf hasGitlabSecrets ''
+    # Auto-detect work GitLab repos and set identity
+    autoload -U add-zsh-hook
+    _git_work_auto_setup() {
+      [ -d .git ] && ${config.home.homeDirectory}/.local/bin/git-work-setup --quiet
+    }
+    add-zsh-hook chpwd _git_work_auto_setup
+    # Run on shell start too (in case starting in a work repo)
+    _git_work_auto_setup
+  '';
 }
