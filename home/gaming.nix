@@ -16,6 +16,10 @@ in
 {
   home.packages = with pkgs; [
     pokerogue-optimized
+
+    # Minecraft
+    prismlauncher
+    jdk21
   ];
 
   programs.mangohud = {

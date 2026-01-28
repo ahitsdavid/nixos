@@ -23,6 +23,7 @@
     (import ./zed.nix )
     (import ./spicetify.nix )
     (import ./docker-gui.nix )
+    (import ./sops-manager.nix )
   ];
 
   #programs.dolphin = {
