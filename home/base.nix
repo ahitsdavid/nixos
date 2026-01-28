@@ -1,5 +1,5 @@
 # home/base.nix
-{ config, pkgs, inputs, username, system, lib, ... }: {
+{ config, pkgs, inputs, username, system, hostname, lib, ... }: {
   home.username = username;
   home.homeDirectory = "/home/${username}";
   
@@ -13,6 +13,7 @@
     (import ./modules/chromium.nix )
     (import ./modules/ssh.nix )
     (import ./modules/bitwarden.nix )
+    (import ./modules/vnc.nix )
 
   ];
   
