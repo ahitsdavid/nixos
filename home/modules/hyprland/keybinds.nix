@@ -51,7 +51,8 @@ in
     bind = Ctrl+Super, P, global, quickshell:panelFamilyCycle # Cycle panel family
 
     ##! Utilities
-    # Screenshot, Record, OCR, Color picker, Clipboard history
+    # Screenshot, Record, OCR, Color picker, Clipboard history, Syncthing
+    bind = Ctrl+Super, Y, exec, xdg-open http://localhost:8384 # Syncthing
     bindd = Super, V, Copy clipboard history entry, exec, qs -c $qsConfig ipc call TEST_ALIVE || pkill fuzzel || cliphist list | fuzzel --match-mode fzf --dmenu | cliphist decode | wl-copy # [hidden] Clipboard history >> clipboard (fallback)
     bindd = Super, Period, Copy an emoji, exec, qs -c $qsConfig ipc call TEST_ALIVE || pkill fuzzel || ~/.config/hypr/hyprland/scripts/fuzzel-emoji.sh copy # [hidden] Emoji >> clipboard (fallback)
     bind = Super+Shift, S, global, quickshell:regionScreenshot # Screen snip

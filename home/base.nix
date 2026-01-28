@@ -14,6 +14,7 @@
     (import ./modules/ssh.nix )
     (import ./modules/bitwarden.nix )
     (import ./modules/vnc.nix )
+    (import ./modules/syncthing.nix )
 
   ];
   
