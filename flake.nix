@@ -141,6 +141,12 @@
         hostname = "thinkpad";
       };
 
+      # MacBook Pro 2014 Configuration
+      macbook = mkNixosConfiguration {
+        hostname = "macbook";
+        includeGaming = false;
+      };
+
       # Work Intel Configuration (no gaming)
       work-intel = mkNixosConfiguration {
         hostname = "work-intel";
