@@ -21,9 +21,13 @@
   hardware.enableAllFirmware = true;
 
   # Allow insecure broadcom-sta
-  nixpkgs.config.permittedInsecurePackages = [
-    "broadcom-sta-6.30.223.271"
-  ];
+  nixpkgs.config.allowInsecurePredicate = pkg:
+    builtins.elem (builtins.parseDrvName pkg.name).name [
+      "broadcom-sta"
+    ];
+
+
+
 
   # Apple keyboard/input support
   hardware.facetimehd.enable = lib.mkDefault false; # Enable if webcam needed (requires firmware extraction)
