@@ -126,6 +126,18 @@
           }
         ] ++ (extraModules.systemModules or []);
       };
+
+    # Create a function for headless servers (no GUI, no home-manager)
+    mkHeadlessConfiguration = { hostname }:
+      nixpkgs.lib.nixosSystem {
+        inherit system;
+        specialArgs = { inherit inputs username; };
+        modules = [
+          { nixpkgs.config.allowUnfree = true; }
+          inputs.sops-nix.nixosModules.sops
+          ./hosts/${hostname}
+        ];
+      };
   in 
   {
     nixosConfigurations = {
@@ -174,16 +186,8 @@
         };
       };
       
-      # VM Configuration
-      vm = mkNixosConfiguration {
-        hostname = "vm";
-        extraModules.systemModules = [
-          # VM-specific system modules
-          { home-manager.backupFileExtension = "backup"; }
-        ];
-        # If you need VM-specific home modules:
-        # extraModules.homeModules = [ ./home/vm-specific.nix ];
-      };
+      # VM Configuration (headless build server with Harmonia)
+      vm = mkHeadlessConfiguration { hostname = "vm"; };
     };
     
     # ISO image for desktop installation
