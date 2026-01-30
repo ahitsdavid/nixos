@@ -21,9 +21,13 @@
   hardware.enableAllFirmware = true;
 
   # Allow insecure broadcom-sta
-  nixpkgs.config.permittedInsecurePackages = [
-    "broadcom-sta-6.30.223.271"
-  ];
+  nixpkgs.config.allowInsecurePredicate = pkg:
+    builtins.elem (builtins.parseDrvName pkg.name).name [
+      "broadcom-sta"
+    ];
+
+
+
 
   # Apple keyboard/input support
   hardware.facetimehd.enable = lib.mkDefault false; # Enable if webcam needed (requires firmware extraction)
@@ -70,6 +74,18 @@
   # Firmware updates
   services.fwupd.enable = true;
 
+  # GNOME Desktop Environment (optional, selectable at login)
+  services.xserver.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+
+  # Exclude some GNOME default apps to keep it lighter
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    epiphany  # GNOME Web browser
+    geary     # Email client
+    gnome-music
+  ];
+
   environment.systemPackages = with pkgs; [
     # Monitoring tools
     lm_sensors
@@ -81,6 +97,16 @@
     # Graphics
     mesa
     mesa-demos
+
+    # GNOME tweaks and extensions
+    gnome-tweaks
+    gnome-extension-manager
+    gnomeExtensions.caffeine           # Prevent screen sleep
+    gnomeExtensions.appindicator       # System tray support
+    gnomeExtensions.dash-to-dock       # Better dock
+    gnomeExtensions.clipboard-indicator # Clipboard history
+    gnomeExtensions.blur-my-shell      # Visual blur effects
+    gnomeExtensions.vitals             # System monitor in top bar
   ];
 
   networking = {

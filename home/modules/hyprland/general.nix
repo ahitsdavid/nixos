@@ -3,6 +3,7 @@
 let
   isDesktop = hostname == "desktop";
   isWorkIntel = hostname == "work-intel";
+  isMacbook = hostname == "macbook";
 in
 {
   wayland.windowManager.hyprland = {
@@ -16,6 +17,9 @@ in
         "eDP-1,3840x2160@60,0x0,1.5"
         # Dell U3419W ultrawide - no scaling
         "DP-6,3440x1440@60,2560x0,1"
+      ] else if isMacbook then [
+        # MacBook Pro Retina display - 1.5 scale for readable UI
+        "eDP-1,2880x1800@60,0x0,1.5"
       ] else [
         ",preferred,auto,1"
         # Uncomment the following line to enable HDMI mirroring
