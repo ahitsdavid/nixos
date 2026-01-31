@@ -4,7 +4,13 @@ let
   # Wallpaper path - should match what's used in quickshell/hyprland
   wallpaperPath = "/home/${username}/Pictures/Wallpapers/yosemite.png";
 
-  # Custom SDDM theme with pill-shaped elements inspired by end-4 quickshell
+  # Base catppuccin theme
+  catppuccinBase = pkgs.catppuccin-sddm.override {
+    flavor = "mocha";
+    accent = "mauve";
+  };
+
+  # Custom SDDM theme - overlay our components on catppuccin base
   catppuccin-rounded-sddm = pkgs.stdenv.mkDerivation {
     pname = "sddm-catppuccin-rounded";
     version = "1.0";
@@ -13,11 +19,25 @@ let
 
     installPhase = ''
       mkdir -p $out/share/sddm/themes/catppuccin-rounded
-      cp -r $src/* $out/share/sddm/themes/catppuccin-rounded/
 
-      # Update wallpaper path in theme.conf
-      substituteInPlace $out/share/sddm/themes/catppuccin-rounded/theme.conf \
-        --replace "/home/davidthach/Pictures/Wallpapers/yosemite.png" "${wallpaperPath}"
+      # Start with catppuccin base theme
+      cp -r ${catppuccinBase}/share/sddm/themes/catppuccin-mocha-mauve/* $out/share/sddm/themes/catppuccin-rounded/
+      chmod -R u+w $out/share/sddm/themes/catppuccin-rounded/
+
+      # Override with our custom files
+      cp $src/Main.qml $out/share/sddm/themes/catppuccin-rounded/
+      cp $src/Components/*.qml $out/share/sddm/themes/catppuccin-rounded/Components/
+
+      # Update metadata
+      cp $src/metadata.desktop $out/share/sddm/themes/catppuccin-rounded/
+
+      # Update theme.conf with wallpaper
+      cat > $out/share/sddm/themes/catppuccin-rounded/theme.conf << EOF
+      [General]
+      Background="${wallpaperPath}"
+      Font="Rubik"
+      FontSize=12
+      EOF
     '';
   };
 in
