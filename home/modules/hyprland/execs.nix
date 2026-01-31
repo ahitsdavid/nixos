@@ -13,8 +13,8 @@ in
       # but keeping these ensures compatibility if running without UWSM)
       "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
-      # Set default wallpaper via Quickshell (wait for Quickshell to start)
-      "sleep 2 && ~/.config/quickshell/default/scripts/colors/switchwall.sh ${config.home.homeDirectory}/${wallpaper}"
+      # Colors and wallpaper are persisted in ~/.local/state/quickshell/user/generated/colors.json
+      # and ~/.config/illogical-impulse/config.json - no need to regenerate on startup
       "hypridle"
     ];
   };
