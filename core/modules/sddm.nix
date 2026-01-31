@@ -1,8 +1,9 @@
 {pkgs, lib, config, username, ...}:
 let
   cfg = config.services.displayManager.sddm;
-  # Wallpaper path - should match what's used in quickshell/hyprland
-  wallpaperPath = "/home/${username}/Pictures/Wallpapers/yosemite.png";
+
+  # Wallpaper source from repo
+  wallpaperSrc = ../../wallpapers/yosemite.png;
 
   # Base catppuccin theme
   catppuccinBase = pkgs.catppuccin-sddm.override {
@@ -31,13 +32,16 @@ let
       # Update metadata
       cp $src/metadata.desktop $out/share/sddm/themes/catppuccin-rounded/
 
-      # Update theme.conf with wallpaper
+      # Copy wallpaper into theme
+      cp ${wallpaperSrc} $out/share/sddm/themes/catppuccin-rounded/background.png
+
+      # Update theme.conf with relative wallpaper path
       cat > $out/share/sddm/themes/catppuccin-rounded/theme.conf << EOF
-      [General]
-      Background="${wallpaperPath}"
-      Font="Rubik"
-      FontSize=12
-      EOF
+[General]
+Background="background.png"
+Font="Rubik"
+FontSize=12
+EOF
     '';
   };
 in
@@ -48,6 +52,11 @@ in
     wayland.enable = true;
     theme = "catppuccin-rounded";
     package = pkgs.kdePackages.sddm;
+    settings = {
+      General = {
+        DefaultSession = "hyprland.desktop";
+      };
+    };
   };
 
   environment.systemPackages = [
