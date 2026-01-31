@@ -1,10 +1,14 @@
 [SddmGreeterTheme]
 Name=Catppuccin Rounded
 Description=Catppuccin Mocha theme with pill-shaped elements inspired by end-4 quickshell
-Author=Custom
+Type=sddm-theme
 Version=1.0
 Website=
 Screenshot=
 MainScript=Main.qml
 ConfigFile=theme.conf
 TranslationsDirectory=translations
+Theme-Id=catppuccin-rounded
+Theme-API=2.0
+License=MIT
+QtVersion=6
