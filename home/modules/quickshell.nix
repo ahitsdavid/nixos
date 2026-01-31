@@ -67,6 +67,7 @@
   # Install additional packages that QuickShell needs
   home.packages = with pkgs; [
     # System tools
+    glib  # Provides gsettings - needed by switchwall.sh to detect dark/light mode
     gammastep
     (geoclue2.override { withDemoAgent = true; })
     playerctl
