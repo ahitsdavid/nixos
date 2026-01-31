@@ -51,21 +51,36 @@ Item {
         onAccepted: root.accepted()
     }
 
-    // Visual password display with shapes
-    Row {
-        id: shapeRow
-        anchors.centerIn: parent
-        spacing: 4
+    // Container with clipping for password shapes
+    Item {
+        id: shapeContainer
+        anchors.fill: parent
+        anchors.leftMargin: 8
+        anchors.rightMargin: 8
+        clip: true
 
-        Repeater {
-            model: root.charCount
+        // Visual password display with shapes - show only last N characters that fit
+        Row {
+            id: shapeRow
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.right: parent.right
+            anchors.rightMargin: 4
+            spacing: 4
+
+            Repeater {
+                // Calculate max visible chars based on container width (24px per char)
+                property int maxVisible: Math.floor((shapeContainer.width - 8) / 24)
+                property int startIndex: Math.max(0, root.charCount - maxVisible)
+                model: Math.min(root.charCount, maxVisible)
 
             delegate: Item {
                 id: charShape
                 width: 20
                 height: 20
 
-                property int shapeIndex: index % 7
+                // Use actual character index for consistent shape colors
+                property int actualIndex: index + parent.parent.startIndex
+                property int shapeIndex: actualIndex % 7
                 property color shapeColor: shapeColors[shapeIndex]
 
                 // Different shapes based on index
@@ -203,14 +218,11 @@ Item {
         visible: root.charCount === 0
     }
 
-    // Cursor
+    // Cursor - positioned at right edge of shape container
     Rectangle {
         visible: hiddenInput.activeFocus && root.charCount > 0
-        anchors {
-            left: shapeRow.right
-            leftMargin: 4
-            verticalCenter: parent.verticalCenter
-        }
+        x: shapeContainer.x + shapeContainer.width - 2
+        anchors.verticalCenter: parent.verticalCenter
         width: 2
         height: 20
         color: colMauve
@@ -229,11 +241,11 @@ Item {
     // Shake animation for wrong password
     SequentialAnimation {
         id: shakeAnimation
-        NumberAnimation { target: shapeRow; property: "anchors.horizontalCenterOffset"; to: -20; duration: 50 }
-        NumberAnimation { target: shapeRow; property: "anchors.horizontalCenterOffset"; to: 20; duration: 50 }
-        NumberAnimation { target: shapeRow; property: "anchors.horizontalCenterOffset"; to: -10; duration: 40 }
-        NumberAnimation { target: shapeRow; property: "anchors.horizontalCenterOffset"; to: 10; duration: 40 }
-        NumberAnimation { target: shapeRow; property: "anchors.horizontalCenterOffset"; to: 0; duration: 30 }
+        NumberAnimation { target: shapeContainer; property: "anchors.leftMargin"; to: -12; duration: 50 }
+        NumberAnimation { target: shapeContainer; property: "anchors.leftMargin"; to: 28; duration: 50 }
+        NumberAnimation { target: shapeContainer; property: "anchors.leftMargin"; to: -2; duration: 40 }
+        NumberAnimation { target: shapeContainer; property: "anchors.leftMargin"; to: 18; duration: 40 }
+        NumberAnimation { target: shapeContainer; property: "anchors.leftMargin"; to: 8; duration: 30 }
     }
 
     // Click to focus
