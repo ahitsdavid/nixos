@@ -54,7 +54,8 @@ in
     package = pkgs.kdePackages.sddm;
     settings = {
       General = {
-        DefaultSession = "hyprland.desktop";
+        # Use hyprland-uwsm.desktop when programs.hyprland.withUWSM = true
+        DefaultSession = "hyprland-uwsm.desktop";
       };
     };
   };

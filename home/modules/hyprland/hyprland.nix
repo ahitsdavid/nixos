@@ -59,11 +59,9 @@
   wayland.windowManager.hyprland = {
     enable = true;
     package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-    systemd = {
-      enable = true;
-      enableXdgAutostart = true;
-      variables = ["--all"];
-    };
+    # IMPORTANT: Disable systemd integration when using UWSM (programs.hyprland.withUWSM = true)
+    # UWSM handles session management, targets, and environment variables
+    systemd.enable = false;
 
     xwayland = {
       enable = true;

@@ -9,7 +9,8 @@ in
       # Clipboard history
       "wl-paste --type text --watch cliphist store"
       "wl-paste --type image --watch cliphist store"
-      # Environment setup
+      # Environment setup (UWSM handles this when programs.hyprland.withUWSM = true,
+      # but keeping these ensures compatibility if running without UWSM)
       "dbus-update-activation-environment --all --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
       # Set default wallpaper via Quickshell (wait for Quickshell to start)

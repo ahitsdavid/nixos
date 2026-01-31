@@ -11,9 +11,9 @@ Item {
     property int toolbarHeight: 56
     property int toolbarSpacing: 10
 
-    // Session index - use simple binding, will be set properly in Component.onCompleted
-    // and when user clicks a session
-    property int sessionIndex: 3  // Default to index 3 (hyprland.desktop based on session order)
+    // Session index - initialized from lastIndex, updated by user selection
+    property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
+    property bool sessionInitialized: false
 
     // Catppuccin Mocha colors
     readonly property color colSurface0: "#313244"
@@ -28,14 +28,32 @@ Item {
     implicitHeight: toolbarHeight
 
     // Find hyprland index when model is ready
+    // Prefers hyprland-uwsm session (for programs.hyprland.withUWSM = true)
     function findHyprlandIndex() {
-        for (var i = 0; i < sessionModel.count; i++) {
-            var name = sessionModel.data(sessionModel.index(i, 0), Qt.UserRole + 2) // UserRole + 2 = name
-            if (name && name.toLowerCase().indexOf("hyprland") >= 0 &&
-                name.toLowerCase().indexOf("uwsm") < 0) {
-                return i
+        // SDDM sessionModel exposes roles: file, name, exec, comment
+        // Qt.UserRole is 256, NameRole = Qt.UserRole + 2 = 258
+        var NameRole = 258
+        var hyprlandUwsmIdx = -1
+        var hyprlandIdx = -1
+
+        for (var i = 0; i < sessionModel.rowCount(); i++) {
+            var name = sessionModel.data(sessionModel.index(i, 0), NameRole)
+            if (name) {
+                var lowerName = name.toLowerCase()
+                // Prefer hyprland-uwsm (UWSM-managed session)
+                if (lowerName.indexOf("hyprland") >= 0 && lowerName.indexOf("uwsm") >= 0) {
+                    hyprlandUwsmIdx = i
+                }
+                // Also track regular hyprland as fallback
+                else if (lowerName.indexOf("hyprland") >= 0) {
+                    hyprlandIdx = i
+                }
             }
         }
+
+        // Prefer UWSM variant, then regular hyprland, then lastIndex
+        if (hyprlandUwsmIdx >= 0) return hyprlandUwsmIdx
+        if (hyprlandIdx >= 0) return hyprlandIdx
         return sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
     }
 
@@ -125,7 +143,7 @@ Item {
 
         ToolTip {
             visible: sessBtn.hovered
-            text: sessionModel.data(sessionModel.index(root.sessionIndex, 0), Qt.UserRole + 2) || "Select Session"
+            text: sessionModel.data(sessionModel.index(root.sessionIndex, 0), 258) || "Select Session"
             delay: 500
         }
     }
@@ -158,10 +176,11 @@ Item {
                 width: sessionList.width
                 height: 36
 
-                required property int index
-                required property string name
+                // Use model attached property for robust role access
+                property int sessionIdx: index
+                property string sessionName: model.name || ""
 
-                highlighted: root.sessionIndex === index
+                highlighted: root.sessionIndex === sessionIdx
 
                 background: Rectangle {
                     radius: 8
@@ -174,7 +193,7 @@ Item {
                 }
 
                 contentItem: Text {
-                    text: sessionDelegate.name
+                    text: sessionDelegate.sessionName
                     font.pixelSize: 14
                     font.family: config.Font
                     color: colText
@@ -182,12 +201,9 @@ Item {
                     leftPadding: 8
                 }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: {
-                        root.sessionIndex = sessionDelegate.index
-                        sessionPopup.close()
-                    }
+                onClicked: {
+                    root.sessionIndex = sessionDelegate.sessionIdx
+                    sessionPopup.close()
                 }
             }
         }
@@ -309,12 +325,14 @@ Item {
         }
     }
 
-    // Watch for session model changes
+    // Initialize session once when model is ready
     Connections {
         target: sessionModel
         function onCountChanged() {
-            if (sessionModel.count > 0) {
+            // Only initialize once, don't override user selection
+            if (!root.sessionInitialized && sessionModel.rowCount() > 0) {
                 root.sessionIndex = root.findHyprlandIndex()
+                root.sessionInitialized = true
             }
         }
     }
@@ -332,8 +350,9 @@ Item {
     Component.onCompleted: {
         passwordField.forceActiveFocus()
         // Try to find hyprland if model is already loaded
-        if (sessionModel.count > 0) {
+        if (!root.sessionInitialized && sessionModel.rowCount() > 0) {
             root.sessionIndex = findHyprlandIndex()
+            root.sessionInitialized = true
         }
     }
 }
