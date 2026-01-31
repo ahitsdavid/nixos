@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import Qt5Compat.GraphicalEffects
 import "Components"
 
 Item {
@@ -28,7 +27,7 @@ Item {
     readonly property color colBlue: "#89B4FA"
     readonly property color colOverlay0: "#6C7086"
 
-    // Wallpaper background
+    // Background color fallback
     Rectangle {
         id: background
         anchors.fill: parent
@@ -36,39 +35,23 @@ Item {
         z: 0
     }
 
+    // Wallpaper image
     Image {
         id: wallpaperImage
         anchors.fill: parent
         source: config.Background
         fillMode: Image.PreserveAspectCrop
-        visible: false
         asynchronous: true
         cache: true
+        z: 1
     }
 
-    // Blurred wallpaper
-    GaussianBlur {
-        id: blurEffect
-        anchors.fill: parent
-        source: wallpaperImage
-        radius: 60
-        samples: 121
-        visible: true
-
-        transform: Scale {
-            origin.x: blurEffect.width / 2
-            origin.y: blurEffect.height / 2
-            xScale: 1.1
-            yScale: 1.1
-        }
-    }
-
-    // Dark overlay
+    // Dark overlay (simulates blur darkening)
     Rectangle {
         anchors.fill: parent
         color: colBase
-        opacity: 0.5
-        z: 1
+        opacity: 0.6
+        z: 2
     }
 
     // Main content

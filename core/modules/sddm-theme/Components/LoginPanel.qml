@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
-import Qt5Compat.GraphicalEffects
 
 Item {
     id: root
@@ -13,7 +12,7 @@ Item {
     property int toolbarHeight: 56
     property int toolbarSpacing: 10
 
-    // Catppuccin Mocha colors (inherited from Main.qml via parent)
+    // Catppuccin Mocha colors
     readonly property color colSurface0: "#313244"
     readonly property color colSurface1: "#45475A"
     readonly property color colText: "#CDD6F4"
@@ -25,7 +24,7 @@ Item {
     implicitWidth: mainToolbar.width
     implicitHeight: toolbarHeight
 
-    // Toolbar component
+    // Toolbar component - pill-shaped container
     component Toolbar: Item {
         id: toolbar
         property alias content: toolbarLayout.data
@@ -33,17 +32,6 @@ Item {
 
         implicitWidth: toolbarBackground.implicitWidth
         implicitHeight: toolbarBackground.implicitHeight
-
-        // Shadow
-        DropShadow {
-            anchors.fill: toolbarBackground
-            horizontalOffset: 0
-            verticalOffset: 4
-            radius: 12
-            samples: 25
-            color: "#40000000"
-            source: toolbarBackground
-        }
 
         Rectangle {
             id: toolbarBackground
