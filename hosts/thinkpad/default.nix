@@ -138,16 +138,16 @@ hardware.trackpoint = {
   #   requires = [ "systemd-modules-load.service" ];
   # };
 
-  # GNOME Desktop Environment
-  services.xserver.desktopManager.gnome.enable = true;
+  # GNOME Desktop Environment (disabled - using Hyprland)
+  # services.xserver.desktopManager.gnome.enable = true;
 
-  # Exclude some default GNOME apps to reduce bloat
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    epiphany      # web browser
-    geary         # email client
-    gnome-music
-  ];
+  # # Exclude some default GNOME apps to reduce bloat
+  # environment.gnome.excludePackages = with pkgs; [
+  #   gnome-tour
+  #   epiphany      # web browser
+  #   geary         # email client
+  #   gnome-music
+  # ];
 
   networking = {
     hostName = "thinkpad";

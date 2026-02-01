@@ -10,10 +10,12 @@
       trusted-users = [ "root" "@wheel" ];
       # Increase download buffer for large updates
       download-buffer-size = 268435456; # 256 MiB (in bytes)
-      # Binary cache for faster builds (includes VM Harmonia cache)
+      # Binary cache for faster builds
+      # Note: VM Harmonia cache (vm:5000) disabled until VM is set up
+      # To enable: add "http://vm:5000" to substituters and configure trusted-public-keys
       substituters = [
         "https://cache.nixos.org"
-        "http://vm:5000"  # Harmonia binary cache on VM (use Tailscale hostname)
+        # "http://vm:5000"  # Harmonia binary cache on VM (use Tailscale hostname)
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
