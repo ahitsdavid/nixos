@@ -23,10 +23,11 @@ let
       cp -r ${catppuccinBase}/share/sddm/themes/catppuccin-mocha-mauve/* $out/share/sddm/themes/catppuccin-styled/
       chmod -R u+w $out/share/sddm/themes/catppuccin-styled/
 
-      # Override visual components + custom LoginPanel, keep original SessionPanel
+      # Override visual components + custom LoginPanel and SessionPanel
       cp $src/Main.qml $out/share/sddm/themes/catppuccin-styled/
       cp $src/Components/Clock.qml $out/share/sddm/themes/catppuccin-styled/Components/
       cp $src/Components/LoginPanel.qml $out/share/sddm/themes/catppuccin-styled/Components/
+      cp $src/Components/SessionPanel.qml $out/share/sddm/themes/catppuccin-styled/Components/
 
       # Copy wallpaper into theme
       cp ${wallpaperSrc} $out/share/sddm/themes/catppuccin-styled/background.png
