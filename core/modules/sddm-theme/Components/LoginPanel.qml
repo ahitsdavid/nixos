@@ -1,287 +1,122 @@
 import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
 
 Item {
     id: root
 
     property var user: userField.text
     property var password: passwordField.text
-    property int toolbarHeight: 56
-    property int toolbarSpacing: 10
+    property var session: sessionPanel.session  // Use original pattern that works
 
-    // Session index - initialized from lastIndex, updated by user selection
-    property int sessionIndex: sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
-    property bool sessionInitialized: false
+    property var inputHeight: 56
+    property var inputWidth: Screen.width * 0.16
 
     // Catppuccin Mocha colors
+    readonly property color colBase: "#1E1E2E"
+    readonly property color colMantle: "#181825"
     readonly property color colSurface0: "#313244"
     readonly property color colSurface1: "#45475A"
     readonly property color colText: "#CDD6F4"
     readonly property color colSubtext0: "#A6ADC8"
     readonly property color colMauve: "#CBA6F7"
     readonly property color colOverlay0: "#6C7086"
-    readonly property color colBase: "#1E1E2E"
 
-    implicitWidth: mainToolbar.width
-    implicitHeight: toolbarHeight
-
-    // Find hyprland index when model is ready
-    // Prefers hyprland-uwsm session (for programs.hyprland.withUWSM = true)
-    function findHyprlandIndex() {
-        // SDDM sessionModel exposes roles: file, name, exec, comment
-        // Qt.UserRole is 256, NameRole = Qt.UserRole + 2 = 258
-        var NameRole = 258
-        var hyprlandUwsmIdx = -1
-        var hyprlandIdx = -1
-
-        for (var i = 0; i < sessionModel.rowCount(); i++) {
-            var name = sessionModel.data(sessionModel.index(i, 0), NameRole)
-            if (name) {
-                var lowerName = name.toLowerCase()
-                // Prefer hyprland-uwsm (UWSM-managed session)
-                if (lowerName.indexOf("hyprland") >= 0 && lowerName.indexOf("uwsm") >= 0) {
-                    hyprlandUwsmIdx = i
-                }
-                // Also track regular hyprland as fallback
-                else if (lowerName.indexOf("hyprland") >= 0) {
-                    hyprlandIdx = i
-                }
-            }
-        }
-
-        // Prefer UWSM variant, then regular hyprland, then lastIndex
-        if (hyprlandUwsmIdx >= 0) return hyprlandUwsmIdx
-        if (hyprlandIdx >= 0) return hyprlandIdx
-        return sessionModel.lastIndex >= 0 ? sessionModel.lastIndex : 0
-    }
-
-    // Toolbar component - pill-shaped container
-    component Toolbar: Item {
-        id: toolbar
-        property alias content: toolbarLayout.data
-        property color backgroundColor: colSurface0
-
-        implicitWidth: toolbarBackground.implicitWidth
-        implicitHeight: toolbarBackground.implicitHeight
-
-        Rectangle {
-            id: toolbarBackground
-            color: toolbar.backgroundColor
-            implicitHeight: root.toolbarHeight
-            implicitWidth: toolbarLayout.implicitWidth + 16
-            radius: height / 2
-
-            RowLayout {
-                id: toolbarLayout
-                spacing: 4
-                anchors {
-                    fill: parent
-                    margins: 8
-                }
-            }
-        }
-    }
-
-    // Icon button component
-    component IconButton: Button {
-        id: iconBtn
-        property string iconText: ""
-        property color iconColor: colSubtext0
-        property color bgColor: "transparent"
-        property color bgHoverColor: colSurface1
-
-        implicitWidth: root.toolbarHeight - 16
-        implicitHeight: root.toolbarHeight - 16
-
-        background: Rectangle {
-            radius: height / 2
-            color: iconBtn.hovered ? bgHoverColor : bgColor
-
-            Behavior on color {
-                ColorAnimation { duration: 150 }
-            }
-        }
-
-        contentItem: Text {
-            text: iconBtn.iconText
-            font.family: "Material Symbols Rounded"
-            font.pixelSize: 24
-            color: iconBtn.iconColor
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
-    }
-
-    // Session button component
-    component SessionButton: Button {
-        id: sessBtn
-
-        implicitWidth: root.toolbarHeight - 16
-        implicitHeight: root.toolbarHeight - 16
-
-        background: Rectangle {
-            radius: height / 2
-            color: sessBtn.hovered ? colSurface1 : "transparent"
-
-            Behavior on color {
-                ColorAnimation { duration: 150 }
-            }
-        }
-
-        contentItem: Text {
-            text: "\ue8b8" // desktop_windows
-            font.family: "Material Symbols Rounded"
-            font.pixelSize: 22
-            color: colSubtext0
-            horizontalAlignment: Text.AlignHCenter
-            verticalAlignment: Text.AlignVCenter
-        }
-
-        onClicked: sessionPopup.open()
-
-        ToolTip {
-            visible: sessBtn.hovered
-            text: sessionModel.data(sessionModel.index(root.sessionIndex, 0), 258) || "Select Session"
-            delay: 500
-        }
-    }
-
-    // Session popup - defined at root level
-    Popup {
-        id: sessionPopup
-        x: toolbarRow.x + rightToolbar.x + 8
-        y: toolbarRow.y - height - 10
-        width: 200
-        padding: 8
-
-        background: Rectangle {
-            color: "#313244"
-            radius: 12
-            border.color: colOverlay0
-            border.width: 1
-        }
-
-        contentItem: ListView {
-            id: sessionList
-            implicitHeight: contentHeight
-            model: sessionModel
-            currentIndex: root.sessionIndex
-            spacing: 4
-            clip: true
-
-            delegate: ItemDelegate {
-                id: sessionDelegate
-                width: sessionList.width
-                height: 36
-
-                // Use model attached property for robust role access
-                property int sessionIdx: index
-                property string sessionName: model.name || ""
-
-                highlighted: root.sessionIndex === sessionIdx
-
-                background: Rectangle {
-                    radius: 8
-                    color: sessionDelegate.hovered || sessionDelegate.highlighted ?
-                           colSurface1 : "transparent"
-
-                    Behavior on color {
-                        ColorAnimation { duration: 100 }
-                    }
-                }
-
-                contentItem: Text {
-                    text: sessionDelegate.sessionName
-                    font.pixelSize: 14
-                    font.family: config.Font
-                    color: colText
-                    verticalAlignment: Text.AlignVCenter
-                    leftPadding: 8
-                }
-
-                onClicked: {
-                    root.sessionIndex = sessionDelegate.sessionIdx
-                    sessionPopup.close()
-                }
-            }
-        }
-    }
-
-    // Main row of toolbars
+    // Bottom toolbar row
     Row {
         id: toolbarRow
-        spacing: toolbarSpacing
-        anchors.horizontalCenter: parent.horizontalCenter
+        spacing: 10
+        anchors {
+            bottom: parent.bottom
+            horizontalCenter: parent.horizontalCenter
+            bottomMargin: 30
+        }
 
-        // Left toolbar - User info
-        Toolbar {
-            id: leftToolbar
+        // User pill
+        Rectangle {
+            width: userContent.width + 32
+            height: inputHeight
+            radius: inputHeight / 2
+            color: colSurface0
 
-            content: [
-                // User icon
+            Row {
+                id: userContent
+                anchors.centerIn: parent
+                spacing: 12
+
                 Text {
-                    text: "\ue853" // account_circle
+                    text: "\ue853"
                     font.family: "Material Symbols Rounded"
                     font.pixelSize: 28
                     color: colSubtext0
-                    Layout.leftMargin: 8
-                    Layout.alignment: Qt.AlignVCenter
-                },
-                // Username field
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
                 TextField {
                     id: userField
-                    Layout.preferredWidth: 120
-                    Layout.alignment: Qt.AlignVCenter
+                    width: 140
                     text: userModel.lastUser
                     placeholderText: "Username"
                     font.pixelSize: 14
                     font.family: config.Font
                     color: colText
                     placeholderTextColor: colOverlay0
-                    horizontalAlignment: TextInput.AlignLeft
-                    background: Rectangle {
-                        color: "transparent"
-                    }
+                    anchors.verticalCenter: parent.verticalCenter
+                    background: Rectangle { color: "transparent" }
                 }
-            ]
+            }
         }
 
-        // Main toolbar - Password
-        Toolbar {
-            id: mainToolbar
+        // Password pill
+        Rectangle {
+            width: passwordContent.width + 32
+            height: inputHeight
+            radius: inputHeight / 2
+            color: colSurface0
 
-            content: [
-                // Password field with custom characters
-                PasswordField {
+            Row {
+                id: passwordContent
+                anchors.centerIn: parent
+                spacing: 12
+
+                Text {
+                    text: "\ue897"
+                    font.family: "Material Symbols Rounded"
+                    font.pixelSize: 24
+                    color: colSubtext0
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                TextField {
                     id: passwordField
-                    Layout.preferredWidth: 200
-                    Layout.fillHeight: true
-                    Layout.alignment: Qt.AlignVCenter
+                    width: 180
+                    placeholderText: "Password"
+                    echoMode: TextInput.Password
+                    font.pixelSize: 14
+                    font.family: config.Font
+                    color: colText
+                    placeholderTextColor: colOverlay0
+                    anchors.verticalCenter: parent.verticalCenter
+                    background: Rectangle { color: "transparent" }
                     onAccepted: loginButton.clicked()
-                },
-                // Login button
+                }
+
                 Button {
                     id: loginButton
-                    implicitWidth: root.toolbarHeight - 16
-                    implicitHeight: root.toolbarHeight - 16
-                    Layout.alignment: Qt.AlignVCenter
-
-                    enabled: user !== "" && password !== ""
+                    width: 40
+                    height: 40
+                    anchors.verticalCenter: parent.verticalCenter
+                    enabled: user != "" && password != ""
 
                     background: Rectangle {
-                        radius: height / 2
+                        radius: 20
                         color: loginButton.enabled ?
                             (loginButton.hovered ? "#B794F4" : colMauve) : colSurface1
-
-                        Behavior on color {
-                            ColorAnimation { duration: 150 }
-                        }
+                        Behavior on color { ColorAnimation { duration: 150 } }
                     }
 
                     contentItem: Text {
-                        text: "\ue5c8" // arrow_forward
+                        text: "\ue5c8"
                         font.family: "Material Symbols Rounded"
                         font.pixelSize: 24
                         color: loginButton.enabled ? colBase : colOverlay0
@@ -290,69 +125,107 @@ Item {
                     }
 
                     onClicked: {
-                        sddm.login(user, password, root.sessionIndex)
+                        sddm.login(user, password, session)
                     }
                 }
-            ]
+            }
         }
 
-        // Right toolbar - Power controls
-        Toolbar {
-            id: rightToolbar
+        // Controls pill
+        Rectangle {
+            width: controlsContent.width + 24
+            height: inputHeight
+            radius: inputHeight / 2
+            color: colSurface0
 
-            content: [
-                // Session selector
-                SessionButton {
-                    Layout.alignment: Qt.AlignVCenter
-                },
+            Row {
+                id: controlsContent
+                anchors.centerIn: parent
+                spacing: 4
+
+                // Session selector - uses original SessionPanel
+                SessionPanel {
+                    id: sessionPanel
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
+                // Divider
+                Rectangle {
+                    width: 1
+                    height: 32
+                    color: colOverlay0
+                    anchors.verticalCenter: parent.verticalCenter
+                }
+
                 // Sleep
-                IconButton {
-                    iconText: "\ue51c" // dark_mode (sleep)
+                Button {
+                    width: 40
+                    height: 40
+                    background: Rectangle {
+                        radius: 20
+                        color: parent.hovered ? colSurface1 : "transparent"
+                    }
+                    contentItem: Text {
+                        text: "\ue51c"
+                        font.family: "Material Symbols Rounded"
+                        font.pixelSize: 22
+                        color: colSubtext0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     onClicked: sddm.suspend()
-                },
-                // Power off
-                IconButton {
-                    iconText: "\ue8ac" // power_settings_new
+                }
+
+                // Power
+                Button {
+                    width: 40
+                    height: 40
+                    background: Rectangle {
+                        radius: 20
+                        color: parent.hovered ? colSurface1 : "transparent"
+                    }
+                    contentItem: Text {
+                        text: "\ue8ac"
+                        font.family: "Material Symbols Rounded"
+                        font.pixelSize: 22
+                        color: colSubtext0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     onClicked: sddm.powerOff()
-                },
+                }
+
                 // Reboot
-                IconButton {
-                    iconText: "\ue042" // restart_alt
-                    Layout.rightMargin: 4
+                Button {
+                    width: 40
+                    height: 40
+                    background: Rectangle {
+                        radius: 20
+                        color: parent.hovered ? colSurface1 : "transparent"
+                    }
+                    contentItem: Text {
+                        text: "\ue042"
+                        font.family: "Material Symbols Rounded"
+                        font.pixelSize: 22
+                        color: colSubtext0
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
                     onClicked: sddm.reboot()
                 }
-            ]
-        }
-    }
-
-    // Initialize session once when model is ready
-    Connections {
-        target: sessionModel
-        function onCountChanged() {
-            // Only initialize once, don't override user selection
-            if (!root.sessionInitialized && sessionModel.rowCount() > 0) {
-                root.sessionIndex = root.findHyprlandIndex()
-                root.sessionInitialized = true
             }
         }
     }
 
     Connections {
         target: sddm
-
         function onLoginFailed() {
-            passwordField.clear()
-            passwordField.shake()
-            passwordField.forceActiveFocus()
+            passwordField.text = ""
+            passwordField.focus = true
         }
     }
 
     Component.onCompleted: {
         passwordField.forceActiveFocus()
-        // Try to find hyprland if model is already loaded
-        if (!root.sessionInitialized && sessionModel.rowCount() > 0) {
-            root.sessionIndex = findHyprlandIndex()
-            root.sessionInitialized = true
-        }
     }
 }

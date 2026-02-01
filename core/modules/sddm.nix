@@ -1,7 +1,5 @@
 {pkgs, lib, config, username, ...}:
 let
-  cfg = config.services.displayManager.sddm;
-
   # Wallpaper source from repo
   wallpaperSrc = ../../wallpapers/yosemite.png;
 
@@ -11,34 +9,34 @@ let
     accent = "mauve";
   };
 
-  # Custom SDDM theme - overlay our components on catppuccin base
-  catppuccin-rounded-sddm = pkgs.stdenv.mkDerivation {
-    pname = "sddm-catppuccin-rounded";
+  # Custom SDDM theme - only override visual components, keep working session handling
+  catppuccin-styled-sddm = pkgs.stdenv.mkDerivation {
+    pname = "sddm-catppuccin-styled";
     version = "1.0";
 
     src = ./sddm-theme;
 
     installPhase = ''
-      mkdir -p $out/share/sddm/themes/catppuccin-rounded
+      mkdir -p $out/share/sddm/themes/catppuccin-styled
 
-      # Start with catppuccin base theme
-      cp -r ${catppuccinBase}/share/sddm/themes/catppuccin-mocha-mauve/* $out/share/sddm/themes/catppuccin-rounded/
-      chmod -R u+w $out/share/sddm/themes/catppuccin-rounded/
+      # Start with catppuccin base theme (has working session selection)
+      cp -r ${catppuccinBase}/share/sddm/themes/catppuccin-mocha-mauve/* $out/share/sddm/themes/catppuccin-styled/
+      chmod -R u+w $out/share/sddm/themes/catppuccin-styled/
 
-      # Override with our custom files
-      cp $src/Main.qml $out/share/sddm/themes/catppuccin-rounded/
-      cp $src/Components/*.qml $out/share/sddm/themes/catppuccin-rounded/Components/
-
-      # Update metadata
-      cp $src/metadata.desktop $out/share/sddm/themes/catppuccin-rounded/
+      # Override visual components + custom LoginPanel, keep original SessionPanel
+      cp $src/Main.qml $out/share/sddm/themes/catppuccin-styled/
+      cp $src/Components/Clock.qml $out/share/sddm/themes/catppuccin-styled/Components/
+      cp $src/Components/LoginPanel.qml $out/share/sddm/themes/catppuccin-styled/Components/
 
       # Copy wallpaper into theme
-      cp ${wallpaperSrc} $out/share/sddm/themes/catppuccin-rounded/background.png
+      cp ${wallpaperSrc} $out/share/sddm/themes/catppuccin-styled/background.png
 
-      # Update theme.conf with relative wallpaper path
-      cat > $out/share/sddm/themes/catppuccin-rounded/theme.conf << EOF
+      # Update theme.conf
+      cat > $out/share/sddm/themes/catppuccin-styled/theme.conf << EOF
 [General]
 Background="background.png"
+CustomBackground="true"
+ClockEnabled="true"
 Font="Rubik"
 FontSize=12
 EOF
@@ -50,25 +48,22 @@ in
   services.displayManager.sddm = {
     enable = true;
     wayland.enable = true;
-    theme = "catppuccin-rounded";
+    theme = "catppuccin-styled";
     package = pkgs.kdePackages.sddm;
     settings = {
       General = {
-        # Use hyprland-uwsm.desktop when programs.hyprland.withUWSM = true
         DefaultSession = "hyprland-uwsm.desktop";
       };
     };
   };
 
   environment.systemPackages = [
-    catppuccin-rounded-sddm
-    # Required for GraphicalEffects and Qt5Compat
-    pkgs.kdePackages.qt5compat
+    catppuccin-styled-sddm
   ];
 
-  # Ensure Material Symbols font is available for SDDM
+  # Fonts for the theme
   fonts.packages = [
-    pkgs.material-symbols
     pkgs.rubik
+    pkgs.material-symbols
   ];
 }
