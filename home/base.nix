@@ -15,7 +15,7 @@
     (import ./modules/bitwarden.nix )
     (import ./modules/vnc.nix )
     (import ./modules/syncthing.nix )
-
+    (import ./modules/claude.nix )
   ];
   
   # Packages for user
