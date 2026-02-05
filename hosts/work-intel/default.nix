@@ -64,6 +64,14 @@
   # GNOME Desktop Environment (SDDM from core modules handles login)
   services.desktopManager.gnome.enable = true;
 
+  # Exclude some GNOME default apps to keep it lighter
+  environment.gnome.excludePackages = with pkgs; [
+    gnome-tour
+    epiphany  # GNOME Web browser
+    geary     # Email client
+    gnome-music
+  ];
+
   # TLP for power management (aggressive thermal settings for i9)
   services.tlp = {
     enable = true;
@@ -141,6 +149,16 @@
     mesa-demos  # includes glxinfo
     vulkan-tools
     nvtopPackages.nvidia  # GPU monitoring with NVIDIA support
+
+    # GNOME tweaks and extensions
+    gnome-tweaks
+    gnome-extension-manager
+    gnomeExtensions.caffeine           # Prevent screen sleep
+    gnomeExtensions.appindicator       # System tray support
+    gnomeExtensions.dash-to-dock       # Better dock
+    gnomeExtensions.clipboard-indicator # Clipboard history
+    gnomeExtensions.blur-my-shell      # Visual blur effects
+    gnomeExtensions.vitals             # System monitor in top bar
   ];
 
   # Intel thermal management (thermald is better for XPS than throttled)
