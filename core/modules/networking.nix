@@ -2,6 +2,9 @@
 { inputs }:
 { config, pkgs, ... }: {
   networking = {
+    extraHosts = ''
+      0.0.0.0 apresolve.spotify.com
+    '';
     networkmanager = {
       enable = true;
       # Configure DNS to use Tailscale's MagicDNS first, with fallbacks

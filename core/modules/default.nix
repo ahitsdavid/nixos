@@ -3,6 +3,7 @@
 { pkgs, ... }: {
   imports = [
     ( import ./bootloader.nix )
+    ./ethernet-share.nix
     ( import ./fonts.nix )
     #( import ./greetd.nix )
     ( import ./sddm.nix )

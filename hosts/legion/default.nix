@@ -81,5 +81,13 @@
 
   networking.hostName = "legion";
 
+  # Ethernet sharing - Legion as gateway for work-intel
+  # Built-in ethernet (enp66s0) connects to work-intel
+  # Dock ethernet (enp63s0u1u4) connects to work network
+  networking.ethernet-share.gateway = {
+    enable = true;
+    interface = "enp66s0";
+  };
+
   system.stateVersion = "25.05";
 }
