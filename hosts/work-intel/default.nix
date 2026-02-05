@@ -151,12 +151,15 @@
 
   networking.hostName = "work-intel";
 
-  # Ethernet sharing - work-intel as client, routes through Legion
-  # TODO: Set interface to built-in ethernet or USB adapter interface name
-  # Run `ip link show | grep -E '^[0-9]+: (en|eth)'` to find it
+  # Ethernet sharing - can be gateway (when docked) or client (when Legion is docked)
+  # Interface: USB ethernet adapter on dock
+  networking.ethernet-share.gateway = {
+    enable = true;
+    interface = "enp58s0u1u2u4";
+  };
   networking.ethernet-share.client = {
-    enable = false;  # Enable once interface is configured
-    interface = "FIXME";  # e.g., "enp0s31f6" or USB adapter name
+    enable = false;
+    interface = "enp58s0u1u2u4";
   };
 
   system.stateVersion = "25.05";
