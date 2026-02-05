@@ -155,11 +155,11 @@
   # Interface: USB ethernet adapter on dock
   networking.ethernet-share.gateway = {
     enable = true;
-    interface = "enp58s0u1u2u4";
+    interface = "enp0s20f0u2";
   };
   networking.ethernet-share.client = {
     enable = false;
-    interface = "enp58s0u1u2u4";
+    interface = "enp0s20f0u2";
   };
 
   system.stateVersion = "25.05";
