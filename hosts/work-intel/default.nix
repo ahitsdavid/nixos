@@ -8,37 +8,13 @@
     (import ../../profiles/work { inherit inputs username; })
     ../../profiles/laptop
 
-    # Intel integrated + NVIDIA discrete
-    ../../core/drivers/intel.nix
-    ../../core/drivers/nvidia.nix
+    # Hybrid graphics: offload mode for battery life
+    (import ../../core/drivers/hybrid-gpu.nix {
+      mode = "offload";
+      intelBusId = "PCI:0:2:0";
+      nvidiaBusId = "PCI:1:0:0";
+    })
   ];
-
-  # Enable Intel graphics driver
-  drivers.intel.enable = true;
-
-  # Enable NVIDIA driver for hybrid graphics
-  drivers.nvidia.enable = true;
-
-  # NVIDIA Prime for hybrid GPU switching (offload mode saves power)
-  hardware.nvidia.prime = {
-    offload = {
-      enable = true;
-      enableOffloadCmd = true; # Provides nvidia-offload command
-    };
-    intelBusId = "PCI:0:2:0";
-    nvidiaBusId = "PCI:1:0:0";
-  };
-
-  # Power down NVIDIA GPU when not in use (Turing+ only)
-  hardware.nvidia.powerManagement = {
-    enable = lib.mkForce true;
-    finegrained = lib.mkForce true;
-  };
-
-  # Override nvidia.nix env vars - use Intel by default for offload mode
-  environment.sessionVariables = lib.mkForce {
-    LIBVA_DRIVER_NAME = "iHD"; # Intel for hardware video accel
-  };
 
   # Use X11 for SDDM (Wayland SDDM has rendering issues)
   services.displayManager.sddm.wayland.enable = lib.mkForce false;
@@ -107,8 +83,6 @@
     s-tui
     acpilight
     v4l-utils
-    vulkan-tools
-    nvtopPackages.nvidia
 
     # GNOME tweaks and extensions
     gnome-tweaks

@@ -19,6 +19,7 @@ This document outlines identified improvements and step-by-step refactoring task
 | 3.1 Add Nix linting | **Done** | - |
 | 3.2 Extract flake helper functions | **Done** | - |
 | 3.4 Fix QML path duplication | **Done** | - |
+| 4.1 Hybrid GPU abstraction | **Done** | - |
 
 ---
 
@@ -702,7 +703,9 @@ imports = [
 
 ## Phase 4: Future Considerations
 
-### 4.1 Hybrid GPU Abstraction
+### 4.1 Hybrid GPU Abstraction ✓
+
+**Status**: Complete - Created `core/drivers/hybrid-gpu.nix` with offload/sync mode support.
 
 Create `core/drivers/hybrid-gpu.nix` for Legion and work-intel:
 ```nix
@@ -766,6 +769,7 @@ After each phase, verify:
 
 **Remaining tasks:**
 - Phase 3.3 - Document module structure rules
-- Phase 4.x - Future considerations (Hybrid GPU, SSH consolidation, Secrets audit)
+- Phase 4.2 - SSH configuration consolidation
+- Phase 4.3 - Secrets management audit
 
 Each step should be a separate commit for easy rollback.
