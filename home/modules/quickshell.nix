@@ -1,6 +1,15 @@
 { config, lib, pkgs, inputs, ... }:
 let
   nvidiaEnv = import ../../lib/nvidia-env.nix;
+
+  # QML import paths for Qt6/KDE packages (shared between systemd service and session vars)
+  qmlImportPaths = lib.concatStringsSep ":" [
+    "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+    "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+    "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
+    "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
+    "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
+  ];
 in
 {
   # Persist GNOME dark mode setting - required for matugen to generate dark colors
@@ -24,20 +33,8 @@ in
 
   # Extend the official systemd service to add environment variables
   systemd.user.services.quickshell.Service.Environment = [
-    "QML2_IMPORT_PATH=${lib.concatStringsSep ":" [
-      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ]}"
-    "QML_IMPORT_PATH=${lib.concatStringsSep ":" [
-      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ]}"
+    "QML2_IMPORT_PATH=${qmlImportPaths}"
+    "QML_IMPORT_PATH=${qmlImportPaths}"
   ] ++ lib.optionals config.hostMeta.hasNvidia nvidiaEnv.systemdEnv ++ [
     # Virtual environment for Python scripts
     "ILLOGICAL_IMPULSE_VIRTUAL_ENV=${config.home.homeDirectory}/.local/state/quickshell/.venv"
@@ -45,20 +42,8 @@ in
 
   # Add session variables
   home.sessionVariables = {
-    QML2_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
-    QML_IMPORT_PATH = lib.concatStringsSep ":" [
-      "${pkgs.kdePackages.qt5compat}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtpositioning}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.qtmultimedia}/${pkgs.kdePackages.qtbase.qtQmlPrefix}"
-      "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
-      "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
-    ];
+    QML2_IMPORT_PATH = qmlImportPaths;
+    QML_IMPORT_PATH = qmlImportPaths;
     # Virtual environment for Python scripts used by quickshell
     ILLOGICAL_IMPULSE_VIRTUAL_ENV = "${config.home.homeDirectory}/.local/state/quickshell/.venv";
   };
