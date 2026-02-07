@@ -16,5 +16,6 @@
 
   networking.hostName = "sb1"; 
   
-  system.stateVersion = "24.11"; 
+  # stateVersion: Set at initial install - do not change
+  system.stateVersion = "24.11";
 }

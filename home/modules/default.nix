@@ -3,7 +3,6 @@
 
   imports = [
     (import ./bash.nix )
-    #(import ./dolphin.nix )
     (import ./claude.nix )
     (import ./eza.nix )
     (import ./git.nix )
@@ -25,8 +24,4 @@
     (import ./docker-gui.nix )
     (import ./sops-manager.nix )
   ];
-
-  #programs.dolphin = {
-  #  enable = true;
-  #};
 }

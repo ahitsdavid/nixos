@@ -2,8 +2,6 @@
 { inputs }:
 { config, pkgs, lib, ... }: {
   nix = {
-    # Enable flakes (necessary for new systems)
-    #package = pkgs.nixFlakes;
     settings = {
       experimental-features = [ "nix-command" "flakes" ];
       auto-optimise-store = true;

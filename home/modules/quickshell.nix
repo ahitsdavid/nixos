@@ -1,5 +1,7 @@
 { config, lib, pkgs, inputs, ... }:
-
+let
+  nvidiaEnv = import ../../lib/nvidia-env.nix;
+in
 {
   # Persist GNOME dark mode setting - required for matugen to generate dark colors
   # The end-4 quickshell uses switchwall.sh which checks this gsettings value
@@ -36,10 +38,7 @@
       "${pkgs.kdePackages.syntax-highlighting}/lib/qt-6/qml"
       "${pkgs.kdePackages.kirigami.unwrapped}/lib/qt-6/qml"
     ]}"
-    # NVIDIA Wayland environment variables for proper EGL initialization
-    "GBM_BACKEND=nvidia-drm"
-    "__GLX_VENDOR_LIBRARY_NAME=nvidia"
-    "LIBVA_DRIVER_NAME=nvidia"
+  ] ++ lib.optionals config.hostMeta.hasNvidia nvidiaEnv.systemdEnv ++ [
     # Virtual environment for Python scripts
     "ILLOGICAL_IMPULSE_VIRTUAL_ENV=${config.home.homeDirectory}/.local/state/quickshell/.venv"
   ];

@@ -180,5 +180,6 @@
     interface = "enp0s20f0u2";
   };
 
+  # stateVersion: Set at initial install - do not change
   system.stateVersion = "25.05";
 }

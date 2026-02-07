@@ -8,10 +8,6 @@
       (import ../../profiles/development { inherit inputs username; })
       (import ../../profiles/work { inherit inputs username; })
       (import ../../core/drivers/intel.nix )
-
-      # Import the GDM customization module
-      #(import ../../home/modules/gdm { inherit username lib config pkgs; })
-
     ];
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -93,66 +89,10 @@ hardware.trackpoint = {
   services.throttled.enable = true;
   services.fwupd.enable = true;
 
-  # boot = {
-  #   kernelModules = [ "thinkpad_acpi" ];
-  #   extraModprobeConfig = ''
-  #     options thinkpad_acpi fan_control=1
-  #   '';
-  # };
-  # # ThinkPad fan control
-  # services.thinkfan = {
-  #   enable = true;
-    
-  #   # Use hwmon with a more flexible path pattern
-  #   sensors = [
-  #     {
-  #       type = "hwmon";
-  #       # More generic pattern that works across reboots
-  #       query = "/sys/class/thermal/thermal_zone*/temp";
-  #     }
-  #   ];
-    
-  #   # Alternative approach using specific paths if the above doesn't work
-  #   # sensors = [
-  #   #   {
-  #   #     type = "hwmon";
-  #   #     query = "/sys/devices/platform/coretemp.0/hwmon/hwmon*/temp1_input";
-  #   #   }
-  #   # ];
-    
-  #   levels = [
-  #     [ 0 0 55 ]
-  #     [ 1 48 60 ]
-  #     [ 2 50 61 ]
-  #     [ 3 52 63 ]
-  #     [ 4 56 65 ]
-  #     [ 5 59 66 ]
-  #     [ 7 63 32767 ]
-  #   ];
-
-  #   extraArgs = [ "-b" "0" "-q" ];
-  # };
-
-  # systemd.services.thinkfan = {
-  #   after = [ "systemd-modules-load.service" ];
-  #   requires = [ "systemd-modules-load.service" ];
-  # };
-
-  # GNOME Desktop Environment (disabled - using Hyprland)
-  # services.xserver.desktopManager.gnome.enable = true;
-
-  # # Exclude some default GNOME apps to reduce bloat
-  # environment.gnome.excludePackages = with pkgs; [
-  #   gnome-tour
-  #   epiphany      # web browser
-  #   geary         # email client
-  #   gnome-music
-  # ];
-
   networking = {
     hostName = "thinkpad";
   };
 
+  # stateVersion: Set at initial install - do not change
   system.stateVersion = "25.05";
-
 }

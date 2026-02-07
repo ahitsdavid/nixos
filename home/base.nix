@@ -13,7 +13,6 @@
     (import ./modules/default.nix )
     (import ./modules/hyprland )
     (import ./modules/fastfetch )
-    #(import ./modules/rofi )
     (import ./modules/chromium.nix )
     (import ./modules/ssh.nix )
     (import ./modules/bitwarden.nix )
@@ -86,5 +85,6 @@
     };
   };
 
+  # stateVersion: Set at initial install - do not change
   home.stateVersion = "25.11";
 }

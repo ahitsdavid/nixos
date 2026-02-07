@@ -85,5 +85,6 @@
 
   networking.hostName = "desktop";
 
+  # stateVersion: Set at initial install - do not change
   system.stateVersion = "25.05";
 }

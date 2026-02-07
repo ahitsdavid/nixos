@@ -6,6 +6,7 @@
 }:
 with lib; let
   cfg = config.drivers.nvidia;
+  nvidiaEnv = import ../../lib/nvidia-env.nix;
 in {
   options.drivers.nvidia = {
     enable = mkEnableOption "Enable Nvidia Graphics Drivers";
@@ -47,13 +48,6 @@ in {
     ];
 
     # Environment variables for Wayland/Hyprland
-    environment.sessionVariables = {
-      # Nvidia Wayland variables
-      LIBVA_DRIVER_NAME = "nvidia";
-      XDG_SESSION_TYPE = "wayland";
-      GBM_BACKEND = "nvidia-drm";
-      __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-      WLR_NO_HARDWARE_CURSORS = "1";
-    };
+    environment.sessionVariables = nvidiaEnv.sessionVariables;
   };
 }
