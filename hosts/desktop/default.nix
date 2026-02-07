@@ -12,7 +12,7 @@
 
   # Kernel - using latest for best Nvidia support
   boot.kernelPackages = pkgs.linuxPackages_latest;
-  
+
   # Bootloader with CachyOS entries
   boot.loader.systemd-boot = {
     enable = true;
@@ -44,7 +44,7 @@
 
   # Desktop-specific power management (no battery optimization needed)
   services.power-profiles-daemon.enable = true;
-  
+
   # Hardware acceleration
   hardware.graphics = {
     enable = true;
@@ -54,23 +54,11 @@
   # Enable NVIDIA drivers
   drivers.nvidia.enable = true;
 
-  # Desktop utilities
+  # Desktop-specific packages (monitoring, graphics, system from core)
   environment.systemPackages = with pkgs; [
-    # Monitoring tools
-    lm_sensors
     nvidia-vaapi-driver
-
-    # GPU utilities
-    mesa
-    mesa-demos
     nvtopPackages.full
-
-    # AMD CPU utilities
     ryzen-monitor-ng
-
-    # Desktop utilities
-    pciutils
-    usbutils
   ];
 
   # Kernel parameters for AMD 7800X3D + Nvidia

@@ -13,6 +13,8 @@ This document outlines identified improvements and step-by-step refactoring task
 | 1.3 Remove dead code | **Done** | `526fa76` |
 | 1.4 Standardize state versions | **Done** | `526fa76` |
 | 2.1 Create laptop profile | **Done** | - |
+| 2.4 Extract package sets | **Done** | - |
+| 3.1 Add Nix linting | **Done** | - |
 
 ---
 

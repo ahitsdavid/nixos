@@ -180,5 +180,16 @@
         ];
       }).config.system.build.isoImage;
     };
+
+    # Development shell with linting tools
+    devShells.${system}.default = let
+      pkgs = import nixpkgs { inherit system; };
+    in pkgs.mkShell {
+      packages = with pkgs; [
+        statix      # Nix linter
+        deadnix     # Dead code finder
+        nixfmt-rfc-style  # Nix formatter
+      ];
+    };
   };
 }
