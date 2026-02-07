@@ -51,13 +51,9 @@
     enable32Bit = true;
   };
 
-  # Gaming support
-  #programs.steam = {
-  #enable = true;
-  #remotePlay.openFirewall = true;
-  # dedicatedServer.openFirewall = true;
-  #};
-  services.desktopManager.gnome.enable = true;
+  # Enable NVIDIA drivers
+  drivers.nvidia.enable = true;
+
   # Desktop utilities
   environment.systemPackages = with pkgs; [
     # Monitoring tools
@@ -86,28 +82,6 @@
     # AMD CPU optimizations
     "amd_pstate=active"
   ];
-
-  # SDDM monitor configuration for desktop
-  # Ensure login screen appears on main monitor (DP-5) not the rotated secondary (DP-4)
-  services.displayManager.sddm.settings = {
-    General = {
-      # Display the greeter on the main monitor
-      DisplayServer = "wayland";
-    };
-    Wayland = {
-      # Set the compositor command with monitor configuration
-      CompositorCommand = "${pkgs.writeScript "sddm-hyprland-wrapper" ''
-        #!/bin/sh
-        # Configure monitors for SDDM greeter - show only on main display
-        export HYPRLAND_LOG_WLR=1
-        # Launch Hyprland with monitor configuration for login screen
-        ${pkgs.hyprland}/bin/Hyprland -c ${pkgs.writeText "sddm-hyprland.conf" ''
-          monitor=DP-5,3440x1440@100,0x0,1
-          monitor=DP-4,disable
-        ''}
-      ''}";
-    };
-  };
 
   networking.hostName = "desktop";
 
