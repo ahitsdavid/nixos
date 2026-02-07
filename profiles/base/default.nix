@@ -6,6 +6,7 @@
     (import ./users.nix { inherit inputs username; })
     (import ./nix-config.nix { inherit inputs; })
     ../../profiles/display-manager
+    ../../profiles/ssh
   ];
 
   # Bluetooth
@@ -20,7 +21,6 @@
   programs.dconf.enable = true;
   services.dbus.enable = true;
 
-  services.openssh.enable = true;
   # Configure keymap in X11
   services.xserver.xkb = {
     layout = "us";

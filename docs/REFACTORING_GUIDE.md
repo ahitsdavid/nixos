@@ -20,6 +20,7 @@ This document outlines identified improvements and step-by-step refactoring task
 | 3.2 Extract flake helper functions | **Done** | - |
 | 3.4 Fix QML path duplication | **Done** | - |
 | 4.1 Hybrid GPU abstraction | **Done** | - |
+| 4.2 SSH consolidation | **Done** | - |
 
 ---
 
@@ -726,13 +727,15 @@ Create `core/drivers/hybrid-gpu.nix` for Legion and work-intel:
 }
 ```
 
-### 4.2 SSH Configuration Consolidation
+### 4.2 SSH Configuration Consolidation ✓
+
+**Status**: Complete - Created `profiles/ssh/default.nix` with hardened server defaults.
 
 Move from scattered configs to `profiles/ssh/`:
-- Client config
-- Server config (optional)
-- Firewall rules
-- Host aliases from meta.nix
+- Server config: `profiles/ssh/default.nix` (security hardening, key exchange algorithms)
+- Client config: Stays in `home/modules/ssh.nix` (home-manager level)
+- Firewall rules: Port 22 in `core/modules/networking.nix`
+- Host aliases: Generated from `hosts/*/meta.nix` via `home/modules/tailscale-hosts.nix`
 
 ### 4.3 Secrets Management Audit
 
@@ -769,7 +772,6 @@ After each phase, verify:
 
 **Remaining tasks:**
 - Phase 3.3 - Document module structure rules
-- Phase 4.2 - SSH configuration consolidation
 - Phase 4.3 - Secrets management audit
 
 Each step should be a separate commit for easy rollback.

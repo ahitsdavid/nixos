@@ -2,6 +2,7 @@
 { config, pkgs, inputs, username, ... }: {
   imports = [
     ./hardware-configuration.nix
+    ../../profiles/ssh
   ];
 
   # Boot
@@ -28,15 +29,6 @@
       # Add SSH public keys from your other machines here
       # Example: "ssh-ed25519 AAAAC3Nza... user@desktop"
     ];
-  };
-
-  # SSH server
-  services.openssh = {
-    enable = true;
-    settings = {
-      PasswordAuthentication = false;
-      PermitRootLogin = "no";
-    };
   };
 
   # Tailscale for easy access from other machines
