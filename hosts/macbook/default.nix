@@ -5,7 +5,8 @@
     # Profiles
     (import ../../profiles/base { inherit inputs username; })
     (import ../../profiles/development { inherit inputs username; })
-    (import ../../core/drivers/intel.nix)
+    ../../profiles/laptop
+    ../../core/drivers/intel.nix
   ];
 
   # Kernel
@@ -26,92 +27,40 @@
       "broadcom-sta"
     ];
 
-
-
-
   # Apple keyboard/input support
-  hardware.facetimehd.enable = lib.mkDefault false; # Enable if webcam needed (requires firmware extraction)
+  hardware.facetimehd.enable = lib.mkDefault false;
 
-  # Power management for MacBook
-  services.tlp = {
-    enable = true;
-    settings = {
-      CPU_SCALING_GOVERNOR_ON_AC = "performance";
-      CPU_SCALING_GOVERNOR_ON_BAT = "powersave";
-      # MacBook battery thresholds (if supported)
-      START_CHARGE_THRESH_BAT0 = 75;
-      STOP_CHARGE_THRESH_BAT0 = 80;
-    };
-  };
-  services.power-profiles-daemon.enable = false;
-
-  # Lid switch behavior
-  services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "ignore";
-    HandleLidSwitchDocked = "ignore";
-  };
-
-  # Trackpad - Apple trackpad works with libinput
-  services.libinput = {
-    enable = true;
-    touchpad = {
-      naturalScrolling = true;
-      tapping = true;
-      clickMethod = "clickfinger"; # Two-finger right-click
-      disableWhileTyping = true;
-    };
-  };
-
-  # Keyboard - Apple keyboard tweaks
+  # Apple keyboard tweaks
   services.xserver.xkb = {
-    options = "altwin:swap_lalt_lwin"; # Swap Alt and Cmd for more natural layout
+    options = "altwin:swap_lalt_lwin"; # Swap Alt and Cmd
   };
 
-  # Backlight control
-  programs.light.enable = true;
-
-  # Firmware updates
-  services.fwupd.enable = true;
-
-  # GNOME Desktop Environment (optional, selectable at login)
+  # GNOME Desktop Environment
   services.xserver.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
-
-  # Exclude some GNOME default apps to keep it lighter
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
-    epiphany  # GNOME Web browser
-    geary     # Email client
+    epiphany
+    geary
     gnome-music
   ];
 
+  # Host-specific packages
   environment.systemPackages = with pkgs; [
-    # Monitoring tools
-    lm_sensors
-    powertop
-
-    # Backlight control
     acpilight
-
-    # Graphics
-    mesa
-    mesa-demos
 
     # GNOME tweaks and extensions
     gnome-tweaks
     gnome-extension-manager
-    gnomeExtensions.caffeine           # Prevent screen sleep
-    gnomeExtensions.appindicator       # System tray support
-    gnomeExtensions.dash-to-dock       # Better dock
-    gnomeExtensions.clipboard-indicator # Clipboard history
-    gnomeExtensions.blur-my-shell      # Visual blur effects
-    gnomeExtensions.vitals             # System monitor in top bar
+    gnomeExtensions.caffeine
+    gnomeExtensions.appindicator
+    gnomeExtensions.dash-to-dock
+    gnomeExtensions.clipboard-indicator
+    gnomeExtensions.blur-my-shell
+    gnomeExtensions.vitals
   ];
 
-  networking = {
-    hostName = "macbook";
-  };
+  networking.hostName = "macbook";
 
   # stateVersion: Set at initial install - do not change
   system.stateVersion = "25.11";

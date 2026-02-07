@@ -8,10 +8,11 @@ This document outlines identified improvements and step-by-step refactoring task
 
 | Task | Status | Commit |
 |------|--------|--------|
-| 1.1 Extract Catppuccin colors | Pending | - |
+| 1.1 Extract Catppuccin colors | **Done** | - |
 | 1.2 Centralize NVIDIA env | **Done** | `526fa76` |
 | 1.3 Remove dead code | **Done** | `526fa76` |
 | 1.4 Standardize state versions | **Done** | `526fa76` |
+| 2.1 Create laptop profile | **Done** | - |
 
 ---
 

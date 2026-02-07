@@ -2,10 +2,11 @@
   imports = [
     ./hardware-configuration.nix
 
-    # Profiles (same as work-intel)
+    # Profiles
     (import ../../profiles/base { inherit inputs username; })
     (import ../../profiles/development { inherit inputs username; })
     (import ../../profiles/work { inherit inputs username; })
+    ../../profiles/laptop
 
     # Hybrid graphics (BIOS set to Dynamic/Hybrid)
     ../../core/drivers/intel.nix
@@ -37,42 +38,21 @@
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Power management - balanced (power-profiles-daemon)
+  # Override: use power-profiles-daemon instead of TLP
+  services.tlp.enable = false;
   services.power-profiles-daemon.enable = true;
-  # TLP disabled (conflicts with power-profiles-daemon)
 
-  # Lid switch handling
-  services.logind.settings.Login = {
-    HandleLidSwitch = "suspend";
-    HandleLidSwitchExternalPower = "ignore";
-    HandleLidSwitchDocked = "ignore";
-  };
+  # Override: disable thermald (NVIDIA handles its own thermals)
+  services.thermald.enable = false;
 
   # Hardware acceleration for gaming
   hardware.graphics = {
     enable = true;
-    enable32Bit = true;  # Required for 32-bit games/Steam
+    enable32Bit = true; # Required for 32-bit games/Steam
   };
 
-  # Input devices
-  services.libinput.enable = true;
-
-  # Backlight control
-  programs.light.enable = true;
-
-  # Firmware updates
-  services.fwupd.enable = true;
-
-  # System packages
+  # Legion-specific packages
   environment.systemPackages = with pkgs; [
-    # Monitoring
-    lm_sensors
-    powertop
-    acpi
-
-    # Graphics
-    mesa
-    mesa-demos
     vulkan-tools
     nvtopPackages.nvidia
     pciutils
@@ -82,7 +62,6 @@
   networking.hostName = "legion";
 
   # Ethernet sharing - can be gateway (when docked) or client (when work-intel is docked)
-  # Built-in ethernet (enp66s0) for direct link to work-intel
   networking.ethernet-share.gateway = {
     enable = false;
     interface = "enp66s0";
