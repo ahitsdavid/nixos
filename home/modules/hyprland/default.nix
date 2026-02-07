@@ -5,15 +5,15 @@
   home.file.".config/hypr/hyprland/scripts".source = "${inputs.dots-hyprland}/dots/.config/hypr/hyprland/scripts";
 
   imports = [
-    (import ./hypridle.nix )
-    (import ./hyprland.nix )
-    (import ./hyprlock.nix)
-    (import ./general.nix )
-    (import ./colors.nix )
-    (import ./keybinds.nix )
-    (import ./execs.nix )
-    (import ./rules.nix )
-    (import ./env.nix )       # Common env vars for all hosts
-    (import ./env-nvidia.nix) # NVIDIA env vars (conditionally applied via mkIf)
+    ./hypridle.nix
+    ./hyprland.nix
+    ./hyprlock.nix
+    ./general.nix
+    ./colors.nix
+    ./keybinds.nix
+    ./execs.nix
+    ./rules.nix
+    ./env.nix        # Common env vars for all hosts
+    ./env-nvidia.nix # NVIDIA env vars (conditionally applied via mkIf)
   ];
 }

@@ -4,21 +4,21 @@
   home.homeDirectory = "/home/${username}";
   
   imports = [
-    (import ./modules/host-meta.nix )  # Must be first - exposes hostMeta to all modules
-    (import ./modules/firefox/default.nix )
-    (import ./modules/zsh/default.nix )
-    (import ./modules/fish.nix )
-    (import ./modules/starship.nix )
-    (import ./modules/foot.nix )
-    (import ./modules/default.nix )
-    (import ./modules/hyprland )
-    (import ./modules/fastfetch )
-    (import ./modules/chromium.nix )
-    (import ./modules/ssh.nix )
-    (import ./modules/bitwarden.nix )
-    (import ./modules/vnc.nix )
-    (import ./modules/syncthing.nix )
-    (import ./modules/claude.nix )
+    ./modules/host-meta.nix  # Must be first - exposes hostMeta to all modules
+    ./modules/firefox
+    ./modules/zsh
+    ./modules/fish.nix
+    ./modules/starship.nix
+    ./modules/foot.nix
+    ./modules/default.nix
+    ./modules/hyprland
+    ./modules/fastfetch
+    ./modules/chromium.nix
+    ./modules/ssh.nix
+    ./modules/bitwarden.nix
+    ./modules/vnc.nix
+    ./modules/syncthing.nix
+    ./modules/claude.nix
   ];
   
   # Packages for user

@@ -2,8 +2,8 @@
 { inputs, username }:
 { config, pkgs, ... }: {
   imports = [
-    (import ./productivity.nix)
-    (import ./certification.nix)
+    ./productivity.nix
+    ./certification.nix
   ];
 
   # Work-related packages

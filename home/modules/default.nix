@@ -1,27 +1,25 @@
 { pkgs, ... }: {
-
-
   imports = [
-    (import ./bash.nix )
-    (import ./claude.nix )
-    (import ./eza.nix )
-    (import ./git.nix )
-    (import ./kitty.nix )
-    (import ./nvf.nix )
-    (import ./yazi.nix )
-    (import ./btop.nix )
-    (import ./zen-browser.nix )
-    (import ./catppuccin.nix )
-    (import ./stylix.nix )
-    (import ./quickshell.nix )
-    (import ./obs.nix )
-    (import ./thunar.nix )
-    (import ./virtualization.nix )
-    (import ./vlc.nix )
-    (import ./vscode.nix )
-    (import ./zed.nix )
-    (import ./spicetify.nix )
-    (import ./docker-gui.nix )
-    (import ./sops-manager.nix )
+    ./bash.nix
+    ./claude.nix
+    ./eza.nix
+    ./git.nix
+    ./kitty.nix
+    ./nvf.nix
+    ./yazi.nix
+    ./btop.nix
+    ./zen-browser.nix
+    ./catppuccin.nix
+    ./stylix.nix
+    ./quickshell.nix
+    ./obs.nix
+    ./thunar.nix
+    ./virtualization.nix
+    ./vlc.nix
+    ./vscode.nix
+    ./zed.nix
+    ./spicetify.nix
+    ./docker-gui.nix
+    ./sops-manager.nix
   ];
 }
