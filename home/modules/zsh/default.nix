@@ -1,6 +1,10 @@
-#home/modules/zsh/default.nix 
+#home/modules/zsh/default.nix
 #Zsh config
 { config, lib, pkgs, ... } :
+
+let
+  sharedAliases = import ../shell-aliases.nix;
+in
 {
     # Set up ZSH as an avilable shell
   programs.zsh = {
@@ -18,16 +22,7 @@
       export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#${config.stylix.base16Scheme.base04}"
     '';
 
-    shellAliases = {
-      v = "nvim";
-      sv = "sudo nvim";
-      c = "clear";
-      list-generations = "nixos-rebuild list-generations";
-      collect-garbage = "sudo nix-collect-garbage -d";
-
-      # Arch container fastfetch with custom config
-      ff-arch = "distrobox enter arch -- fastfetch --config /etc/fastfetch/config.jsonc";
-    };
+    shellAliases = sharedAliases.shellAliases;
 
     history = {
       expireDuplicatesFirst = true;

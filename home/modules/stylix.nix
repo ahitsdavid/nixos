@@ -32,6 +32,8 @@
     targets = {
       kitty.enable = true;
       rofi.enable = true;   # Migrated from Catppuccin
+      starship.enable = false;  # Handled by Catppuccin
+      foot.enable = false;      # Handled by foot.nix with shared terminal-config
       vim.enable = false;
       neovim.enable = false;
       firefox = {

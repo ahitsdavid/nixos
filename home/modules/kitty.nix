@@ -1,6 +1,7 @@
 #home/modules/kitty.nix
 { pkgs, lib, ... } :
 let
+  termConfig = import ./terminal-config.nix;
   kitty_grab = pkgs.fetchFromGitHub {
     owner = "yurikhan";
     repo = "kitty_grab";
@@ -17,9 +18,9 @@ in
   home.file.".config/kitty/grab.conf".text = ''
     # Vim-style kitty_grab config
 
-    # Colors
-    selection_foreground #1e1e2e
-    selection_background #89b4fa
+    # Colors (from shared terminal-config.nix)
+    selection_foreground #${termConfig.colors.selectionForeground}
+    selection_background #${termConfig.colors.selectionBackground}
 
     # Quit/confirm
     map q quit
@@ -55,18 +56,21 @@ in
 
   programs.kitty = {
     enable = true;
-    # Remove themeFile - let Stylix handle theming
+    # Theming handled by Stylix
     settings = {
-      shell = "zsh";
-      font_size = 12;
-      font = "JetBrainsMono Nerd Font";
+      # Shared settings from terminal-config.nix
+      shell = termConfig.shell;
+      font_size = termConfig.font.size;
+      font_family = termConfig.font.family;
+      window_padding_width = termConfig.padding;
+      enable_audio_bell = termConfig.bell;
+      background_opacity = lib.mkForce (toString termConfig.opacity);
+
+      # Kitty-specific settings
       wheel_scroll_min_lines = 1;
-      window_padding_width = 4;
       confirm_os_window_close = 0;
       dynamic_background_opacity = true;
-      enable_audio_bell = false;
       mouse_hide_wait = "-1.0";
-      background_opacity = lib.mkForce "0.7"; # Override Stylix to keep transparency
       background_blur = 5;
       tab_fade = 1;
       active_tab_font_style = "bold";

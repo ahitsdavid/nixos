@@ -6,6 +6,9 @@
   imports = [
     (import ./modules/firefox/default.nix )
     (import ./modules/zsh/default.nix )
+    (import ./modules/fish.nix )
+    (import ./modules/starship.nix )
+    (import ./modules/foot.nix )
     (import ./modules/default.nix )
     (import ./modules/hyprland )
     (import ./modules/fastfetch )
