@@ -14,8 +14,11 @@ This document outlines identified improvements and step-by-step refactoring task
 | 1.4 Standardize state versions | **Done** | `526fa76` |
 | 2.1 Create laptop profile | **Done** | - |
 | 2.2 Create display manager profile | **Done** | - |
+| 2.3 Standardize import syntax | **Done** | - |
 | 2.4 Extract package sets | **Done** | - |
 | 3.1 Add Nix linting | **Done** | - |
+| 3.2 Extract flake helper functions | **Done** | - |
+| 3.4 Fix QML path duplication | **Done** | - |
 
 ---
 
@@ -412,7 +415,9 @@ These require more changes but significantly improve maintainability.
 
 ---
 
-### 2.3 Standardize Import Syntax
+### 2.3 Standardize Import Syntax ✓
+
+**Status**: Complete - Standardized imports in 5 files to use direct paths for non-parameterized imports.
 
 **Problem**: 4 different import patterns used across 27 files.
 
@@ -587,7 +592,9 @@ imports = [
 
 ---
 
-### 3.2 Extract Flake Helper Functions
+### 3.2 Extract Flake Helper Functions ✓
+
+**Status**: Complete - Extracted `mkNixosConfiguration` and `mkHeadlessConfiguration` to `lib/host-builders.nix`.
 
 **Problem**: `flake.nix` contains large inline function definitions.
 
@@ -663,7 +670,9 @@ imports = [
 
 ---
 
-### 3.4 Fix QML Path Duplication in QuickShell
+### 3.4 Fix QML Path Duplication in QuickShell ✓
+
+**Status**: Complete - Extracted `qmlImportPaths` to let binding, reduced 4 duplications to 1.
 
 **File**: `home/modules/quickshell.nix`
 
@@ -746,10 +755,17 @@ After each phase, verify:
 ## Recommended Order
 
 1. ~~**Phase 1.3** - Remove dead code (quick win, reduces noise)~~ ✓
-2. **Phase 1.1** - Extract color scheme (high duplication impact)
+2. ~~**Phase 1.1** - Extract color scheme (high duplication impact)~~ ✓
 3. ~~**Phase 1.2** - Centralize NVIDIA env (high duplication impact)~~ ✓
-4. **Phase 2.1** - Create laptop profile (biggest structural improvement)
-5. **Phase 2.4** - Extract package sets (improves organization)
-6. **Phase 3.1** - Add linting (prevents future issues)
+4. ~~**Phase 2.1** - Create laptop profile (biggest structural improvement)~~ ✓
+5. ~~**Phase 2.4** - Extract package sets (improves organization)~~ ✓
+6. ~~**Phase 3.1** - Add linting (prevents future issues)~~ ✓
+7. ~~**Phase 2.3** - Standardize import syntax~~ ✓
+8. ~~**Phase 3.2** - Extract flake helper functions~~ ✓
+9. ~~**Phase 3.4** - Fix QML path duplication~~ ✓
+
+**Remaining tasks:**
+- Phase 3.3 - Document module structure rules
+- Phase 4.x - Future considerations (Hybrid GPU, SSH consolidation, Secrets audit)
 
 Each step should be a separate commit for easy rollback.
