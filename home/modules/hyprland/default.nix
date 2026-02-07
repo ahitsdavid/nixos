@@ -1,10 +1,6 @@
 # Hyprland default.nix
-{ pkgs, config, lib, inputs, hostname ? "unknown", ... }:
-let
-  # Hosts with NVIDIA GPUs that need NVIDIA-specific env vars
-  hasNvidia = hostname == "desktop" || hostname == "legion";
-in {
-
+{ pkgs, config, lib, inputs, ... }:
+{
   # Symlink hyprland scripts from end-4 dots
   home.file.".config/hypr/hyprland/scripts".source = "${inputs.dots-hyprland}/dots/.config/hypr/hyprland/scripts";
 
@@ -17,9 +13,7 @@ in {
     (import ./keybinds.nix )
     (import ./execs.nix )
     (import ./rules.nix )
-    (import ./env.nix )  # Common env vars for all hosts
-  ] ++ lib.optionals hasNvidia [
-    (import ./env-nvidia.nix )  # NVIDIA-specific env vars
+    (import ./env.nix )       # Common env vars for all hosts
+    (import ./env-nvidia.nix) # NVIDIA env vars (conditionally applied via mkIf)
   ];
-
 }

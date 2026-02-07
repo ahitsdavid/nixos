@@ -76,12 +76,23 @@
     stylix,
     ... 
     } @ inputs: 
-  let 
+  let
     system = "x86_64-linux";
     username = "davidthach";
-    
+
+    # Helper to get host metadata
+    getHostMeta = hostname:
+      let path = ./hosts/${hostname}/meta.nix;
+      in if builtins.pathExists path then import path else {};
+
     # Create a function to make a NixOS configuration with common modules
-    mkNixosConfiguration = { hostname, extraModules ? [], includeGaming ? true }:
+    # Now reads capabilities from hosts/<hostname>/meta.nix
+    mkNixosConfiguration = { hostname, extraModules ? [] }:
+      let
+        meta = getHostMeta hostname;
+        includeGaming = meta.isGaming or false;
+        hasNvidia = meta.hasNvidia or false;
+      in
       nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
@@ -124,7 +135,8 @@
                 ++ (extraModules.homeModules or []);
             };
           }
-        ] ++ (extraModules.systemModules or []);
+        ] ++ (if hasNvidia then [{ drivers.nvidia.enable = true; }] else [])
+          ++ (extraModules.systemModules or []);
       };
 
     # Create a function for headless servers (no GUI, no home-manager)
@@ -141,52 +153,17 @@
   in 
   {
     nixosConfigurations = {
-      # SB Configuration
-      sb1 = mkNixosConfiguration {
-        hostname = "sb1";
-        # If you need specific modules for this host:
-        # extraModules.homeModules = [ ./home/work.nix ];
-      };
-      
-      # Thinkpad Configuration
-      thinkpad = mkNixosConfiguration {
-        hostname = "thinkpad";
-      };
+      # All hosts now read their capabilities from hosts/<name>/meta.nix
+      # (isGaming, hasNvidia, isHeadless, isLaptop, etc.)
 
-      # MacBook Pro 2014 Configuration
-      macbook = mkNixosConfiguration {
-        hostname = "macbook";
-        includeGaming = false;
-      };
+      sb1 = mkNixosConfiguration { hostname = "sb1"; };
+      thinkpad = mkNixosConfiguration { hostname = "thinkpad"; };
+      macbook = mkNixosConfiguration { hostname = "macbook"; };
+      work-intel = mkNixosConfiguration { hostname = "work-intel"; };
+      legion = mkNixosConfiguration { hostname = "legion"; };
+      desktop = mkNixosConfiguration { hostname = "desktop"; };
 
-      # Work Intel Configuration (no gaming)
-      work-intel = mkNixosConfiguration {
-        hostname = "work-intel";
-        includeGaming = false;
-      };
-
-      # Lenovo Legion Configuration (gaming + work laptop)
-      legion = mkNixosConfiguration {
-        hostname = "legion";
-        includeGaming = true;  # Games allowed
-        extraModules = {
-          systemModules = [
-            { drivers.nvidia.enable = true; }
-          ];
-        };
-      };
-
-      # Desktop Configuration
-      desktop = mkNixosConfiguration {
-        hostname = "desktop";
-        extraModules = {
-          systemModules = [
-            { drivers.nvidia.enable = true; }
-          ];
-        };
-      };
-      
-      # VM Configuration (headless build server with Harmonia)
+      # VM is headless (no GUI, no home-manager)
       vm = mkHeadlessConfiguration { hostname = "vm"; };
     };
     

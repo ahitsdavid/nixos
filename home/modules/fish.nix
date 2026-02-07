@@ -1,9 +1,9 @@
 # home/modules/fish.nix
 # Fish shell - complements Zsh with built-in features
-{ config, pkgs, ... }:
+{ config, pkgs, username, ... }:
 
 let
-  sharedAliases = import ./shell-aliases.nix;
+  sharedAliases = import ./shell-aliases.nix { inherit username; };
 in
 {
   programs.fish = {

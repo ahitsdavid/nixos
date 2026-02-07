@@ -1,5 +1,5 @@
 # home/modules/vnc.nix
-{ config, pkgs, lib, hostname, ... }:
+{ config, pkgs, lib, ... }:
 
 let
   cfg = config.modules.vnc;
@@ -8,13 +8,13 @@ in
   options.modules.vnc = {
     server.enable = lib.mkOption {
       type = lib.types.bool;
-      default = hostname == "desktop";
+      default = config.hostMeta.vncServer;
       description = "Enable wayvnc server for remote access to this machine";
     };
 
     client.enable = lib.mkOption {
       type = lib.types.bool;
-      default = hostname != "desktop";
+      default = !config.hostMeta.vncServer;
       description = "Enable VNC viewer to connect to other machines";
     };
   };

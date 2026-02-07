@@ -1,9 +1,9 @@
 #home/modules/zsh/default.nix
 #Zsh config
-{ config, lib, pkgs, ... } :
+{ config, lib, pkgs, username, ... } :
 
 let
-  sharedAliases = import ../shell-aliases.nix;
+  sharedAliases = import ../shell-aliases.nix { inherit username; };
 in
 {
     # Set up ZSH as an avilable shell

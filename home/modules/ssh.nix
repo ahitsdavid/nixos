@@ -1,9 +1,21 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, username, ... }:
 
 let
   # Check if SSH secrets exist (fork-friendly)
   hasUnraidKey = (lib.hasAttr "ssh/unraid_private_key" (config.sops.secrets or {}));
   hasGithubKey = (lib.hasAttr "ssh/github_private_key" (config.sops.secrets or {}));
+
+  # Import central Tailscale hosts definition
+  tailscaleHosts = import ./tailscale-hosts.nix;
+
+  # Generate SSH matchBlocks for each Tailscale host
+  tailscaleMatchBlocks = lib.mapAttrs (name: opts: {
+    hostname = name;  # Tailscale MagicDNS resolves this
+    user = username;
+    extraOptions = {
+      "StrictHostKeyChecking" = "accept-new";
+    };
+  }) tailscaleHosts;
 in
 {
   programs.ssh = {
@@ -12,6 +24,9 @@ in
 
     # SSH client configuration
     matchBlocks = lib.mkMerge [
+      # All Tailscale hosts
+      tailscaleMatchBlocks
+
       # GitHub SSH access
       (lib.mkIf hasGithubKey {
         "github.com" = {

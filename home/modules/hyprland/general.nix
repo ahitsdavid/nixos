@@ -1,30 +1,10 @@
 # home/modules/hyprland/general.nix
-{ pkgs, config, lib, hostname ? "unknown", ... }:
-let
-  isDesktop = hostname == "desktop";
-  isWorkIntel = hostname == "work-intel";
-  isMacbook = hostname == "macbook";
-in
+{ pkgs, config, lib, ... }:
 {
   wayland.windowManager.hyprland = {
     settings = {
-      monitor = if isDesktop then [
-        # Desktop setup: Larger ultrawide on left, smaller vertical on right
-        "DP-5,3440x1440@100,0x0,1"           # Samsung CF791 ultrawide on left
-        "DP-4,1920x1080@180,3440x0,1,transform,3"  # Samsung LS27DG30X vertical on right (90° counterclockwise)
-      ] else if isWorkIntel then [
-        # Laptop screen - keep at 1.5 scale for HiDPI
-        "eDP-1,3840x2160@60,0x0,1.5"
-        # Dell U3419W ultrawide - no scaling
-        "DP-6,3440x1440@60,2560x0,1"
-      ] else if isMacbook then [
-        # MacBook Pro Retina display - 1.5 scale for readable UI
-        "eDP-1,2880x1800@60,0x0,1.5"
-      ] else [
-        ",preferred,auto,1"
-        # Uncomment the following line to enable HDMI mirroring
-        # "HDMI-A-1,1920x1080@60,1920x0,1,mirror,eDP-1"
-      ];
+      # Monitor configuration from host metadata
+      monitor = config.hostMeta.monitors;
 
       input = {
         kb_layout = "us";

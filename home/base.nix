@@ -4,6 +4,7 @@
   home.homeDirectory = "/home/${username}";
   
   imports = [
+    (import ./modules/host-meta.nix )  # Must be first - exposes hostMeta to all modules
     (import ./modules/firefox/default.nix )
     (import ./modules/zsh/default.nix )
     (import ./modules/fish.nix )
