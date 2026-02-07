@@ -4,6 +4,17 @@ This document outlines identified improvements and step-by-step refactoring task
 
 ---
 
+## Progress
+
+| Task | Status | Commit |
+|------|--------|--------|
+| 1.1 Extract Catppuccin colors | Pending | - |
+| 1.2 Centralize NVIDIA env | **Done** | `526fa76` |
+| 1.3 Remove dead code | **Done** | `526fa76` |
+| 1.4 Standardize state versions | **Done** | `526fa76` |
+
+---
+
 ## Executive Summary
 
 | Category | Issues Found | Priority |
@@ -12,7 +23,7 @@ This document outlines identified improvements and step-by-step refactoring task
 | Inconsistent Patterns | 5 patterns | Medium |
 | Missing Abstractions | 4 areas | Medium |
 | Organization Issues | 3 areas | Low |
-| Dead Code | 8+ files | Low |
+| Dead Code | ~~8+ files~~ Fixed | Low |
 
 ---
 
@@ -84,7 +95,9 @@ These changes eliminate duplication without altering behavior.
 
 ---
 
-### 1.2 Centralize NVIDIA Environment Variables
+### 1.2 Centralize NVIDIA Environment Variables ✓
+
+**Status**: Complete - Created `lib/nvidia-env.nix` with multiple output formats.
 
 **Problem**: Same NVIDIA Wayland environment variables defined in 3 locations.
 
@@ -155,7 +168,9 @@ These changes eliminate duplication without altering behavior.
 
 ---
 
-### 1.3 Remove Dead Code and Commented Imports
+### 1.3 Remove Dead Code and Commented Imports ✓
+
+**Status**: Complete - Removed ~60 lines of dead code from 6 files.
 
 **Problem**: 8+ files contain commented-out imports creating confusion about what's active.
 
@@ -196,7 +211,9 @@ These changes eliminate duplication without altering behavior.
 
 ---
 
-### 1.4 Standardize State Versions
+### 1.4 Standardize State Versions ✓
+
+**Status**: Complete - Added clarifying comments to all 8 host/home files.
 
 **Problem**: Mixed `stateVersion` values across hosts.
 
@@ -722,9 +739,9 @@ After each phase, verify:
 
 ## Recommended Order
 
-1. **Phase 1.3** - Remove dead code (quick win, reduces noise)
+1. ~~**Phase 1.3** - Remove dead code (quick win, reduces noise)~~ ✓
 2. **Phase 1.1** - Extract color scheme (high duplication impact)
-3. **Phase 1.2** - Centralize NVIDIA env (high duplication impact)
+3. ~~**Phase 1.2** - Centralize NVIDIA env (high duplication impact)~~ ✓
 4. **Phase 2.1** - Create laptop profile (biggest structural improvement)
 5. **Phase 2.4** - Extract package sets (improves organization)
 6. **Phase 3.1** - Add linting (prevents future issues)
