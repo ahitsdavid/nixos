@@ -5,6 +5,7 @@
     (import ../../core/modules { inherit inputs username; })
     (import ./users.nix { inherit inputs username; })
     (import ./nix-config.nix { inherit inputs; })
+    ../../profiles/display-manager
   ];
 
   # Bluetooth

@@ -13,6 +13,7 @@ This document outlines identified improvements and step-by-step refactoring task
 | 1.3 Remove dead code | **Done** | `526fa76` |
 | 1.4 Standardize state versions | **Done** | `526fa76` |
 | 2.1 Create laptop profile | **Done** | - |
+| 2.2 Create display manager profile | **Done** | - |
 | 2.4 Extract package sets | **Done** | - |
 | 3.1 Add Nix linting | **Done** | - |
 
@@ -370,7 +371,9 @@ These require more changes but significantly improve maintainability.
 
 ---
 
-### 2.2 Create Display Manager Profile
+### 2.2 Create Display Manager Profile ✓
+
+**Status**: Complete - Created `profiles/display-manager/` with sddm-wayland.nix (default) and sddm-x11.nix variants.
 
 **Problem**: SDDM, GDM, X11/Wayland configuration scattered across 5+ files.
 

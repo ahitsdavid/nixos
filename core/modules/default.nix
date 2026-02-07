@@ -5,7 +5,6 @@
     ( import ./bootloader.nix )
     ./ethernet-share.nix
     ( import ./fonts.nix )
-    ( import ./sddm.nix )
     ( import ./networking.nix { inherit inputs; })
     ( import ./packages.nix { inherit inputs; })
     ( import ./pipewire.nix )
