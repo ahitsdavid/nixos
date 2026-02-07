@@ -1,4 +1,16 @@
 # SOPS-Nix Configuration
+#
+# This module configures encrypted secrets for NixOS using SOPS + age.
+# Secrets are decrypted at activation time and placed in /run/secrets/.
+#
+# Secret files:
+#   - secrets/system.yaml:   Infrastructure (WiFi, Tailscale, Harmonia)
+#   - secrets/personal.yaml: User credentials and API keys
+#   - secrets/work.yaml:     Work-related credentials
+#
+# To edit secrets: sops secrets/<file>.yaml
+# To add new secrets: Add key to YAML, then configure below
+#
 { config, lib, pkgs, ... }:
 
 let
@@ -19,12 +31,25 @@ in
 
     # Default sops file for personal secrets (if it exists)
     defaultSopsFile = lib.mkIf hasPersonalSecrets personalSecretsPath;
-    
-    # Only configure secrets if the files exist (fork-friendly!)
+
     secrets = lib.mkMerge [
-      # System secrets (WiFi, VPN, etc.)
+      # ══════════════════════════════════════════════════════════════════
+      # SYSTEM SECRETS (system.yaml)
+      # Infrastructure and network configuration
+      # ══════════════════════════════════════════════════════════════════
       (lib.mkIf hasSystemSecrets {
-        # WiFi passwords
+        # Tailscale VPN authentication key
+        # Used by: core/modules/tailscale.nix (authKeyFile)
+        # Generate at: https://login.tailscale.com/admin/settings/keys
+        "tailscale/auth_key" = {
+          sopsFile = systemSecretsPath;
+          owner = "root";
+          mode = "0400";
+        };
+
+        # WiFi passwords for NetworkManager
+        # Note: These are available but NetworkManager typically uses its own keyring
+        # To use: reference config.sops.secrets."wifi/dantat".path in NM config
         "wifi/dantat" = {
           sopsFile = systemSecretsPath;
           owner = "root";
@@ -39,93 +64,81 @@ in
         };
       })
 
-      # Tailscale secrets
-      (lib.mkIf hasSystemSecrets {
-        "tailscale/auth_key" = {
-          sopsFile = systemSecretsPath;
-          owner = "root";
-          mode = "0400";
-        };
-      })
-      
-      # Personal secrets (API keys, tokens)
+      # ══════════════════════════════════════════════════════════════════
+      # PERSONAL SECRETS (personal.yaml)
+      # User credentials, API keys, SSH keys
+      # ══════════════════════════════════════════════════════════════════
       (lib.mkIf hasPersonalSecrets {
         # User password hash for declarative user management
+        # Used by: profiles/base/users.nix (hashedPasswordFile)
+        # Generate with: mkpasswd -m sha-512
         "users/davidthach/password_hash" = {
-          # sopsFile defaults to defaultSopsFile (personal.yaml)
           owner = "root";
           mode = "0400";
         };
 
+        # SSH private keys - deployed directly to ~/.ssh/
+        # Used by: SSH client (reads from path automatically)
+        "ssh/unraid_private_key" = {
+          owner = "davidthach";
+          mode = "0400";
+          path = "/home/davidthach/.ssh/unraid_rsa";  # Custom path
+        };
+        "ssh/github_private_key" = {
+          owner = "davidthach";
+          mode = "0400";
+          path = "/home/davidthach/.ssh/id_rsa";  # Default SSH key
+        };
+
+        # API keys for various services
+        # Used by: Scripts, widgets, or CLI tools that read from path
         "api_keys/weather" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/github" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "api_keys/ai_service" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
 
-        # SSH keys for personal servers
-        "ssh/unraid_private_key" = {
-          # sopsFile defaults to defaultSopsFile
-          owner = "davidthach";
-          mode = "0400";
-          path = "/home/davidthach/.ssh/unraid_rsa";
-        };
-
-        # GitHub SSH key
-        "ssh/github_private_key" = {
-          # sopsFile defaults to defaultSopsFile
-          owner = "davidthach";
-          mode = "0400";
-          path = "/home/davidthach/.ssh/id_rsa";
-        };
-
-        # Bitwarden account info (login IDs, NOT passwords)
+        # Bitwarden CLI authentication
+        # Used by: `bw` CLI tool for password management
+        # See: https://bitwarden.com/help/cli/
         "bitwarden/email" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "bitwarden/self_hosted_url" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "bitwarden/client_id" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
         "bitwarden/client_secret" = {
-          # sopsFile defaults to defaultSopsFile
           owner = "davidthach";
           mode = "0400";
         };
       })
-      
-      # Work secrets
+
+      # ══════════════════════════════════════════════════════════════════
+      # WORK SECRETS (work.yaml)
+      # Employer-related credentials
+      # ══════════════════════════════════════════════════════════════════
       (lib.mkIf hasWorkSecrets {
-        "work/company_api" = {
+        # GitLab credentials for work repositories
+        # Used by: Git CLI, IDE integrations
+        "work/gitlab/host" = {
           sopsFile = workSecretsPath;
           owner = "davidthach";
           mode = "0400";
         };
-        "work/vpn_config" = {
-          sopsFile = workSecretsPath;
-          owner = "root";
-          mode = "0600";
-        };
-        # GitLab credentials
-        "work/gitlab/host" = {
+        "work/gitlab/additional-hosts" = {
           sopsFile = workSecretsPath;
           owner = "davidthach";
           mode = "0400";
@@ -141,11 +154,6 @@ in
           mode = "0400";
         };
         "work/gitlab/username" = {
-          sopsFile = workSecretsPath;
-          owner = "davidthach";
-          mode = "0400";
-        };
-        "work/gitlab/additional-hosts" = {
           sopsFile = workSecretsPath;
           owner = "davidthach";
           mode = "0400";

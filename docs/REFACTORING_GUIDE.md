@@ -18,9 +18,11 @@ This document outlines identified improvements and step-by-step refactoring task
 | 2.4 Extract package sets | **Done** | - |
 | 3.1 Add Nix linting | **Done** | - |
 | 3.2 Extract flake helper functions | **Done** | - |
+| 3.3 Document module structure | **Done** | - |
 | 3.4 Fix QML path duplication | **Done** | - |
 | 4.1 Hybrid GPU abstraction | **Done** | - |
 | 4.2 SSH consolidation | **Done** | - |
+| 4.3 Secrets management audit | **Done** | - |
 
 ---
 
@@ -644,7 +646,9 @@ imports = [
 
 ---
 
-### 3.3 Document Module Structure Rules
+### 3.3 Document Module Structure Rules ✓
+
+**Status**: Complete - Added "Module Structure Rules" section to CLAUDE.md with guidelines for when to use directories vs single files.
 
 **Steps**:
 
@@ -737,12 +741,20 @@ Move from scattered configs to `profiles/ssh/`:
 - Firewall rules: Port 22 in `core/modules/networking.nix`
 - Host aliases: Generated from `hosts/*/meta.nix` via `home/modules/tailscale-hosts.nix`
 
-### 4.3 Secrets Management Audit
+### 4.3 Secrets Management Audit ✓
+
+**Status**: Complete - Added documentation to .sops.yaml and sops.nix, removed empty placeholder secrets.
 
 Review `secrets/*.yaml` for:
 - Unused secrets
 - Secrets that could be removed
 - Documentation of what each secret is for
+
+**Changes made:**
+- Added usage documentation to `.sops.yaml` (secret file contents overview)
+- Added section headers and "Used by:" comments to `core/modules/sops.nix`
+- Removed empty `work/company_api` and `work/vpn_config` configurations
+- Identified 2 actively used secrets vs 15 configured-but-unused secrets
 
 ---
 
@@ -770,8 +782,6 @@ After each phase, verify:
 8. ~~**Phase 3.2** - Extract flake helper functions~~ ✓
 9. ~~**Phase 3.4** - Fix QML path duplication~~ ✓
 
-**Remaining tasks:**
-- Phase 3.3 - Document module structure rules
-- Phase 4.3 - Secrets management audit
+**All tasks complete!**
 
 Each step should be a separate commit for easy rollback.

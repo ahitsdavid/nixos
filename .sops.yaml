@@ -1,41 +1,58 @@
 # SOPS Configuration
 # This file controls how secrets are encrypted and who can decrypt them
+#
+# Usage:
+#   sops secrets/system.yaml    # Edit system secrets
+#   sops secrets/personal.yaml  # Edit personal secrets
+#   sops secrets/work.yaml      # Edit work secrets
 
 keys:
   # Daily key - used on systems for normal operations
+  # Location: ~/.config/sops/age/keys.txt (or /var/lib/sops-nix/key.txt for headless)
   - &daily age1g2lrl7380khsxt988e5x59yjfnf9q4tmhq29gx2tg86j4vl8mgvsj6pcx3
 
   # Master key - stored securely offline (Bitwarden + paper backup)
   # Can decrypt all secrets if daily key is lost/compromised
   - &master age1ufxwrvqk9fnusw5fl508ycmn392zqzsexh6mvlzggfx3h2xya4xqekgmsl
 
-  # For multiple users, add more keys:
-  # - &alice age1alice_public_key...
-  # - &bob age1bob_public_key...
-
 creation_rules:
-  # System secrets - basic configuration that most forks would want
+  # System secrets - infrastructure and network configuration
+  # Contents:
+  #   - wifi/*: WiFi network passwords (for NetworkManager)
+  #   - tailscale/auth_key: Tailscale VPN authentication
+  #   - harmonia/signing-key: Binary cache signing (vm host only)
   - path_regex: secrets/system\.yaml$
     key_groups:
     - age:
       - *daily
       - *master
 
-  # Personal secrets - your private API keys, tokens, etc.
+  # Personal secrets - user credentials and API keys
+  # Contents:
+  #   - users/*/password_hash: User login password hashes
+  #   - api_keys/*: Third-party API keys (weather, github, ai, etc.)
+  #   - ssh/*: SSH private keys (deployed to ~/.ssh/)
+  #   - bitwarden/*: Bitwarden CLI authentication
+  #   - social/*: Discord/Telegram bot tokens
+  #   - cloud/*: Cloud provider credentials (AWS, DO, Cloudflare)
+  #   - development/*: Dev tool tokens (npm, docker)
+  #   - services/*: Service passwords (email, etc.)
   - path_regex: secrets/personal\.yaml$
     key_groups:
     - age:
       - *daily
       - *master
 
-  # Work secrets - work-related credentials
+  # Work secrets - employer-related credentials
+  # Contents:
+  #   - work/gitlab/*: GitLab host, token, email, username
   - path_regex: secrets/work\.yaml$
     key_groups:
     - age:
       - *daily
       - *master
 
-# Default fallback rule for any other .yaml files
+  # Default fallback rule for any other .yaml files
   - key_groups:
     - age:
       - *daily
