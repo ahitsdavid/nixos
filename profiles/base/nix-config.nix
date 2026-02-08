@@ -19,6 +19,9 @@
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
         "vm-cache:w+a4m3Ar0u+zhZ1bThVg4lUq0DSemKd17YUlwPkAnbM="
       ];
+      # Fallback to other caches if VM is offline
+      fallback = true;
+      connect-timeout = 5;  # Seconds before giving up on a cache
     };
 
     # Registry configuration
