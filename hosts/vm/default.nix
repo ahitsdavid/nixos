@@ -58,7 +58,7 @@
   # Harmonia binary cache server
   services.harmonia = {
     enable = true;
-    signKeyPath = config.sops.secrets."harmonia/signing-key".path;
+    signKeyPaths = [ config.sops.secrets."harmonia/signing-key".path ];
     settings = {
       bind = "[::]:5000";
       priority = 50;  # Lower priority than cache.nixos.org
