@@ -18,12 +18,18 @@ let
 in
 {
   # Create a NixOS configuration with common modules
-  # Reads capabilities from hosts/<hostname>/meta.nix (isGaming, hasNvidia, etc.)
+  # Reads capabilities from hosts/<hostname>/meta.nix (isGaming, hasNvidia, usesGnome, etc.)
   mkNixosConfiguration = { hostname, extraModules ? [] }:
     let
       meta = getHostMeta hostname;
       includeGaming = meta.isGaming or false;
       hasNvidia = meta.hasNvidia or false;
+      usesGnome = meta.usesGnome or false;
+
+      # Select home config based on desktop environment
+      homeConfig = if usesGnome
+                   then ../home/minimal.nix
+                   else ../home/base.nix;
     in
     nixpkgs.lib.nixosSystem {
       inherit system;
@@ -62,9 +68,9 @@ in
             imports = [
               stylix.homeModules.stylix
               catppuccin.homeModules.catppuccin
-              inputs.spicetify-nix.homeManagerModules.default
-              ../home/base.nix
-            ] ++ (if includeGaming then [ ../home/gaming.nix ] else [])
+            ] ++ (if usesGnome then [] else [ inputs.spicetify-nix.homeManagerModules.default ])
+              ++ [ homeConfig ]
+              ++ (if includeGaming then [ ../home/gaming.nix ] else [])
               ++ (extraModules.homeModules or []);
           };
         }

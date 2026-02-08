@@ -1,11 +1,12 @@
 # Host metadata for SSH aliases and other tooling
 {
   sshAlias = "s1";
-  description = "SB1 system";
+  description = "Microsoft Surface tablet";
 
   # Capabilities
   hasNvidia = false;
-  isGaming = true;
+  isGaming = false;
   isHeadless = false;
-  isLaptop = false;
+  isLaptop = true;
+  usesGnome = true; # Use GNOME instead of Hyprland for tablet experience
 }

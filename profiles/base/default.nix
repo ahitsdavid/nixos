@@ -1,12 +1,13 @@
 # profiles/base/default.nix
 { inputs, username }:
-{ config, pkgs, ... }: {
+{ config, pkgs, lib, ... }:
+{
   imports = [
     (import ../../core/modules { inherit inputs username; })
     (import ./users.nix { inherit inputs username; })
     (import ./nix-config.nix { inherit inputs; })
-    ../../profiles/display-manager
     ../../profiles/ssh
+    ../../profiles/display-manager
   ];
 
   # Bluetooth
@@ -40,7 +41,7 @@
     nameserver 8.8.8.8
     nameserver 1.1.1.1
   '';
-  
+
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
@@ -59,31 +60,30 @@
   time.timeZone = "America/New_York";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  programs = {
-    hyprland = {
-        enable = true;
-        withUWSM = true;  # Recommended for Hyprland 0.53+
-        xwayland.enable = true;
-        package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
-        portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
-    };
+  # Hyprland (can be disabled by gnome-tablet profile)
+  programs.hyprland = {
+    enable = lib.mkDefault true;
+    withUWSM = true;  # Recommended for Hyprland 0.53+
+    xwayland.enable = true;
+    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.default;
+    portalPackage = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.xdg-desktop-portal-hyprland;
   };
 
   xdg.portal = {
     enable = true;
     xdgOpenUsePortal = false;  # Disabled - portal doesn't provide OpenURI interface
     config = {
-        common.default = ["gtk"];
-        hyprland.default = ["hyprland" "gtk"];
+      common.default = ["gtk"];
+      hyprland.default = lib.mkDefault ["hyprland" "gtk"];
     };
     extraPortals = with pkgs; [
         xdg-desktop-portal-gtk
-        xdg-desktop-portal-gnome  # Provides Settings interface for quickshell
+        xdg-desktop-portal-gnome  # Provides Settings interface for quickshell/GNOME
     ];
   };
 
   systemd.user.services.xdg-desktop-portal-gtk = {
-    wantedBy = [ "graphical-session.target" ];
+    wantedBy = lib.mkDefault [ "graphical-session.target" ];
   };
 
 

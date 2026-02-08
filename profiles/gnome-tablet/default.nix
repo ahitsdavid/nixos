@@ -7,9 +7,9 @@
 
   # GNOME Desktop with GDM (better touch support than SDDM)
   services.xserver.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.displayManager.gdm.wayland = true;
+  services.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = lib.mkForce true;
+  services.displayManager.gdm.wayland = true;
 
   # Disable SDDM (from display-manager profile)
   services.displayManager.sddm.enable = lib.mkForce false;
@@ -47,8 +47,12 @@
   ];
 
   # Screen rotation sensor support
-  services.hardware.iio-sensor-proxy.enable = true;
+  hardware.sensor.iio.enable = true;
 
   # Enable gnome-keyring for credential storage
   services.gnome.gnome-keyring.enable = true;
+
+  # GNOME requires power-profiles-daemon, not TLP
+  services.power-profiles-daemon.enable = lib.mkForce true;
+  services.tlp.enable = lib.mkForce false;
 }
