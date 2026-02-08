@@ -38,6 +38,10 @@
 
   # GNOME Desktop Environment (SDDM from core modules handles login)
   services.desktopManager.gnome.enable = true;
+
+  # Keep TLP for thermal management, disable GNOME's power-profiles-daemon
+  services.power-profiles-daemon.enable = lib.mkForce false;
+  services.tlp.enable = lib.mkForce true;
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     epiphany
