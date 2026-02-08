@@ -38,6 +38,10 @@
   # GNOME Desktop Environment
   services.xserver.enable = true;
   services.xserver.desktopManager.gnome.enable = true;
+
+  # GNOME requires power-profiles-daemon, not TLP
+  services.power-profiles-daemon.enable = lib.mkForce true;
+  services.tlp.enable = lib.mkForce false;
   environment.gnome.excludePackages = with pkgs; [
     gnome-tour
     epiphany
