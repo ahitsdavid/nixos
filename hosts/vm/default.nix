@@ -34,9 +34,17 @@
   services.tailscale.enable = true;
 
   # SOPS secrets
-  sops.defaultSopsFile = ../../secrets/system.yaml;
   sops.age.keyFile = "/var/lib/sops-nix/key.txt";
-  sops.secrets."harmonia/signing-key" = {};
+  sops.secrets."harmonia/signing-key" = {
+    sopsFile = ../../secrets/system.yaml;
+  };
+  # GitHub SSH key for git operations
+  sops.secrets."ssh/github_private_key" = {
+    sopsFile = ../../secrets/personal.yaml;
+    owner = username;
+    mode = "0400";
+    path = "/home/${username}/.ssh/id_rsa";
+  };
 
   # Nix configuration for remote building
   nix = {
