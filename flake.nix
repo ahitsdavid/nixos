@@ -103,7 +103,9 @@
     };
     
     # ISO image for desktop installation
-    packages.${system} = {
+    packages.${system} = let
+      pkgs = import nixpkgs { inherit system; };
+    in {
       desktop-iso = (nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
@@ -114,6 +116,14 @@
           ./iso.nix
         ];
       }).config.system.build.isoImage;
+
+      # Build all system closures (for populating the Harmonia binary cache)
+      all-systems = pkgs.linkFarm "all-systems" (
+        builtins.map (name: {
+          inherit name;
+          path = self.nixosConfigurations.${name}.config.system.build.toplevel;
+        }) [ "desktop" "thinkpad" "legion" "work-intel" "sb1" "macbook" ]
+      );
     };
 
     # Development shell with linting tools
