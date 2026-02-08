@@ -17,9 +17,7 @@
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        # TODO: Add Harmonia public key after generating with:
-        # nix-store --generate-binary-cache-key vm-harmonia cache-priv-key.pem cache-pub-key.pem
-        # "vm-harmonia:<PUBLIC_KEY_HERE>"
+        "vm-cache:w+a4m3Ar0u+zhZ1bThVg4lUq0DSemKd17YUlwPkAnbM="
       ];
     };
 
