@@ -13,6 +13,9 @@
   # VM guest support (Unraid/QEMU)
   services.qemuGuest.enable = true;
 
+  # Temporary: allow password SSH until keys are set up
+  services.openssh.settings.PasswordAuthentication = true;
+
   # Networking
   networking.hostName = "vm";
   networking.networkmanager.enable = true;
