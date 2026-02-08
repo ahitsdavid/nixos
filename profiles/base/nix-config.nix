@@ -13,7 +13,7 @@
       # To enable: add "http://vm:5000" to substituters and configure trusted-public-keys
       substituters = [
         "https://cache.nixos.org"
-        # "http://vm:5000"  # Harmonia binary cache on VM (use Tailscale hostname)
+        "http://vm:5000"
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
