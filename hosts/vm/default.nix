@@ -13,9 +13,6 @@
   # VM guest support (Unraid/QEMU)
   services.qemuGuest.enable = true;
 
-  # Temporary: allow password SSH until keys are set up
-  services.openssh.settings.PasswordAuthentication = true;
-
   # Networking
   networking.hostName = "vm";
   networking.networkmanager.enable = true;
@@ -29,8 +26,7 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     openssh.authorizedKeys.keys = [
-      # Add SSH public keys from your other machines here
-      # Example: "ssh-ed25519 AAAAC3Nza... user@desktop"
+      "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQC9m9hi0nKZsrlHCFLLyjoFG+jkO6VpB72B7M9UJzvOhQJJq/9vXfdg4xqxMrmP7vTs1fm9RUxrK4RUFBECEmfc56ZuTw1kzGj0ABwGRj0oBDULOeHW2SwYgJv59utf5ClHWQMLsqWgKEnAfZZsQyjpdn9TF1u5XaTGjmfWYW6DiH1zw24cO7m14L/llIKN6Ex+WZT09SQ3nTQNn85fFmxuSuSz9fLDjLurGx+GhRLruF6M0bR+hFugBMTpasUDnXPb0iwe2bxfZoIQIlLnBnkQLCfnOCFAaP3dS/Z9ejDwTlVRSeaBPvXmqjVwYaoaV6+UWNCd7lhhLlBhrLy7vPAwTjuaGkIU3lXSh1IlPZ+0qLKpN+IGumPSOq21eq1Fa/FwYbxciCEBCR4kjElSNNIRlM+Nb0CAYTQ2SfgKQou/j+/LxvCUVFp5WdU9cKBzNrzQJl1orap0uGbf1YJNQ/LU43ikhpyD59R4U3y0Brqnxj5Q4Hue59sJIsf0w0kmklbtLyecQKky8lE1/BfvdMn1++AlVqIXg4ix0IkW7bZW3cpnX0mb1ejxfkK389oSx1lFIWSmfFRGpsXLxTlGBeuxqJWeKJ1as/C/yI1IDrelZsgpnZfDBCGmyYmHDTGc7AZL3SUCSwUb30gUQJvAHuSVeLYG8xQ0cdODsZjA021RAw== davidthach@live.com"
     ];
   };
 
