@@ -72,9 +72,17 @@
     };
   };
 
+  # Git configuration (no home-manager on headless VM)
+  programs.git = {
+    enable = true;
+    config = {
+      user.name = "David Thach";
+      user.email = "davidthach@live.com";
+    };
+  };
+
   # Basic packages for administration
   environment.systemPackages = with pkgs; [
-    git
     htop
     curl
     vim
