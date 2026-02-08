@@ -19,9 +19,8 @@
     };
   };
 
-  # Power profiles daemon (alternative to TLP) - disabled by default
-  # Enable this and disable TLP for GNOME power profiles integration
-  services.power-profiles-daemon.enable = lib.mkDefault false;
+  # Power profiles daemon is disabled by default in NixOS
+  # GNOME hosts override this via mkForce in their host/profile config
 
   # Thermal management
   services.thermald.enable = lib.mkDefault true;
