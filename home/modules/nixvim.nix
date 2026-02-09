@@ -33,14 +33,30 @@
       autoread = true;
     };
 
+    # Extra packages available to nvim
+    extraPackages = with pkgs; [
+      cmake
+      gnumake
+    ];
+
     # Extra plugins not built into nixvim
     extraPlugins = with pkgs.vimPlugins; [
       kitty-scrollback-nvim
+      cmake-tools-nvim
     ];
 
     extraConfigLua = ''
       -- Kitty scrollback
       require('kitty-scrollback').setup()
+
+      -- CMake tools
+      require('cmake-tools').setup({
+        cmake_command = "${pkgs.cmake}/bin/cmake",
+        ctest_command = "${pkgs.cmake}/bin/ctest",
+        cmake_generate_options = { "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON" },
+        cmake_build_directory = "build",
+        cmake_soft_link_compile_commands = true,  -- Auto symlink compile_commands.json to project root
+      })
 
       -- Auto-reload files when changed externally
       vim.api.nvim_create_autocmd({ "FocusGained", "BufEnter", "CursorHold" }, {
@@ -88,7 +104,19 @@
       servers = {
         # Languages
         nixd.enable = true;
-        clangd.enable = true;
+        clangd = {
+          enable = true;
+          cmd = [
+            "clangd"
+            "--background-index"
+            "--clang-tidy"
+            "--header-insertion=iwyu"
+            "--completion-style=detailed"
+            "--fallback-style=llvm"
+            # Allow clangd to query system compilers for include paths
+            "--query-driver=${pkgs.gcc}/bin/g++,${pkgs.clang}/bin/clang++"
+          ];
+        };
         zls.enable = true;
         pyright.enable = true;
         ts_ls.enable = true;
@@ -109,7 +137,11 @@
         qmlls = {
           enable = true;
           package = null;  # Use system qmlls
-          cmd = [ "${pkgs.kdePackages.qtdeclarative}/bin/qmlls" ];
+          cmd = [
+            "${pkgs.kdePackages.qtdeclarative}/bin/qmlls"
+            "-I" "${pkgs.kdePackages.qtdeclarative}/lib/qt-6/qml"
+            "-I" "${pkgs.kdePackages.qtbase}/lib/qt-6/qml"
+          ];
         };
       };
     };
@@ -380,6 +412,14 @@
       { mode = "n"; key = "<leader>2"; action = "<cmd>lua require('harpoon.ui').nav_file(2)<CR>"; options.desc = "Harpoon file 2"; }
       { mode = "n"; key = "<leader>3"; action = "<cmd>lua require('harpoon.ui').nav_file(3)<CR>"; options.desc = "Harpoon file 3"; }
       { mode = "n"; key = "<leader>4"; action = "<cmd>lua require('harpoon.ui').nav_file(4)<CR>"; options.desc = "Harpoon file 4"; }
+
+      # === CMake ===
+      { mode = "n"; key = "<leader>cg"; action = "<cmd>CMakeGenerate<CR>"; options.desc = "CMake generate"; }
+      { mode = "n"; key = "<leader>cb"; action = "<cmd>CMakeBuild<CR>"; options.desc = "CMake build"; }
+      { mode = "n"; key = "<leader>cr"; action = "<cmd>CMakeRun<CR>"; options.desc = "CMake run"; }
+      { mode = "n"; key = "<leader>cd"; action = "<cmd>CMakeDebug<CR>"; options.desc = "CMake debug"; }
+      { mode = "n"; key = "<leader>ct"; action = "<cmd>CMakeSelectBuildType<CR>"; options.desc = "CMake build type"; }
+      { mode = "n"; key = "<leader>cs"; action = "<cmd>CMakeSelectLaunchTarget<CR>"; options.desc = "CMake select target"; }
 
       # === Terminal mode ===
       { mode = "t"; key = "<Esc>"; action = "<C-\\><C-n>"; options.desc = "Exit terminal mode"; }
