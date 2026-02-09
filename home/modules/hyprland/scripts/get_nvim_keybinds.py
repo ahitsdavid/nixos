@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Neovim keybind parser for nvf.nix configurations.
-Reads keybinds from nvf.nix maps section and outputs JSON for quickshell cheatsheet.
+Neovim keybind parser for nixvim configurations.
+Reads keybinds from nixvim.nix keymaps section and outputs JSON for quickshell cheatsheet.
 """
 import argparse
 import re
@@ -9,10 +9,10 @@ import os
 import json
 from typing import Dict, List, Any
 
-NIX_NVF_PATH = "/etc/nixos/home/modules/nvf.nix"
+NIX_NIXVIM_PATH = "/etc/nixos/home/modules/nixvim.nix"
 
-parser = argparse.ArgumentParser(description='Neovim keybind reader for nvf.nix')
-parser.add_argument('--path', type=str, default=NIX_NVF_PATH,
+parser = argparse.ArgumentParser(description='Neovim keybind reader for nixvim.nix')
+parser.add_argument('--path', type=str, default=NIX_NIXVIM_PATH,
                     help='ignored - always reads from Nix source')
 args = parser.parse_args()
 
@@ -26,91 +26,65 @@ def read_file(path: str) -> str:
         return file.read()
 
 
-def parse_nvf_keybinds(content: str) -> Dict[str, Any]:
-    """Parse nvf.nix content and extract keybinds from maps section."""
+def parse_nixvim_keybinds(content: str) -> Dict[str, Any]:
+    """Parse nixvim.nix content and extract keybinds from keymaps section."""
     result = {
         "children": []
     }
 
-    # Find the maps section
-    maps_match = re.search(r'maps\s*=\s*\{', content)
-    if not maps_match:
-        return result
+    # Pattern to match nixvim keymap entries:
+    # { mode = "n"; key = "<leader>cc"; action = "<cmd>...<CR>"; options.desc = "..."; }
+    keymap_pattern = r'\{\s*mode\s*=\s*"([^"]+)";\s*key\s*=\s*"([^"]+)";\s*action\s*=\s*"([^"]+)";\s*options\.desc\s*=\s*"([^"]+)";\s*\}'
 
-    # Extract each mode section (normal, insert, terminal, visual)
-    modes = ['normal', 'insert', 'terminal', 'visual']
+    # Group keybinds by mode
+    mode_keybinds = {
+        'n': [],
+        'i': [],
+        't': [],
+        'v': [],
+        'x': [],
+    }
 
-    for mode in modes:
-        # Find the mode section
-        mode_pattern = rf'{mode}\s*=\s*\{{'
-        mode_match = re.search(mode_pattern, content)
-        if not mode_match:
-            continue
+    for match in re.finditer(keymap_pattern, content):
+        mode = match.group(1)
+        key = match.group(2)
+        action = match.group(3)
+        desc = match.group(4)
 
-        # Find the content of this mode section
-        start = mode_match.end()
-        brace_count = 1
-        end = start
+        # Parse the key into mods and key
+        mods, main_key = parse_vim_key(key)
 
-        while brace_count > 0 and end < len(content):
-            if content[end] == '{':
-                brace_count += 1
-            elif content[end] == '}':
-                brace_count -= 1
-            end += 1
+        keybind = {
+            "mods": mods,
+            "key": main_key,
+            "action": action,
+            "comment": desc
+        }
 
-        mode_content = content[start:end-1]
-        keybinds = parse_mode_keybinds(mode_content)
+        if mode in mode_keybinds:
+            mode_keybinds[mode].append(keybind)
+        else:
+            mode_keybinds[mode] = [keybind]
 
+    # Build result structure
+    mode_names = {
+        'n': "Normal Mode",
+        'i': "Insert Mode",
+        't': "Terminal Mode",
+        'v': "Visual Mode",
+        'x': "Visual Block Mode",
+    }
+
+    for mode, keybinds in mode_keybinds.items():
         if keybinds:
-            # Capitalize mode name for display
-            mode_name = mode.capitalize()
-            if mode == 'normal':
-                mode_name = "Normal Mode"
-            elif mode == 'insert':
-                mode_name = "Insert Mode"
-            elif mode == 'terminal':
-                mode_name = "Terminal Mode"
-            elif mode == 'visual':
-                mode_name = "Visual Mode"
-
+            mode_name = mode_names.get(mode, f"{mode.upper()} Mode")
             result["children"].append({
                 "name": mode_name,
                 "keybinds": keybinds,
                 "children": []
             })
 
-    # Group keybinds by category based on comments in the nix file
-    result = group_by_category(content, result)
-
     return result
-
-
-def parse_mode_keybinds(mode_content: str) -> List[Dict[str, Any]]:
-    """Parse keybinds from a mode section."""
-    keybinds = []
-
-    # Pattern to match keybind definitions like:
-    # "<leader>cc" = { action = "..."; desc = "..."; };
-    # or "<C-s>" = { action = "..."; desc = "..."; };
-    keybind_pattern = r'"([^"]+)"\s*=\s*\{\s*action\s*=\s*"([^"]+)";\s*desc\s*=\s*"([^"]+)";\s*\}'
-
-    for match in re.finditer(keybind_pattern, mode_content):
-        key = match.group(1)
-        action = match.group(2)
-        desc = match.group(3)
-
-        # Parse the key into mods and key
-        mods, main_key = parse_vim_key(key)
-
-        keybinds.append({
-            "mods": mods,
-            "key": main_key,
-            "action": action,
-            "comment": desc
-        })
-
-    return keybinds
 
 
 def parse_vim_key(key: str) -> tuple:
@@ -162,29 +136,10 @@ def parse_vim_key(key: str) -> tuple:
     return mods, main_key
 
 
-def group_by_category(content: str, result: Dict) -> Dict:
-    """Group keybinds by category based on comments in the source."""
-    # Define categories based on common patterns
-    categories = {
-        "Claude Code": ["cc", "ch"],
-        "Terminal": ["tv", "th", "tt"],
-        "File Operations": ["C-s", "C-q"],
-        "Navigation": ["C-p", "C-f", "e", "o"],
-        "Buffers": ["Tab", "S-Tab", "x", "b"],
-        "Windows": ["C-h", "C-j", "C-k", "C-l"],
-        "LSP": ["gd", "gr", "K", "rn", "ca", "d"],
-        "Git": ["gg", "gb", "gd", "gl"],
-    }
-
-    # For now, just return the mode-based grouping
-    # A more sophisticated implementation could re-organize by category
-    return result
-
-
 if __name__ == "__main__":
-    content = read_file(NIX_NVF_PATH)
+    content = read_file(NIX_NIXVIM_PATH)
     if not content:
         print(json.dumps({"children": []}))
     else:
-        parsed = parse_nvf_keybinds(content)
+        parsed = parse_nixvim_keybinds(content)
         print(json.dumps(parsed))

@@ -21,6 +21,10 @@
       url = "github:notashelf/nvf";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     hyprland = {
         type = "git";
         url = "https://github.com/hyprwm/Hyprland";

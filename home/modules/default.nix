@@ -5,7 +5,7 @@
     ./eza.nix
     ./git.nix
     ./kitty.nix
-    ./nvf.nix
+    ./nixvim.nix
     ./yazi.nix
     ./btop.nix
     ./zen-browser.nix
