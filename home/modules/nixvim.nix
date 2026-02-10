@@ -1,6 +1,6 @@
 { inputs, config, lib, pkgs, ... }:
 {
-  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
+  imports = [ inputs.nixvim.homeModules.nixvim ];
 
   programs.nixvim = {
     enable = true;
@@ -117,7 +117,7 @@
             "--query-driver=${pkgs.gcc}/bin/g++,${pkgs.clang}/bin/clang++"
           ];
         };
-        zls.enable = true;
+        # zls.enable = true;  # Disabled: zls 0.15.1 fails to build in sandbox
         pyright.enable = true;
         ts_ls.enable = true;
         html.enable = true;
