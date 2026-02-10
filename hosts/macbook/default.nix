@@ -37,7 +37,7 @@
 
   # GNOME Desktop Environment
   services.xserver.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # GNOME requires power-profiles-daemon, not TLP
   services.power-profiles-daemon.enable = lib.mkForce true;

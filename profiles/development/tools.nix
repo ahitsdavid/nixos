@@ -13,8 +13,8 @@
     tmux
     direnv
     qemu
-    xorg.xhost    # X11 access control for Docker GUI apps
-    xorg.xauth    # X11 authentication for Docker GUI apps
+    xhost    # X11 access control for Docker GUI apps
+    xauth    # X11 authentication for Docker GUI apps
 
     # Docker utilities
     lazydocker    # TUI for Docker management

@@ -1,8 +1,8 @@
 { pkgs, ... }: {
   # Packages needed for Docker GUI app support
   home.packages = with pkgs; [
-    xorg.xhost        # X11 access control (for X11 forwarding)
-    xorg.xauth        # X11 authentication
+    xhost        # X11 access control (for X11 forwarding)
+    xauth        # X11 authentication
     xwayland          # X11 apps on Wayland (should already be available via Hyprland)
   ];
 
@@ -16,8 +16,8 @@
       export DISPLAY=:0
       
       # Allow X11 connections from Docker containers
-      ${pkgs.xorg.xhost}/bin/xhost +local:docker 2>/dev/null || true
-      
+      ${pkgs.xhost}/bin/xhost +local:docker 2>/dev/null || true
+
       # Run the Docker command with X11 forwarding
       exec ${pkgs.docker}/bin/docker run \
           --rm \
@@ -88,8 +88,8 @@
       
       # Fallback to X11
       export DISPLAY=:0
-      ${pkgs.xorg.xhost}/bin/xhost +local:docker 2>/dev/null || true
-      
+      ${pkgs.xhost}/bin/xhost +local:docker 2>/dev/null || true
+
       ${pkgs.docker}/bin/docker run \
           --rm \
           -e DISPLAY=$DISPLAY \

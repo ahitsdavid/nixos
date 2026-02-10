@@ -151,7 +151,7 @@ in
   home.sessionPath = lib.mkIf hasGitlabSecrets [ "${config.home.homeDirectory}/.local/bin" ];
 
   # Shell hook for auto-detecting work repos on cd
-  programs.zsh.initExtra = lib.mkIf hasGitlabSecrets ''
+  programs.zsh.initContent = lib.mkIf hasGitlabSecrets ''
     # Auto-detect work GitLab repos and set identity
     autoload -U add-zsh-hook
     _git_work_auto_setup() {

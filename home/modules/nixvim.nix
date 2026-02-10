@@ -184,10 +184,10 @@
     # File tree
     plugins.neo-tree = {
       enable = true;
-      closeIfLastWindow = true;
-      enableGitStatus = true;
-      enableDiagnostics = true;
-      filesystem.followCurrentFile.enabled = true;
+      settings.close_if_last_window = true;
+      settings.enable_git_status = true;
+      settings.enable_diagnostics = true;
+      settings.filesystem.follow_current_file.enabled = true;
     };
 
     # Fuzzy finder
@@ -246,10 +246,8 @@
     plugins.dashboard.enable = true;
 
     # Debugger
-    plugins.dap = {
-      enable = true;
-      extensions.dap-ui.enable = true;
-    };
+    plugins.dap.enable = true;
+    plugins.dap-ui.enable = true;
 
     # AI assistant
     plugins.copilot-lua = {
@@ -284,7 +282,7 @@
     # Highlight other uses of word under cursor
     plugins.illuminate = {
       enable = true;
-      delay = 200;
+      settings.delay = 200;
     };
 
     # Better text objects (e.g., via/vaa for arguments)
