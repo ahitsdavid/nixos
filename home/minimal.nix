@@ -19,7 +19,7 @@
     ./modules/claude.nix
     ./modules/git.nix
     ./modules/eza.nix
-    ./modules/nvf.nix
+    ./modules/nixvim.nix
     ./modules/yazi.nix
     ./modules/btop.nix
     ./modules/catppuccin.nix
