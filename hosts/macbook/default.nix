@@ -66,6 +66,13 @@
 
   networking.hostName = "macbook";
 
+  # Ethernet sharing - client via unmanaged switch to work-intel gateway
+  networking.ethernet-share.client = {
+    enable = true;
+    interface = "enp64s0";
+    ip = "10.10.10.3";
+  };
+
   # stateVersion: Set at initial install - do not change
   system.stateVersion = "25.11";
 }
