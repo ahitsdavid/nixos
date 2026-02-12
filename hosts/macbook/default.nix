@@ -28,7 +28,7 @@
     ];
 
   # Apple keyboard/input support
-  hardware.facetimehd.enable = lib.mkDefault false;
+  hardware.facetimehd.enable = true;
 
   # Apple keyboard tweaks
   services.xserver.xkb = {
