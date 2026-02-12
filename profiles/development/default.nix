@@ -4,7 +4,7 @@
   imports = [
     (import ./languages { inherit inputs; })
     (import ./tools.nix { inherit inputs; })
-    (import ./containers.nix { inherit inputs; })
+    (import ./containers.nix { inherit inputs username; })
     (import ./virtualization.nix { inherit inputs; })
   ];
 

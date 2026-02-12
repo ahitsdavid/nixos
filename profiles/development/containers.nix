@@ -1,9 +1,7 @@
 # profiles/development/containers.nix
-{ inputs }:
+{ inputs, username }:
 { config, pkgs, lib, ... }:
 let
-  username = config.users.users.davidthach.name or "davidthach";
-
   # Declarative package lists for Arch container
   # These packages will be installed if not present, but never removed
   # This provides a reproducible foundation while allowing manual package additions

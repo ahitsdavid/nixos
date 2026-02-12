@@ -5,7 +5,7 @@
   imports = [
     (import ../../core/modules { inherit inputs username; })
     (import ./users.nix { inherit inputs username; })
-    (import ./nix-config.nix { inherit inputs; })
+    (import ./nix-config.nix { inherit inputs username; })
     ../../profiles/ssh
     ../../profiles/display-manager
   ];

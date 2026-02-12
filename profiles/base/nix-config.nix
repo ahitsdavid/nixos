@@ -1,5 +1,5 @@
 # profile/base/nix-config.nix
-{ inputs }:
+{ inputs, username }:
 { config, pkgs, lib, ... }: {
   nix = {
     settings = {
@@ -47,7 +47,7 @@
         speedFactor = 2;
         supportedFeatures = [ "nixos-test" "big-parallel" "kvm" ];
         mandatoryFeatures = [];
-        sshUser = "davidthach";
+        sshUser = username;
         # sshKey = "/path/to/ssh/key";  # Uncomment and set if needed
       }
     ];

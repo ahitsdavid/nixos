@@ -11,7 +11,7 @@
 # To edit secrets: sops secrets/<file>.yaml
 # To add new secrets: Add key to YAML, then configure below
 #
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, username, ... }:
 
 let
   # Automatically detect which secret files exist (fork-friendly!)
@@ -27,7 +27,7 @@ in
   # Enable SOPS only if we have at least one secrets file
   sops = lib.mkIf (hasSystemSecrets || hasPersonalSecrets || hasWorkSecrets) {
     # Set default age key file location
-    age.keyFile = "/home/davidthach/.config/sops/age/keys.txt";
+    age.keyFile = "/home/${username}/.config/sops/age/keys.txt";
 
     # Default sops file for personal secrets (if it exists)
     defaultSopsFile = lib.mkIf hasPersonalSecrets personalSecretsPath;
@@ -72,7 +72,7 @@ in
         # User password hash for declarative user management
         # Used by: profiles/base/users.nix (hashedPasswordFile)
         # Generate with: mkpasswd -m sha-512
-        "users/davidthach/password_hash" = {
+        "users/${username}/password_hash" = {
           owner = "root";
           mode = "0400";
         };
@@ -80,28 +80,28 @@ in
         # SSH private keys - deployed directly to ~/.ssh/
         # Used by: SSH client (reads from path automatically)
         "ssh/unraid_private_key" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
-          path = "/home/davidthach/.ssh/unraid_rsa";  # Custom path
+          path = "/home/${username}/.ssh/unraid_rsa";  # Custom path
         };
         "ssh/github_private_key" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
-          path = "/home/davidthach/.ssh/id_rsa";  # Default SSH key
+          path = "/home/${username}/.ssh/id_rsa";  # Default SSH key
         };
 
         # API keys for various services
         # Used by: Scripts, widgets, or CLI tools that read from path
         "api_keys/weather" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "api_keys/github" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "api_keys/ai_service" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
 
@@ -109,19 +109,19 @@ in
         # Used by: `bw` CLI tool for password management
         # See: https://bitwarden.com/help/cli/
         "bitwarden/email" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "bitwarden/self_hosted_url" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "bitwarden/client_id" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "bitwarden/client_secret" = {
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
       })
@@ -135,27 +135,27 @@ in
         # Used by: Git CLI, IDE integrations
         "work/gitlab/host" = {
           sopsFile = workSecretsPath;
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "work/gitlab/additional-hosts" = {
           sopsFile = workSecretsPath;
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "work/gitlab/token" = {
           sopsFile = workSecretsPath;
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "work/gitlab/email" = {
           sopsFile = workSecretsPath;
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
         "work/gitlab/username" = {
           sopsFile = workSecretsPath;
-          owner = "davidthach";
+          owner = username;
           mode = "0400";
         };
       })

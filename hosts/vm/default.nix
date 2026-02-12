@@ -1,5 +1,9 @@
 # Headless build server with Harmonia binary cache
-{ config, pkgs, inputs, username, ... }: {
+{ config, pkgs, inputs, username, ... }:
+let
+  userVars = import ../../lib/user-vars.nix username;
+in
+{
   imports = [
     ./hardware-configuration.nix
     ../../profiles/ssh
@@ -76,8 +80,8 @@
   programs.git = {
     enable = true;
     config = {
-      user.name = "David Thach";
-      user.email = "davidthach@live.com";
+      user.name = userVars.gitUsername;
+      user.email = userVars.gitEmail;
     };
   };
 

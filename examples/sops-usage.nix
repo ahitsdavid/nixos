@@ -2,7 +2,8 @@
 # This file shows how to use SOPS secrets in your NixOS configuration
 # Copy relevant parts to your actual config files as needed
 
-{ config, lib, pkgs, ... }:
+# Note: In real configs, 'username' comes from specialArgs (set in flake.nix)
+{ config, lib, pkgs, username ? "youruser", ... }:
 
 {
   # Example: WiFi networks using SOPS secrets
@@ -48,7 +49,7 @@
     description = "Weather data fetcher for quickshell";
     serviceConfig = {
       Type = "oneshot";
-      User = "davidthach";
+      User = username;
     };
     script = ''
       export WEATHER_API_KEY=$(cat ${config.sops.secrets."api_keys/weather".path})
@@ -59,7 +60,7 @@
   };
 
   # Example: GitHub CLI authentication using personal token
-  home-manager.users.davidthach = lib.mkIf (config.sops.secrets ? "api_keys/github") {
+  home-manager.users.${username} = lib.mkIf (config.sops.secrets ? "api_keys/github") {
     programs.gh = {
       enable = true;
       settings = {

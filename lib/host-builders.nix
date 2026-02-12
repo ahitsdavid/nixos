@@ -15,16 +15,52 @@ let
   getHostMeta = hostname:
     let path = ../hosts/${hostname}/meta.nix;
     in if builtins.pathExists path then import path else {};
+
+  # Helper to import user-vars for a given username
+  getUserVars = name: import ./user-vars.nix name;
+
+  # Build home-manager user config for a given user
+  mkUserHomeConfig = { name, homeConfig, includeGaming, usesGnome, extraHomeModules ? [] }:
+    let
+      userVars = getUserVars name;
+    in {
+      imports = [
+        stylix.homeModules.stylix
+        catppuccin.homeModules.catppuccin
+      ] ++ (if usesGnome then [] else [ inputs.spicetify-nix.homeManagerModules.default ])
+        ++ [ homeConfig ]
+        ++ (if includeGaming then [ ../home/gaming.nix ] else [])
+        ++ extraHomeModules;
+    };
+
+  # Build system user account for an extra user
+  mkExtraUserSystem = name:
+    let
+      userVars = getUserVars name;
+      shellPkg = {
+        fish = "fish";
+        zsh = "zsh";
+        bash = "bash";
+      }.${userVars.shell} or "fish";
+    in {
+      users.users.${name} = {
+        isNormalUser = true;
+        description = userVars.description;
+        extraGroups = userVars.extraGroups;
+        shell = "/run/current-system/sw/bin/${shellPkg}";
+      };
+    };
 in
 {
   # Create a NixOS configuration with common modules
-  # Reads capabilities from hosts/<hostname>/meta.nix (isGaming, hasNvidia, usesGnome, etc.)
+  # Reads capabilities from hosts/<hostname>/meta.nix (isGaming, hasNvidia, usesGnome, extraUsers, etc.)
   mkNixosConfiguration = { hostname, extraModules ? [] }:
     let
       meta = getHostMeta hostname;
       includeGaming = meta.isGaming or false;
       hasNvidia = meta.hasNvidia or false;
       usesGnome = meta.usesGnome or false;
+      extraUsers = meta.extraUsers or [];
 
       # Select home config based on desktop environment
       homeConfig = if usesGnome
@@ -64,17 +100,30 @@ in
           home-manager.backupCommand = "mv -f";
           home-manager.useUserPackages = true;
           home-manager.extraSpecialArgs = { inherit inputs username system; hostname = hostname; };
-          home-manager.users.${username} = {
-            imports = [
-              stylix.homeModules.stylix
-              catppuccin.homeModules.catppuccin
-            ] ++ (if usesGnome then [] else [ inputs.spicetify-nix.homeManagerModules.default ])
-              ++ [ homeConfig ]
-              ++ (if includeGaming then [ ../home/gaming.nix ] else [])
-              ++ (extraModules.homeModules or []);
+
+          # Primary user
+          home-manager.users.${username} = mkUserHomeConfig {
+            name = username;
+            inherit homeConfig includeGaming usesGnome;
+            extraHomeModules = extraModules.homeModules or [];
           };
         }
-      ] ++ (if hasNvidia then [{ drivers.nvidia.enable = true; }] else [])
+
+        # Extra users (from meta.extraUsers)
+      ] ++ (map (extraUser: {
+            users.users.${extraUser} = let
+              userVars = getUserVars extraUser;
+            in {
+              isNormalUser = true;
+              description = userVars.description;
+              extraGroups = userVars.extraGroups;
+            };
+            home-manager.users.${extraUser} = mkUserHomeConfig {
+              name = extraUser;
+              inherit homeConfig includeGaming usesGnome;
+            };
+          }) extraUsers)
+        ++ (if hasNvidia then [{ drivers.nvidia.enable = true; }] else [])
         ++ (extraModules.systemModules or []);
     };
 

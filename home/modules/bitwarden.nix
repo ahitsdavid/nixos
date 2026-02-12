@@ -5,13 +5,12 @@ let
   hasBitwardenSecrets = (lib.hasAttr "bitwarden/self_hosted_url" (config.sops.secrets or {}));
 in
 {
-  # Only enable for davidthach user
-  home.packages = lib.mkIf (username == "davidthach") (with pkgs; [
+  home.packages = with pkgs; [
     bitwarden-cli
-  ]);
+  ];
 
   # Create wrapper scripts that read credentials from SOPS secrets
-  home.file = lib.mkIf (username == "davidthach" && hasBitwardenSecrets) {
+  home.file = lib.mkIf hasBitwardenSecrets {
     ".local/bin/bw-self" = {
       executable = true;
       text = ''
@@ -39,7 +38,7 @@ in
   };
 
   # Shell aliases for managing multiple Bitwarden accounts
-  programs.zsh.shellAliases = lib.mkIf (username == "davidthach") {
+  programs.zsh.shellAliases = {
     # Wrapper scripts (read from SOPS secrets)
     bw-self = "~/.local/bin/bw-self";
     bw-standard = "~/.local/bin/bw-standard";
@@ -52,7 +51,7 @@ in
   };
 
   # Shell functions for convenient workflows
-  programs.zsh.initContent = lib.mkIf (username == "davidthach") ''
+  programs.zsh.initContent = ''
     # One-command login + unlock for self-hosted Bitwarden
     bw-start() {
       echo "Logging in to self-hosted Bitwarden..."
@@ -79,7 +78,7 @@ in
   '';
 
   # Environment setup
-  home.sessionVariables = lib.mkIf (username == "davidthach") {
+  home.sessionVariables = {
     # Bitwarden CLI uses these
     BW_SESSION = "";  # Will be set after unlock
   };

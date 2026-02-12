@@ -1,6 +1,10 @@
 # home/minimal.nix
 # Minimal home config for GNOME hosts (no Hyprland/QuickShell)
-{ config, pkgs, inputs, username, system, hostname, lib, ... }: {
+{ config, pkgs, inputs, username, system, hostname, lib, ... }:
+let
+  userVars = import ../lib/user-vars.nix username;
+in
+{
   home.username = username;
   home.homeDirectory = "/home/${username}";
 
@@ -60,8 +64,8 @@
     git = {
       enable = true;
       settings = {
-        user.name = "David Thach";
-        user.email = "davidthach@live.com";
+        user.name = userVars.gitUsername;
+        user.email = userVars.gitEmail;
         init.defaultBranch = "main";
       };
     };
