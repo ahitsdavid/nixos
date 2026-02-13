@@ -1,30 +1,24 @@
-# ISO configuration for desktop installation
+# ISO configuration for NixOS installer
+# Boots into GNOME desktop with the repo and install wizard ready to go
 { config, pkgs, lib, inputs, username, ... }:
 
 {
   imports = [
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
-    
+
     # Include specific modules we need (excluding bootloader which conflicts with ISO)
     (import ./profiles/base/users.nix { inherit inputs username; })
-    (import ./profiles/base/nix-config.nix { inherit inputs; })
-    
-    # Include Nvidia drivers for hardware detection
-    ./core/drivers/nvidia.nix
+    (import ./profiles/base/nix-config.nix { inherit inputs username; })
   ];
 
-  # Allow unfree packages (needed for Nvidia drivers)
+  # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
   nixpkgs.config.allowBroken = true;
 
-  # Enable Nvidia drivers in ISO
-  drivers.nvidia.enable = true;
-
   # ISO-specific configuration
   isoImage.squashfsCompression = "gzip -Xcompression-level 1";
-  
+
   # Enable support for multiple filesystems
-  # ZFS is excluded due to kernel 6.18.2 incompatibility (ZFS max: 6.17)
   boot.supportedFilesystems = lib.mkForce [
     "ext4"     # Standard Linux filesystem
     "btrfs"    # Advanced filesystem with snapshots
@@ -35,8 +29,14 @@
     "vfat"     # Boot partition standard
     "bcachefs" # Next-generation COW filesystem
   ];
-  
-  # Add filesystem tools and utilities
+
+  # GNOME-only desktop (no Hyprland)
+  services.xserver.enable = true;
+  services.desktopManager.gnome.enable = true;
+  services.displayManager.gdm.enable = true;
+  services.displayManager.gdm.wayland = true;
+
+  # Add filesystem tools, utilities, and install wizard
   environment.systemPackages = with pkgs; [
     # Essential tools
     git
@@ -45,53 +45,51 @@
     vim
     nano
     htop
-    
+
     # Hardware detection
     pciutils
     usbutils
     lshw
-    
+
     # Network tools
     networkmanager
-    
+
     # Partitioning tools
     parted
     gparted
     util-linux  # provides cfdisk
     gptfdisk    # provides gdisk
-    
+
     # Filesystem tools
-    # ext4
-    e2fsprogs
-    
-    # btrfs
-    btrfs-progs
-    
-    # xfs
-    xfsprogs
+    e2fsprogs     # ext4
+    btrfs-progs   # btrfs
+    xfsprogs      # xfs
+    f2fs-tools    # f2fs
+    ntfs3g        # ntfs
+    exfatprogs    # exfat
+    dosfstools    # fat
+    bcachefs-tools # bcachefs
 
-    # f2fs
-    f2fs-tools
-
-    # ntfs/exfat/fat
-    ntfs3g
-    exfatprogs
-    dosfstools
-    
-    # bcachefs
-    bcachefs-tools
-    
     # Encryption
     cryptsetup
-    
+
     # LVM
     lvm2
 
     # GPU utilities
     mesa-demos
-    nvidia-vaapi-driver
-    nvtopPackages.full
+
+    # GNOME terminal for easy script access
+    gnome-terminal
+
+    # Install wizard wrapper
+    (pkgs.writeShellScriptBin "nixos-install-wizard" ''
+      exec /etc/nixos-config/scripts/install.sh "$@"
+    '')
   ];
+
+  # Bake in the full repo so install.sh is available on boot
+  environment.etc."nixos-config".source = ./.;
 
   # Enable SSH for remote installation if needed
   services.openssh = {
@@ -108,63 +106,10 @@
   networking.networkmanager.enable = true;
   networking.wireless.enable = lib.mkForce false;
 
-  # Enable Hyprland for a graphical environment during installation
-  programs.hyprland = {
-    enable = true;
-    package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;
-  };
-
-  # Enable X11 and display manager for installation GUI
-  services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Hardware configuration hints for desktop
+  # Hardware configuration hints
   hardware.graphics = {
     enable = true;
     enable32Bit = true;
-  };
-
-  # Include our desktop configuration as a reference
-  environment.etc."nixos-desktop-config" = {
-    source = ./hosts/desktop;
-    target = "nixos/desktop-config";
-  };
-
-  # Add installation helper script with filesystem options
-  environment.etc."install-desktop.sh" = {
-    text = ''
-      #!/usr/bin/env bash
-      echo "NixOS Desktop Installation Helper"
-      echo "This script will help you install NixOS with the desktop configuration"
-      echo ""
-      echo "Available configurations:"
-      echo "- Desktop (Nvidia 3070Ti + Intel i7-8700K + Hyprland)"
-      echo ""
-      echo "Supported filesystems:"
-      echo "- ext4: Standard, reliable Linux filesystem"
-      echo "- btrfs: Advanced with snapshots, compression, RAID"
-      echo "- xfs: High-performance for large files"
-      echo "- f2fs: Optimized for SSDs and flash storage"
-      echo "- bcachefs: Next-gen copy-on-write filesystem"
-      echo ""
-      echo "Configuration files are located in /etc/nixos/desktop-config/"
-      echo ""
-      echo "To install:"
-      echo "1. Partition your disks (use cfdisk, gdisk, or gparted)"
-      echo "2. Format with your chosen filesystem:"
-      echo "   - ext4: mkfs.ext4 /dev/sdXY"
-      echo "   - btrfs: mkfs.btrfs /dev/sdXY"
-      echo "   - xfs: mkfs.xfs /dev/sdXY"
-      echo "   - f2fs: mkfs.f2fs /dev/sdXY"
-      echo "   - bcachefs: bcachefs format /dev/sdXY"
-      echo "3. Mount your filesystems to /mnt"
-      echo "4. Copy desktop config: cp -r /etc/nixos/desktop-config/* /mnt/etc/nixos/"
-      echo "5. Generate hardware config: nixos-generate-config --root /mnt"
-      echo "6. Edit /mnt/etc/nixos/hardware-configuration.nix if needed"
-      echo "7. Install: nixos-install --flake /mnt/etc/nixos#desktop"
-    '';
-    mode = "0755";
   };
 
   system.stateVersion = "25.05";

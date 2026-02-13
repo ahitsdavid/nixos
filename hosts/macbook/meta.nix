@@ -8,6 +8,8 @@
   isGaming = false;
   isHeadless = false;
   isLaptop = true;
+  usesGnome = true;
+  isWork = true;
 
   # Monitor configuration
   monitors = [

@@ -8,6 +8,14 @@
   isGaming = false;
   isHeadless = false;
   isLaptop = true;
+  usesGnome = true;
+
+  # Hybrid GPU: offload mode for battery life
+  hybridGpu = {
+    mode = "offload";
+    intelBusId = "PCI:0:2:0";
+    nvidiaBusId = "PCI:1:0:0";
+  };
 
   # Monitor configuration
   monitors = [

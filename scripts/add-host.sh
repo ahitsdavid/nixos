@@ -154,6 +154,8 @@ read_host_config() {
     is_gaming=$(grep -oP 'isGaming\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
     is_headless=$(grep -oP 'isHeadless\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
     is_laptop=$(grep -oP 'isLaptop\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
+    uses_gnome=$(grep -oP 'usesGnome\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
+    has_nvidia=$(grep -oP 'hasNvidia\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
   else
     err "No meta.nix found for host '$source_host'."
     return 1
@@ -165,38 +167,23 @@ read_host_config() {
     return 1
   fi
 
-  # Detect GPU driver from imports (more reliable than meta.nix for has_nvidia)
-  if grep -q "hybrid-gpu.nix" "$default_file" 2>/dev/null; then
+  # Detect GPU driver from meta.nix hybridGpu or hasNvidia
+  if grep -q "hybridGpu" "$meta_file" 2>/dev/null; then
     gpu_driver="hybrid"
     has_nvidia="true"
-    hybrid_mode=$(grep -oP 'mode\s*=\s*"\K[^"]+' "$default_file" 2>/dev/null || echo "sync")
-    intel_bus_id=$(grep -oP 'intelBusId\s*=\s*"\K[^"]+' "$default_file" 2>/dev/null || echo "PCI:0:2:0")
-    nvidia_bus_id=$(grep -oP 'nvidiaBusId\s*=\s*"\K[^"]+' "$default_file" 2>/dev/null || echo "PCI:1:0:0")
-  elif grep -q "drivers/nvidia.nix" "$default_file" 2>/dev/null; then
+    hybrid_mode=$(grep -oP 'mode\s*=\s*"\K[^"]+' "$meta_file" 2>/dev/null || echo "sync")
+    intel_bus_id=$(grep -oP 'intelBusId\s*=\s*"\K[^"]+' "$meta_file" 2>/dev/null || echo "PCI:0:2:0")
+    nvidia_bus_id=$(grep -oP 'nvidiaBusId\s*=\s*"\K[^"]+' "$meta_file" 2>/dev/null || echo "PCI:1:0:0")
+  elif [[ "$has_nvidia" == "true" ]]; then
     gpu_driver="nvidia"
-    has_nvidia="true"
     hybrid_mode=""
     intel_bus_id=""
     nvidia_bus_id=""
-  elif grep -q "drivers/intel.nix" "$default_file" 2>/dev/null; then
+  else
     gpu_driver="intel"
-    has_nvidia="false"
     hybrid_mode=""
     intel_bus_id=""
     nvidia_bus_id=""
-  else
-    gpu_driver="none"
-    has_nvidia="false"
-    hybrid_mode=""
-    intel_bus_id=""
-    nvidia_bus_id=""
-  fi
-
-  # Detect GNOME from default.nix (some hosts enable GNOME without usesGnome in meta.nix)
-  if grep -q "gnome.enable = true" "$default_file" 2>/dev/null; then
-    uses_gnome="true"
-  else
-    uses_gnome=$(grep -oP 'usesGnome\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "false")
   fi
 
   # Derive desktop_env
@@ -208,19 +195,11 @@ read_host_config() {
     desktop_env="hyprland"
   fi
 
-  # Detect profiles
-  if grep -q "profiles/development" "$default_file" 2>/dev/null; then
-    enable_dev="true"
-  else
-    enable_dev="false"
-  fi
-  if grep -q "profiles/work" "$default_file" 2>/dev/null; then
-    enable_work="true"
-  else
-    enable_work="false"
-  fi
+  # Detect isDevelopment / isWork from meta.nix (default true for GUI hosts)
+  enable_dev=$(grep -oP 'isDevelopment\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "true")
+  enable_work=$(grep -oP 'isWork\s*=\s*\K(true|false)' "$meta_file" 2>/dev/null || echo "true")
 
-  # Detect kernel
+  # Detect kernel from default.nix
   if grep -q "linuxPackages_zen" "$default_file" 2>/dev/null; then
     kernel_package="linuxPackages_zen"
     kernel_choice="zen (optimized, gaming-focused)"
@@ -255,6 +234,29 @@ NIXEOF
     echo "  usesGnome = true; # Use GNOME instead of Hyprland"
   fi
 
+  # isDevelopment / isWork: only emit if non-default (default is true for GUI hosts)
+  if [[ "$is_headless" != "true" ]]; then
+    if [[ "$enable_dev" == "false" ]]; then
+      echo "  isDevelopment = false;"
+    fi
+    if [[ "$enable_work" == "false" ]]; then
+      echo "  isWork = false;"
+    fi
+  fi
+
+  # Hybrid GPU config
+  if [[ "$gpu_driver" == "hybrid" ]]; then
+    cat <<NIXEOF
+
+  # Hybrid GPU: $hybrid_mode mode
+  hybridGpu = {
+    mode = "$hybrid_mode";
+    intelBusId = "$intel_bus_id";
+    nvidiaBusId = "$nvidia_bus_id";
+  };
+NIXEOF
+  fi
+
   echo "}"
 }
 
@@ -265,119 +267,26 @@ generate_default_nix() {
     return
   fi
 
-  cat <<'NIXEOF'
+  # Profiles, drivers, and GPU config are auto-applied by host-builders.nix
+  # based on meta.nix flags. Only host-specific config goes here.
+
+  cat <<NIXEOF
 { config, pkgs, inputs, username, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
-
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-NIXEOF
-
-  # Development profile
-  if [[ "$enable_dev" == "true" ]]; then
-    echo "    (import ../../profiles/development { inherit inputs username; })"
-  fi
-
-  # Work profile
-  if [[ "$enable_work" == "true" ]]; then
-    echo "    (import ../../profiles/work { inherit inputs username; })"
-  fi
-
-  # Laptop profile
-  if [[ "$is_laptop" == "true" ]]; then
-    echo "    ../../profiles/laptop"
-  fi
-
-  # GPU driver imports
-  case "$gpu_driver" in
-    intel)
-      echo "    ../../core/drivers/intel.nix"
-      ;;
-    nvidia)
-      echo "    (import ../../core/drivers/nvidia.nix)"
-      ;;
-    hybrid)
-      cat <<NIXEOF
-
-    # Hybrid graphics: $hybrid_mode mode
-    (import ../../core/drivers/hybrid-gpu.nix {
-      mode = "$hybrid_mode";
-      intelBusId = "$intel_bus_id";
-      nvidiaBusId = "$nvidia_bus_id";
-    })
-NIXEOF
-      ;;
-  esac
-
-  echo "  ];"
-  echo ""
-
-  # ── Kernel ──
-  echo "  # Kernel"
-  echo "  boot.kernelPackages = pkgs.$kernel_package;"
-  echo ""
-
-  # ── Bootloader ──
-  echo "  # Bootloader"
-  echo "  boot.loader.systemd-boot.enable = true;"
-  echo "  boot.loader.efi.canTouchEfiVariables = true;"
-
-  # ── Hardware graphics (NVIDIA or Hybrid) ──
-  if [[ "$gpu_driver" == "nvidia" || "$gpu_driver" == "hybrid" ]]; then
-    cat <<'NIXEOF'
-
-  # Hardware acceleration
-  hardware.graphics = {
-    enable = true;
-    enable32Bit = true;
-  };
-NIXEOF
-  fi
-
-  # ── NVIDIA driver enable (standalone only — hybrid is handled by the import) ──
-  if [[ "$gpu_driver" == "nvidia" ]]; then
-    cat <<'NIXEOF'
-
-  # Enable NVIDIA drivers
-  drivers.nvidia.enable = true;
-NIXEOF
-  fi
-
-  # ── NVIDIA kernel params (standalone NVIDIA) ──
-  if [[ "$gpu_driver" == "nvidia" ]]; then
-    cat <<'NIXEOF'
-
-  # Kernel parameters for NVIDIA
-  boot.kernelParams = [
-    "nvidia-drm.modeset=1"
-    "nvidia.NVreg_PreserveVideoMemoryAllocations=1"
   ];
-NIXEOF
-  fi
 
-  # ── GNOME ──
+  # Kernel
+  boot.kernelPackages = pkgs.$kernel_package;
+
+  # Bootloader
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+NIXEOF
+
+  # ── GNOME host-specific extensions ──
   if [[ "$uses_gnome" == "true" ]]; then
     cat <<'NIXEOF'
-
-  # GNOME Desktop Environment
-  services.desktopManager.gnome.enable = true;
-
-  # GNOME requires power-profiles-daemon, not TLP
-  services.power-profiles-daemon.enable = lib.mkForce true;
-NIXEOF
-
-    if [[ "$is_laptop" == "true" ]]; then
-      echo "  services.tlp.enable = lib.mkForce false;"
-    fi
-
-    cat <<'NIXEOF'
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    epiphany
-    geary
-    gnome-music
-  ];
 
   # GNOME tweaks and extensions
   environment.systemPackages = with pkgs; [
@@ -836,6 +745,11 @@ main() {
   info "  3. Commit: git add hosts/$hostname flake.nix && git commit -m 'Add host $hostname'"
   info "  4. Build: nixos-rebuild switch --flake .#$hostname"
 
+  echo ""
+  info "Profiles (base, development, work, laptop) and GPU drivers are auto-applied"
+  info "by host-builders.nix based on meta.nix flags. Only host-specific overrides"
+  info "go in default.nix."
+
   if [[ "$uses_gnome" == "true" ]]; then
     echo ""
     info "Note: GNOME hosts use minimal.nix for home-manager (set via usesGnome in meta.nix)."
@@ -844,7 +758,7 @@ main() {
 
   if [[ "$gpu_driver" == "hybrid" ]]; then
     echo ""
-    info "Note: Verify PCI bus IDs match your hardware (lspci | grep VGA)."
+    info "Note: Verify PCI bus IDs in meta.nix match your hardware (lspci | grep VGA)."
     info "Wrong bus IDs will cause boot issues."
   fi
 

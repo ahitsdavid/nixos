@@ -21,10 +21,19 @@ set -euo pipefail
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
+# Detect repo root: prefer git repo, fall back to ISO baked-in config
 REPO_ROOT="$(git rev-parse --show-toplevel 2>/dev/null || true)"
 if [[ -z "$REPO_ROOT" ]]; then
-  echo "Error: Must be run inside the nixos git repository."
-  exit 1
+  if [[ -d /etc/nixos-config/.git ]]; then
+    REPO_ROOT="/etc/nixos-config"
+  else
+    echo "Error: Must be run inside the nixos git repository (or from the installer ISO)."
+    exit 1
+  fi
+fi
+IS_ISO=false
+if [[ "$REPO_ROOT" == "/etc/nixos-config" ]]; then
+  IS_ISO=true
 fi
 
 RED='\033[0;31m'
@@ -374,7 +383,7 @@ clone_repo_to_target() {
     scp -r "$REPO_ROOT" "root@$REMOTE_HOST:/mnt/etc/nixos-config"
     ok "Configuration copied to /mnt/etc/nixos-config"
   else
-    # Local mode: symlink or copy
+    # Local mode: copy repo to target
     if [[ ! -d /mnt/etc/nixos-config ]]; then
       run_cmd "mkdir -p /mnt/etc"
       cp -r "$REPO_ROOT" /mnt/etc/nixos-config
@@ -383,6 +392,18 @@ clone_repo_to_target() {
       ok "Configuration already present at /mnt/etc/nixos-config"
     fi
   fi
+
+  # Commit hardware-config so the flake can see it
+  # (NixOS flakes require all files to be tracked by git)
+  local config_dir
+  if [[ -n "${REMOTE_HOST:-}" ]]; then
+    config_dir="/mnt/etc/nixos-config"
+    run_cmd "cd $config_dir && git add hosts/$INSTALL_HOSTNAME/hardware-configuration.nix && git commit -m 'Add hardware-configuration.nix for $INSTALL_HOSTNAME' --no-gpg-sign || true"
+  else
+    config_dir="/mnt/etc/nixos-config"
+    (cd "$config_dir" && git add "hosts/$INSTALL_HOSTNAME/hardware-configuration.nix" && git commit -m "Add hardware-configuration.nix for $INSTALL_HOSTNAME" --no-gpg-sign) || true
+  fi
+  ok "Hardware config committed to git"
 }
 
 # ── NixOS installation ──────────────────────────────────────────────────────

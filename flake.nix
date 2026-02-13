@@ -106,7 +106,7 @@
     packages.${system} = let
       pkgs = import nixpkgs { inherit system; };
     in {
-      desktop-iso = (nixpkgs.lib.nixosSystem {
+      installer-iso = (nixpkgs.lib.nixosSystem {
         inherit system;
         specialArgs = { inherit inputs username; };
         modules = [

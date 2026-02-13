@@ -1,13 +1,6 @@
 { config, pkgs, inputs, username, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
-
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-    (import ../../profiles/development { inherit inputs username; })
-    (import ../../profiles/work { inherit inputs username; })
-    ../../profiles/laptop
-    ../../core/drivers/intel.nix
   ];
 
   # Kernel

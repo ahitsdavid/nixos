@@ -2,12 +2,6 @@
   imports =
     [ # Include the results of the hardware scan.
       ./hardware-configuration.nix
-
-      # Profiles
-      (import ../../profiles/base { inherit inputs username; })
-      (import ../../profiles/development { inherit inputs username; })
-      (import ../../profiles/work { inherit inputs username; })
-      (import ../../core/drivers/nvidia.nix)
     ];
 
   # Kernel - using latest for best Nvidia support
@@ -50,9 +44,6 @@
     enable = true;
     enable32Bit = true;
   };
-
-  # Enable NVIDIA drivers
-  drivers.nvidia.enable = true;
 
   # Desktop-specific packages (monitoring, graphics, system from core)
   environment.systemPackages = with pkgs; [

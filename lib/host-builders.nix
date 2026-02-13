@@ -53,14 +53,21 @@ let
 in
 {
   # Create a NixOS configuration with common modules
-  # Reads capabilities from hosts/<hostname>/meta.nix (isGaming, hasNvidia, usesGnome, extraUsers, etc.)
+  # Reads capabilities from hosts/<hostname>/meta.nix
+  # Auto-applies profiles based on meta flags
   mkNixosConfiguration = { hostname, extraModules ? [] }:
     let
       meta = getHostMeta hostname;
+      # Existing flags
       includeGaming = meta.isGaming or false;
       hasNvidia = meta.hasNvidia or false;
       usesGnome = meta.usesGnome or false;
       extraUsers = meta.extraUsers or [];
+      # New flags
+      isLaptop = meta.isLaptop or false;
+      isDevelopment = meta.isDevelopment or true;
+      isWork = meta.isWork or true;
+      hybridGpu = meta.hybridGpu or null;
 
       # Select home config based on desktop environment
       homeConfig = if usesGnome
@@ -92,6 +99,11 @@ in
         # Catppuccin theming
         catppuccin.nixosModules.catppuccin
 
+        # ── Auto-applied profiles ──
+
+        # Base profile (always for GUI hosts)
+        (import ../profiles/base { inherit inputs username; })
+
         # home-manager NixOS module
         home-manager.nixosModules.home-manager {
           home-manager.useGlobalPkgs = true;
@@ -109,21 +121,41 @@ in
           };
         }
 
-        # Extra users (from meta.extraUsers)
-      ] ++ (map (extraUser: {
-            users.users.${extraUser} = let
-              userVars = getUserVars extraUser;
-            in {
-              isNormalUser = true;
-              description = userVars.description;
-              extraGroups = userVars.extraGroups;
-            };
-            home-manager.users.${extraUser} = mkUserHomeConfig {
-              name = extraUser;
-              inherit homeConfig includeGaming usesGnome;
-            };
-          }) extraUsers)
-        ++ (if hasNvidia then [{ drivers.nvidia.enable = true; }] else [])
+      ] # Conditional profiles
+        ++ (if isDevelopment then [(import ../profiles/development { inherit inputs username; })] else [])
+        ++ (if isWork then [(import ../profiles/work { inherit inputs username; })] else [])
+        ++ (if isLaptop then [../profiles/laptop] else [])
+        ++ (if usesGnome then [../profiles/gnome] else [])
+
+        # GPU driver selection
+        ++ (if hybridGpu != null then [
+              (import ../core/drivers/hybrid-gpu.nix {
+                mode = hybridGpu.mode;
+                intelBusId = hybridGpu.intelBusId;
+                nvidiaBusId = hybridGpu.nvidiaBusId;
+              })
+            ] else if hasNvidia then [
+              ../core/drivers/nvidia.nix
+              { drivers.nvidia.enable = true; }
+            ] else [
+              ../core/drivers/intel.nix
+              { drivers.intel.enable = true; }
+            ])
+
+        # Extra users
+        ++ (map (extraUser: {
+              users.users.${extraUser} = let
+                userVars = getUserVars extraUser;
+              in {
+                isNormalUser = true;
+                description = userVars.description;
+                extraGroups = userVars.extraGroups;
+              };
+              home-manager.users.${extraUser} = mkUserHomeConfig {
+                name = extraUser;
+                inherit homeConfig includeGaming usesGnome;
+              };
+            }) extraUsers)
         ++ (extraModules.systemModules or []);
     };
 

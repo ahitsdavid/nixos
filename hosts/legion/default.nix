@@ -2,19 +2,6 @@
   imports = [
     ./hardware-configuration.nix
 
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-    (import ../../profiles/development { inherit inputs username; })
-    (import ../../profiles/work { inherit inputs username; })
-    ../../profiles/laptop
-
-    # Hybrid graphics: sync mode for gaming performance
-    (import ../../core/drivers/hybrid-gpu.nix {
-      mode = "sync";
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    })
-
     # Waydroid - uses Intel iGPU for proper GPU acceleration
     ../../core/modules/waydroid.nix
   ];

@@ -2,14 +2,9 @@
   imports = [
     ./hardware-configuration.nix
 
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-    (import ../../profiles/development { inherit inputs username; })
-    (import ../../profiles/work { inherit inputs username; })  # CAC support
-    ../../profiles/laptop
+    # Tablet + Surface-specific profiles (not auto-applied by meta flags)
     ../../profiles/surface
     ../../profiles/gnome-tablet
-    ../../core/drivers/intel.nix
   ];
 
   # Use latest kernel for better Surface support

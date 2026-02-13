@@ -2,30 +2,14 @@
 # GNOME optimized for tablet/touch use
 { config, lib, pkgs, ... }:
 {
-  # Disable Hyprland (from base profile)
-  programs.hyprland.enable = lib.mkForce false;
+  imports = [ ../gnome ];
 
-  # GNOME Desktop with GDM (better touch support than SDDM)
-  services.xserver.enable = true;
-  services.desktopManager.gnome.enable = true;
+  # Force GDM for tablet reliability (override gnome profile's mkOverride 60)
   services.displayManager.gdm.enable = lib.mkForce true;
-  services.displayManager.gdm.wayland = true;
-
-  # Disable SDDM (from display-manager profile)
   services.displayManager.sddm.enable = lib.mkForce false;
 
-  # Override portal config for GNOME
-  xdg.portal.config.hyprland.default = lib.mkForce [];
-
-  # Disable the Hyprland-specific portal service
-  systemd.user.services.xdg-desktop-portal-gtk.wantedBy = lib.mkForce [];
-
-  # Minimal GNOME - exclude bloat
+  # Extra tablet bloat exclusions (on top of gnome profile's list)
   environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    epiphany
-    geary
-    gnome-music
     gnome-contacts
     gnome-maps
     gnome-weather
@@ -46,13 +30,10 @@
     papirus-icon-theme
   ];
 
-  # Screen rotation sensor support
-  hardware.sensor.iio.enable = true;
-
   # Enable gnome-keyring for credential storage
   services.gnome.gnome-keyring.enable = true;
 
-  # GNOME requires power-profiles-daemon, not TLP
+  # Force power-profiles-daemon for tablet, disable TLP
   services.power-profiles-daemon.enable = lib.mkForce true;
   services.tlp.enable = lib.mkForce false;
 }

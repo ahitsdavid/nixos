@@ -1,12 +1,6 @@
 { config, pkgs, inputs, username, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
-
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-    (import ../../profiles/development { inherit inputs username; })
-    ../../profiles/laptop
-    ../../core/drivers/intel.nix
   ];
 
   # Kernel
@@ -34,20 +28,6 @@
   services.xserver.xkb = {
     options = "altwin:swap_lalt_lwin"; # Swap Alt and Cmd
   };
-
-  # GNOME Desktop Environment
-  services.xserver.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # GNOME requires power-profiles-daemon, not TLP
-  services.power-profiles-daemon.enable = lib.mkForce true;
-  services.tlp.enable = lib.mkForce false;
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    epiphany
-    geary
-    gnome-music
-  ];
 
   # Host-specific packages
   environment.systemPackages = with pkgs; [

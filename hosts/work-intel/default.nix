@@ -1,23 +1,12 @@
 { config, pkgs, inputs, username, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
-
-    # Profiles
-    (import ../../profiles/base { inherit inputs username; })
-    (import ../../profiles/development { inherit inputs username; })
-    (import ../../profiles/work { inherit inputs username; })
-    ../../profiles/laptop
-
-    # Hybrid graphics: offload mode for battery life
-    (import ../../core/drivers/hybrid-gpu.nix {
-      mode = "offload";
-      intelBusId = "PCI:0:2:0";
-      nvidiaBusId = "PCI:1:0:0";
-    })
   ];
 
-  # Use X11 for SDDM (Wayland SDDM has rendering issues)
+  # Override gnome profile: SDDM X11 needed for hybrid GPU
+  services.displayManager.sddm.enable = lib.mkForce true;
   services.displayManager.sddm.wayland.enable = lib.mkForce false;
+  services.displayManager.gdm.enable = lib.mkForce false;
 
   # Kernel
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -36,18 +25,9 @@
     HandleLidSwitchDocked = "ignore";
   };
 
-  # GNOME Desktop Environment (SDDM from core modules handles login)
-  services.desktopManager.gnome.enable = true;
-
   # Keep TLP for thermal management, disable GNOME's power-profiles-daemon
   services.power-profiles-daemon.enable = lib.mkForce false;
   services.tlp.enable = lib.mkForce true;
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    epiphany
-    geary
-    gnome-music
-  ];
 
   # Override TLP: aggressive thermal settings for i9
   services.tlp.settings = {
