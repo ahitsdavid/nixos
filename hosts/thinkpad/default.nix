@@ -40,6 +40,7 @@
     tpacpi-bat
     acpilight
     v4l-utils
+    cryptsetup
   ];
 
   networking.hostName = "thinkpad";
