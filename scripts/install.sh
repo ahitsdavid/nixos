@@ -733,10 +733,19 @@ main() {
     info "     reboot"
   fi
   info "  2. Log in as your user"
-  info "  3. Connect to Tailscale: tailscale up"
-  info "  4. Verify secrets: scripts/setup-secrets.sh verify"
-  info "  5. Move config to permanent location:"
-  info "     mv /etc/nixos-config ~/nixos"
+  info "  3. Move config to permanent location:"
+  info "     mv /etc/nixos-config ~/nixos && cd ~/nixos"
+  info "  4. Connect to Tailscale: sudo tailscale up"
+  info "  5. Set up secrets (SOPS age key):"
+  info "     scripts/setup-secrets.sh bootstrap"
+  info "  6. Deploy to apply secrets and finalize:"
+  info "     scripts/deploy.sh $INSTALL_HOSTNAME"
+  echo ""
+  info "Available scripts for ongoing management:"
+  info "  scripts/deploy.sh <host>           Deploy config (local or remote)"
+  info "  scripts/setup-secrets.sh verify    Verify secrets are decryptable"
+  info "  scripts/add-host.sh               Scaffold a new host"
+  info "  scripts/add-user.sh --add         Add an additional user to a host"
   echo ""
 
   if [[ -n "${LUKS_PART:-}" ]]; then
