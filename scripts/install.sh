@@ -546,7 +546,9 @@ main() {
   else
     info "Mode: Local installation"
     if [[ $EUID -ne 0 ]]; then
-      warn "Not running as root. Some operations will require sudo."
+      err "This script must be run as root (partitioning, formatting, and mounting require it)."
+      info "Re-run with: sudo $0 $*"
+      exit 1
     fi
   fi
 
