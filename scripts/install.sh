@@ -308,7 +308,7 @@ format_filesystem() {
 create_btrfs_subvolumes() {
   local device="$1"
 
-  prompt_yn "Create btrfs subvolumes? (@, @home)" "y" use_subvols
+  prompt_yn "Create btrfs subvolumes? (@, @home, @swap)" "y" use_subvols
   if [[ "$use_subvols" == "true" ]]; then
     info "Creating btrfs subvolumes..."
     run_cmd "mkdir -p /mnt"
@@ -612,9 +612,14 @@ main() {
   local create_swapfile=false
   local swapfile_size=""
   if [[ "$partition_scheme_choice" != LUKS\ +\ LVM* ]]; then
-    prompt_yn "Create a swap file?" "y" create_swapfile
-    if [[ "$create_swapfile" == "true" ]]; then
-      prompt_default "Swap file size" "8G" swapfile_size
+    if [[ "$fstype" == "bcachefs" ]]; then
+      warn "bcachefs does not support swap files. Skipping swap."
+      warn "Consider using a separate swap partition or LUKS+LVM with a swap LV."
+    else
+      prompt_yn "Create a swap file?" "y" create_swapfile
+      if [[ "$create_swapfile" == "true" ]]; then
+        prompt_default "Swap file size" "8G" swapfile_size
+      fi
     fi
   fi
 
@@ -692,18 +697,36 @@ main() {
   # Create swap file (non-LVM)
   if [[ "$create_swapfile" == "true" && -n "$swapfile_size" ]]; then
     info "Creating ${swapfile_size} swap file..."
-    if [[ "$fstype" == "btrfs" && "${BTRFS_SUBVOLS:-false}" == "true" ]]; then
-      # Btrfs needs a dedicated no-COW, no-compression subvolume for swap
-      run_cmd "mkdir -p /mnt/swap"
-      run_cmd "mount -o subvol=@swap,nodatacow $ROOT_PART /mnt/swap"
+    local swap_count=$((${swapfile_size%G} * 1024))
+
+    if [[ "$fstype" == "btrfs" ]]; then
+      if [[ "${BTRFS_SUBVOLS:-false}" == "true" ]]; then
+        # Btrfs with subvolumes: use dedicated @swap subvolume (no COW, no compression)
+        run_cmd "mkdir -p /mnt/swap"
+        run_cmd "mount -o subvol=@swap,nodatacow $ROOT_PART /mnt/swap"
+      else
+        # Btrfs without subvolumes: create swap dir and disable COW on it
+        run_cmd "mkdir -p /mnt/swap"
+      fi
       run_cmd "truncate -s 0 /mnt/swap/swapfile"
       run_cmd "chattr +C /mnt/swap/swapfile"
-      run_cmd "dd if=/dev/zero of=/mnt/swap/swapfile bs=1M count=$((${swapfile_size%G} * 1024)) status=progress"
+      run_cmd "dd if=/dev/zero of=/mnt/swap/swapfile bs=1M count=$swap_count status=progress"
       run_cmd "chmod 600 /mnt/swap/swapfile"
       run_cmd "mkswap /mnt/swap/swapfile"
       run_cmd "swapon /mnt/swap/swapfile"
+
+    elif [[ "$fstype" == "f2fs" ]]; then
+      # f2fs: create swap file with pinned extents (required for f2fs swap)
+      run_cmd "fallocate -l ${swapfile_size} /mnt/swapfile"
+      run_cmd "chmod 600 /mnt/swapfile"
+      # Pin the file so f2fs doesn't move blocks (required for swap)
+      run_cmd "f2fs_io pinfile set /mnt/swapfile" || warn "f2fs_io not available, swap may not work on older kernels"
+      run_cmd "mkswap /mnt/swapfile"
+      run_cmd "swapon /mnt/swapfile"
+
     else
-      run_cmd "dd if=/dev/zero of=/mnt/swapfile bs=1M count=$((${swapfile_size%G} * 1024)) status=progress"
+      # ext4, xfs: standard swap file
+      run_cmd "dd if=/dev/zero of=/mnt/swapfile bs=1M count=$swap_count status=progress"
       run_cmd "chmod 600 /mnt/swapfile"
       run_cmd "mkswap /mnt/swapfile"
       run_cmd "swapon /mnt/swapfile"
