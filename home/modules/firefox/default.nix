@@ -210,50 +210,6 @@ in {
             color: var(--base05) !important;
           }
           
-          /* Tab styling - comprehensive selectors for Firefox 140+ */
-          .tabbrowser-tab,
-          .tabbrowser-tab .tab-stack,
-          .tabbrowser-tab .tab-background {
-            background-color: var(--base02) !important;
-            border: none !important;
-            color: var(--base04) !important;
-          }
-          
-          /* Active/selected tab with rounded corners */
-          .tabbrowser-tab[selected="true"],
-          .tabbrowser-tab[selected="true"] .tab-stack,
-          .tabbrowser-tab[selected="true"] .tab-background,
-          .tabbrowser-tab[visuallyselected="true"],
-          .tabbrowser-tab[visuallyselected="true"] .tab-stack,
-          .tabbrowser-tab[visuallyselected="true"] .tab-background {
-            background-color: var(--base01) !important;
-            border-radius: 20px 20px 0 0 !important;
-            color: var(--base05) !important;
-          }
-          
-          /* Tab text and labels */
-          .tabbrowser-tab .tab-label-container,
-          .tabbrowser-tab .tab-label {
-            color: var(--base04) !important;
-          }
-          
-          .tabbrowser-tab[selected="true"] .tab-label-container,
-          .tabbrowser-tab[selected="true"] .tab-label,
-          .tabbrowser-tab[visuallyselected="true"] .tab-label-container,
-          .tabbrowser-tab[visuallyselected="true"] .tab-label {
-            color: var(--base05) !important;
-          }
-          
-          /* Tab close buttons */
-          .tabbrowser-tab .tab-close-button {
-            color: var(--base04) !important;
-          }
-          
-          .tabbrowser-tab[selected="true"] .tab-close-button,
-          .tabbrowser-tab[visuallyselected="true"] .tab-close-button {
-            color: var(--base05) !important;
-          }
-          
           /* Toolbar and navigation */
           #nav-bar, 
           #PersonalToolbar,
