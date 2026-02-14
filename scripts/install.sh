@@ -311,6 +311,7 @@ create_btrfs_subvolumes() {
   prompt_yn "Create btrfs subvolumes? (@, @home)" "y" use_subvols
   if [[ "$use_subvols" == "true" ]]; then
     info "Creating btrfs subvolumes..."
+    run_cmd "mkdir -p /mnt"
     run_cmd "mount $device /mnt"
     run_cmd "btrfs subvolume create /mnt/@"
     run_cmd "btrfs subvolume create /mnt/@home"
@@ -326,6 +327,7 @@ create_btrfs_subvolumes() {
 
 mount_filesystems() {
   info "Mounting filesystems to /mnt..."
+  run_cmd "mkdir -p /mnt"
 
   if [[ "${BTRFS_SUBVOLS:-false}" == "true" ]]; then
     run_cmd "mount -o subvol=@,compress=zstd $ROOT_PART /mnt"
