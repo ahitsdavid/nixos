@@ -128,6 +128,144 @@ run_cmd() {
   fi
 }
 
+# ── Generate variables.nix ────────────────────────────────────────────────
+
+generate_variables_nix() {
+  local new_username="$1" fullname="$2" email="$3" shell="$4" browser="$5" terminal="$6"
+  cat <<NIXEOF
+
+{
+  # Identity
+  fullName = "$fullname";
+  description = "$fullname";
+  gitUsername = "$fullname";
+  gitEmail = "$email";
+
+  # System
+  shell = "$shell";
+  extraGroups = [ "networkmanager" "wheel" "docker" "libvirtd" "keys" ];
+
+  # Hyprland Settings
+  extraMonitorSettings = "";
+
+  # Program Options
+  browser = "$browser";
+  terminal = "$terminal";
+  file-manager = "yazi";
+  keyboardLayout = "us";
+  consoleKeyMap = "us";
+
+  # Wallpaper
+  wallpaper = "Pictures/Wallpapers/yosemite.png";
+
+}
+NIXEOF
+}
+
+# ── User setup ─────────────────────────────────────────────────────────────
+
+setup_user() {
+  echo ""
+  info "User setup..."
+  echo ""
+
+  # Read current username from flake.nix
+  local current_username
+  current_username=$(grep -oP 'username = "\K[^"]+' "$REPO_ROOT/flake.nix")
+
+  prompt_yn "Current configured user is '$current_username'. Keep this user?" "y" keep_user
+  KEEP_USER="$keep_user"
+  NEW_USER=false
+
+  if [[ "$KEEP_USER" == "true" ]]; then
+    # Scenario A: Keep current user
+    INSTALL_USERNAME="$current_username"
+
+    # Check for existing age key (use user's home, not root's)
+    local age_key="/home/$INSTALL_USERNAME/.config/sops/age/keys.txt"
+    if [[ -f "$age_key" ]]; then
+      AGE_KEY_SOURCE="$age_key"
+      ok "Found existing age key at $age_key"
+    else
+      prompt_yn "No age key found. Generate a new one?" "y" gen_key
+      if [[ "$gen_key" == "true" ]]; then
+        check_tool age-keygen
+        age-keygen -o /tmp/install-age-key.txt 2>&1
+        chmod 600 /tmp/install-age-key.txt
+        AGE_KEY_SOURCE="/tmp/install-age-key.txt"
+        ok "Generated new age key"
+        local pubkey
+        pubkey=$(grep "public key:" /tmp/install-age-key.txt | awk '{print $NF}')
+        info "Public key: $pubkey"
+      else
+        AGE_KEY_SOURCE=""
+        warn "No age key — secrets won't decrypt during install."
+        warn "Encrypted secrets will be removed from the target so the build succeeds."
+        warn "Set up secrets after first boot with: scripts/setup-secrets.sh bootstrap"
+        REMOVE_SECRETS=true
+      fi
+    fi
+
+  else
+    # Scenario B: New user
+    NEW_USER=true
+
+    prompt_required "Username (login name, lowercase)" new_username
+    # Validate username
+    if [[ ! "$new_username" =~ ^[a-z_][a-z0-9_-]*$ ]]; then
+      err "Invalid username. Must start with lowercase letter or underscore, contain only [a-z0-9_-]."
+      exit 1
+    fi
+    INSTALL_USERNAME="$new_username"
+
+    prompt_required "Full name (for git commits, display)" fullname
+    prompt_required "Email address (for git config)" email
+    prompt_default "Default shell" "fish" shell
+    prompt_default "Default browser" "firefox" browser
+    prompt_default "Default terminal" "kitty" terminal
+
+    # Create user directory
+    local user_dir="$REPO_ROOT/home/users/$new_username"
+    if [[ -d "$user_dir" ]]; then
+      warn "Directory $user_dir already exists — will not overwrite variables.nix"
+    else
+      mkdir -p "$user_dir"
+      generate_variables_nix "$new_username" "$fullname" "$email" "$shell" "$browser" "$terminal" \
+        > "$user_dir/variables.nix"
+      ok "Created $user_dir/variables.nix"
+
+      # Copy face.png from current user or create placeholder
+      local existing_face="$REPO_ROOT/home/users/$current_username/face.png"
+      if [[ -f "$existing_face" ]]; then
+        cp "$existing_face" "$user_dir/face.png"
+        ok "Copied face.png"
+      else
+        touch "$user_dir/face.png"
+        warn "No face.png found — placeholder created"
+      fi
+    fi
+
+    # Update flake.nix username
+    local old_username
+    old_username=$(grep -oP 'username = "\K[^"]+' "$REPO_ROOT/flake.nix")
+    if [[ "$old_username" != "$new_username" ]]; then
+      sed -i "s|username = \"$old_username\"|username = \"$new_username\"|" "$REPO_ROOT/flake.nix"
+      ok "Updated flake.nix: username = \"$new_username\" (was: \"$old_username\")"
+    fi
+
+    # Generate age key
+    check_tool age-keygen
+    age-keygen -o /tmp/install-age-key.txt 2>&1
+    chmod 600 /tmp/install-age-key.txt
+    AGE_KEY_SOURCE="/tmp/install-age-key.txt"
+    ok "Generated new age key"
+    local pubkey
+    pubkey=$(grep "public key:" /tmp/install-age-key.txt | awk '{print $NF}')
+    info "Public key: $pubkey"
+    info "Save this key — you'll need it for setup-secrets.sh bootstrap"
+  fi
+}
+
 # ── Disk detection ───────────────────────────────────────────────────────────
 
 detect_disks() {
@@ -185,19 +323,57 @@ partition_name() {
   fi
 }
 
+# ── Disk cleanup ──────────────────────────────────────────────────────────
+
+deactivate_disk() {
+  local disk="$1"
+  info "Deactivating existing partitions on $disk..."
+
+  # Unmount, deactivate swap/LVM/LUKS, wipe signatures, re-read partition table
+  run_cmd "bash -c '
+    umount -R /mnt 2>/dev/null || true
+    for part in \$(lsblk -lnpo NAME \"$disk\" 2>/dev/null | tail -n +2); do
+      umount -l \$part 2>/dev/null || true
+      swapoff \$part 2>/dev/null || true
+    done
+    vgchange -an 2>/dev/null || true
+    for dm in \$(ls /dev/mapper/ 2>/dev/null | grep -v control); do
+      cryptsetup close \$dm 2>/dev/null || true
+    done
+    dmsetup remove_all 2>/dev/null || true
+    wipefs -af $disk 2>/dev/null || true
+    partx -d $disk 2>/dev/null || true
+    sgdisk --zap-all $disk 2>/dev/null || true
+    partprobe $disk 2>/dev/null || blockdev --rereadpt $disk 2>/dev/null || true
+    sleep 2
+  '"
+
+  ok "Disk $disk deactivated"
+}
+
 # ── Partitioning schemes ────────────────────────────────────────────────────
 
 do_partition_plain() {
   local disk="$1"
   info "Creating GPT partition table (plain, no encryption)..."
 
-  run_cmd "parted -s $disk -- mklabel gpt"
-  run_cmd "parted -s $disk -- mkpart ESP fat32 1MiB 512MiB"
-  run_cmd "parted -s $disk -- set 1 esp on"
-  run_cmd "parted -s $disk -- mkpart primary 512MiB 100%"
+  local boot_part root_part
+  boot_part=$(partition_name "$disk" 1)
+  root_part=$(partition_name "$disk" 2)
 
-  BOOT_PART=$(partition_name "$disk" 1)
-  ROOT_PART=$(partition_name "$disk" 2)
+  # Use sgdisk for partitioning — handles stale kernel partition tables gracefully
+  run_cmd "sgdisk -Z $disk || true"
+  run_cmd "sgdisk -n 1:2048:+512M -t 1:EF00 -n 2:0:0 -t 2:8300 $disk"
+  run_cmd "partprobe $disk; sleep 1"
+
+  # Verify partitions exist
+  if ! run_cmd "test -b $boot_part && test -b $root_part"; then
+    err "Partitions not found after partitioning. You may need to reboot."
+    exit 1
+  fi
+
+  BOOT_PART="$boot_part"
+  ROOT_PART="$root_part"
   LUKS_PART=""
   LVM_VG=""
 
@@ -208,13 +384,21 @@ do_partition_luks() {
   local disk="$1"
   info "Creating GPT partition table (LUKS encrypted)..."
 
-  run_cmd "parted -s $disk -- mklabel gpt"
-  run_cmd "parted -s $disk -- mkpart ESP fat32 1MiB 512MiB"
-  run_cmd "parted -s $disk -- set 1 esp on"
-  run_cmd "parted -s $disk -- mkpart primary 512MiB 100%"
+  local boot_part luks_part
+  boot_part=$(partition_name "$disk" 1)
+  luks_part=$(partition_name "$disk" 2)
 
-  BOOT_PART=$(partition_name "$disk" 1)
-  LUKS_PART=$(partition_name "$disk" 2)
+  run_cmd "sgdisk -Z $disk || true"
+  run_cmd "sgdisk -n 1:2048:+512M -t 1:EF00 -n 2:0:0 -t 2:8309 $disk"
+  run_cmd "partprobe $disk; sleep 1"
+
+  if ! run_cmd "test -b $boot_part && test -b $luks_part"; then
+    err "Partitions not found after partitioning. You may need to reboot."
+    exit 1
+  fi
+
+  BOOT_PART="$boot_part"
+  LUKS_PART="$luks_part"
   LVM_VG=""
 
   echo ""
@@ -239,13 +423,21 @@ do_partition_luks_lvm() {
   local disk="$1"
   info "Creating GPT partition table (LUKS + LVM)..."
 
-  run_cmd "parted -s $disk -- mklabel gpt"
-  run_cmd "parted -s $disk -- mkpart ESP fat32 1MiB 512MiB"
-  run_cmd "parted -s $disk -- set 1 esp on"
-  run_cmd "parted -s $disk -- mkpart primary 512MiB 100%"
+  local boot_part luks_part
+  boot_part=$(partition_name "$disk" 1)
+  luks_part=$(partition_name "$disk" 2)
 
-  BOOT_PART=$(partition_name "$disk" 1)
-  LUKS_PART=$(partition_name "$disk" 2)
+  run_cmd "sgdisk -Z $disk || true"
+  run_cmd "sgdisk -n 1:2048:+512M -t 1:EF00 -n 2:0:0 -t 2:8309 $disk"
+  run_cmd "partprobe $disk; sleep 1"
+
+  if ! run_cmd "test -b $boot_part && test -b $luks_part"; then
+    err "Partitions not found after partitioning. You may need to reboot."
+    exit 1
+  fi
+
+  BOOT_PART="$boot_part"
+  LUKS_PART="$luks_part"
   LVM_VG="vg0"
 
   echo ""
@@ -407,6 +599,32 @@ clone_repo_to_target() {
     (cd "$config_dir" && git add "hosts/$INSTALL_HOSTNAME/hardware-configuration.nix" && git commit -m "Add hardware-configuration.nix for $INSTALL_HOSTNAME" --no-gpg-sign) || true
   fi
   ok "Hardware config committed to git"
+
+  # If new user: commit user setup changes
+  if [[ "${NEW_USER:-false}" == "true" ]]; then
+    if [[ -n "${REMOTE_HOST:-}" ]]; then
+      run_cmd "cd $config_dir && git add home/users/$INSTALL_USERNAME/variables.nix home/users/$INSTALL_USERNAME/face.png flake.nix && git commit -m 'Setup user $INSTALL_USERNAME' --no-gpg-sign || true"
+    else
+      (cd "$config_dir" && \
+        git add "home/users/$INSTALL_USERNAME/variables.nix" "home/users/$INSTALL_USERNAME/face.png" flake.nix && \
+        git commit -m "Setup user $INSTALL_USERNAME" --no-gpg-sign) || true
+    fi
+    ok "User config committed"
+  fi
+
+  # Remove secrets if no age key available (new user or existing user without key)
+  # sops.nix uses pathExists, so removing these disables SOPS cleanly
+  if [[ "${NEW_USER:-false}" == "true" || "${REMOVE_SECRETS:-false}" == "true" ]]; then
+    if [[ -n "${REMOTE_HOST:-}" ]]; then
+      run_cmd "cd $config_dir && rm -f secrets/system.yaml secrets/personal.yaml secrets/work.yaml && git add -A secrets/ && git commit -m 'Remove secrets for clean install' --no-gpg-sign || true"
+    else
+      (cd "$config_dir" && \
+        rm -f secrets/system.yaml secrets/personal.yaml secrets/work.yaml && \
+        git add -A secrets/ && \
+        git commit -m "Remove secrets for clean install" --no-gpg-sign) || true
+    fi
+    ok "Secrets cleared for clean build"
+  fi
 }
 
 # ── NixOS installation ──────────────────────────────────────────────────────
@@ -424,6 +642,38 @@ run_nixos_install() {
   ok "NixOS installation completed!"
 }
 
+# ── Install age key (BEFORE nixos-install so sops-nix can decrypt) ────────
+
+install_age_key() {
+  info "Installing age key to target..."
+
+  if [[ -n "${AGE_KEY_SOURCE:-}" && -f "$AGE_KEY_SOURCE" ]]; then
+    # User home directory — sops.nix reads from here during activation
+    local target_age="/mnt/home/$INSTALL_USERNAME/.config/sops/age"
+    run_cmd "mkdir -p $target_age"
+    if [[ -n "${REMOTE_HOST:-}" ]]; then
+      scp "$AGE_KEY_SOURCE" "root@$REMOTE_HOST:$target_age/keys.txt"
+    else
+      cp "$AGE_KEY_SOURCE" "$target_age/keys.txt"
+    fi
+    run_cmd "chmod 600 $target_age/keys.txt"
+    ok "Age key installed at /home/$INSTALL_USERNAME/.config/sops/age/keys.txt"
+
+    # System location for sops-nix (fallback used by some configs like vm)
+    run_cmd "mkdir -p /mnt/var/lib/sops-nix"
+    if [[ -n "${REMOTE_HOST:-}" ]]; then
+      scp "$AGE_KEY_SOURCE" "root@$REMOTE_HOST:/mnt/var/lib/sops-nix/key.txt"
+    else
+      cp "$AGE_KEY_SOURCE" /mnt/var/lib/sops-nix/key.txt
+    fi
+    run_cmd "chmod 600 /mnt/var/lib/sops-nix/key.txt"
+    ok "Age key installed at /var/lib/sops-nix/key.txt"
+  else
+    warn "No age key — secrets won't decrypt during install."
+    warn "Set up after first boot with: scripts/setup-secrets.sh bootstrap"
+  fi
+}
+
 # ── Post-install ─────────────────────────────────────────────────────────────
 
 post_install() {
@@ -432,51 +682,24 @@ post_install() {
   echo ""
   info "Post-installation setup..."
 
-  # Get username from flake
-  local username
-  username=$(grep -oP 'username = "\K[^"]+' "$REPO_ROOT/flake.nix")
-
-  # Copy SOPS age key if it exists
-  local age_key="$HOME/.config/sops/age/keys.txt"
-  if [[ -f "$age_key" ]]; then
-    prompt_yn "Copy SOPS age key to the new installation?" "y" copy_sops
-    if [[ "$copy_sops" == "true" ]]; then
-      local target_age="/mnt/home/$username/.config/sops/age"
-      run_cmd "mkdir -p $target_age"
-      if [[ -n "${REMOTE_HOST:-}" ]]; then
-        scp "$age_key" "root@$REMOTE_HOST:$target_age/keys.txt"
-        run_cmd "chmod 600 $target_age/keys.txt"
-      else
-        cp "$age_key" "$target_age/keys.txt"
-        chmod 600 "$target_age/keys.txt"
-      fi
-      ok "SOPS age key copied"
-
-      # Also copy to system location for sops-nix
-      run_cmd "mkdir -p /mnt/var/lib/sops-nix"
-      if [[ -n "${REMOTE_HOST:-}" ]]; then
-        scp "$age_key" "root@$REMOTE_HOST:/mnt/var/lib/sops-nix/key.txt"
-        run_cmd "chmod 600 /mnt/var/lib/sops-nix/key.txt"
-      else
-        cp "$age_key" /mnt/var/lib/sops-nix/key.txt
-        chmod 600 /mnt/var/lib/sops-nix/key.txt
-      fi
-      ok "SOPS key copied to /var/lib/sops-nix/key.txt"
-    fi
-  else
-    warn "No SOPS age key found at $age_key"
-    info "You can set one up later with: scripts/setup-secrets.sh bootstrap"
+  # Fix ownership of age key (nixos-install creates the user, so now we can chown)
+  if [[ -n "${AGE_KEY_SOURCE:-}" && -f "$AGE_KEY_SOURCE" ]]; then
+    run_cmd "chown -R 1000:100 /mnt/home/$INSTALL_USERNAME/.config" 2>/dev/null || true
+    ok "Fixed age key ownership for $INSTALL_USERNAME"
   fi
+
+  # Clean up temp key
+  [[ "${AGE_KEY_SOURCE:-}" == /tmp/* ]] && rm -f "$AGE_KEY_SOURCE"
 
   # Set user password
   echo ""
-  info "Set a password for user '$username':"
+  info "Set a password for user '$INSTALL_USERNAME':"
   if [[ -n "${REMOTE_HOST:-}" ]]; then
-    ssh -t "root@$REMOTE_HOST" "nixos-enter --root /mnt -- passwd $username"
+    ssh -t "root@$REMOTE_HOST" "nixos-enter --root /mnt -- passwd $INSTALL_USERNAME"
   else
-    nixos-enter --root /mnt -- passwd "$username"
+    nixos-enter --root /mnt -- passwd "$INSTALL_USERNAME"
   fi
-  ok "Password set for $username"
+  ok "Password set for $INSTALL_USERNAME"
 }
 
 # ── Host selection ───────────────────────────────────────────────────────────
@@ -551,6 +774,9 @@ main() {
       exit 1
     fi
   fi
+
+  # Step 0: User setup
+  setup_user
 
   # Step 1: Host selection
   if [[ -n "${PRE_HOSTNAME:-}" ]]; then
@@ -631,6 +857,11 @@ main() {
   echo -e "${GREEN}  Installation Summary${NC}"
   echo -e "${GREEN}──────────────────────────────────────────────────────────────${NC}"
   echo ""
+  info "  User:         $INSTALL_USERNAME"
+  info "  Age key:      ${AGE_KEY_SOURCE:-none (set up later)}"
+  if [[ "${NEW_USER:-false}" == "true" || "${REMOVE_SECRETS:-false}" == "true" ]]; then
+    info "  Secrets:      will be removed (set up after first boot)"
+  fi
   info "  Hostname:     $INSTALL_HOSTNAME"
   info "  Target disk:  $TARGET_DISK"
   info "  Partitioning: ${partition_scheme_choice%% (*}"
@@ -670,7 +901,8 @@ main() {
   start_time=$(date +%s)
 
   # Step A: Partition disk
-  info "Step 1/7: Partitioning disk..."
+  info "Step 1/8: Partitioning disk..."
+  deactivate_disk "$TARGET_DISK"
   case "$partition_scheme_choice" in
     Plain*)      do_partition_plain "$TARGET_DISK" ;;
     LUKS\ \(*)   do_partition_luks "$TARGET_DISK" ;;
@@ -679,21 +911,21 @@ main() {
   echo ""
 
   # Step B: Format filesystem
-  info "Step 2/7: Formatting filesystem..."
+  info "Step 2/8: Formatting filesystem..."
   format_filesystem "$ROOT_PART" "$fstype"
   echo ""
 
   # Step C: Btrfs subvolumes
   if [[ "$fstype" == "btrfs" ]]; then
-    info "Step 3/7: Btrfs subvolumes..."
+    info "Step 3/8: Btrfs subvolumes..."
     create_btrfs_subvolumes "$ROOT_PART"
   else
-    info "Step 3/7: Skipping subvolumes (not btrfs)"
+    info "Step 3/8: Skipping subvolumes (not btrfs)"
   fi
   echo ""
 
   # Step D: Mount filesystems
-  info "Step 4/7: Mounting filesystems..."
+  info "Step 4/8: Mounting filesystems..."
   mount_filesystems
 
   # Create swap file (non-LVM)
@@ -738,17 +970,22 @@ main() {
   echo ""
 
   # Step E: Generate hardware config
-  info "Step 5/7: Generating hardware configuration..."
+  info "Step 5/8: Generating hardware configuration..."
   generate_hardware_config "$INSTALL_HOSTNAME"
   echo ""
 
   # Step F: Clone repo to target
-  info "Step 6/7: Setting up configuration on target..."
+  info "Step 6/8: Setting up configuration on target..."
   clone_repo_to_target
   echo ""
 
-  # Step G: Run nixos-install
-  info "Step 7/7: Installing NixOS..."
+  # Step G: Install age key (BEFORE nixos-install so sops-nix can decrypt)
+  info "Step 7/8: Installing age key..."
+  install_age_key
+  echo ""
+
+  # Step H: Run nixos-install
+  info "Step 8/8: Installing NixOS..."
   run_nixos_install "$INSTALL_HOSTNAME"
   echo ""
 
@@ -772,14 +1009,26 @@ main() {
   else
     info "     reboot"
   fi
-  info "  2. Log in as your user"
+  info "  2. Log in as $INSTALL_USERNAME"
   info "  3. Move config to permanent location:"
   info "     mv /etc/nixos-config ~/nixos && cd ~/nixos"
   info "  4. Connect to Tailscale: sudo tailscale up"
-  info "  5. Set up secrets (SOPS age key):"
-  info "     scripts/setup-secrets.sh bootstrap"
-  info "  6. Deploy to apply secrets and finalize:"
-  info "     scripts/deploy.sh $INSTALL_HOSTNAME"
+  if [[ "${NEW_USER:-false}" == "true" ]]; then
+    info ""
+    info "  NEW USER: Set up secrets after login:"
+    info "     cd ~/nixos && scripts/setup-secrets.sh bootstrap"
+    info "     Then rebuild: scripts/deploy.sh $INSTALL_HOSTNAME"
+  else
+    if [[ -n "${AGE_KEY_SOURCE:-}" ]]; then
+      info "  5. Secrets should work immediately (age key was copied)."
+      info "     Verify with: scripts/setup-secrets.sh verify"
+    else
+      info "  5. Set up secrets (SOPS age key):"
+      info "     scripts/setup-secrets.sh bootstrap"
+    fi
+    info "  6. Deploy to apply secrets and finalize:"
+    info "     scripts/deploy.sh $INSTALL_HOSTNAME"
+  fi
   echo ""
   info "Available scripts for ongoing management:"
   info "  scripts/deploy.sh <host>           Deploy config (local or remote)"
