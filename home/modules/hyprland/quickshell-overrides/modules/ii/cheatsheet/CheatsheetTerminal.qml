@@ -77,6 +77,7 @@ Item {
 
     Row {
         id: mainRow
+        anchors.centerIn: parent
         spacing: root.spacing
 
         Repeater {
