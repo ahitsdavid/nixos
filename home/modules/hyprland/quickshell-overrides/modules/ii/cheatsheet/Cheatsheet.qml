@@ -165,8 +165,8 @@ Scope { // Scope
                             Persistent.states.cheatsheet.tabIndex = currentIndex;
                         }
 
-                        implicitWidth: Math.max.apply(null, contentChildren.map(child => child.implicitWidth || 0))
-                        implicitHeight: Math.max.apply(null, contentChildren.map(child => child.implicitHeight || 0))
+                        implicitWidth: Math.min(cheatsheetRoot.width * 0.85, Math.max.apply(null, contentChildren.map(child => child.implicitWidth || 0)))
+                        implicitHeight: Math.min(cheatsheetRoot.height * 0.85, Math.max.apply(null, contentChildren.map(child => child.implicitHeight || 0)))
 
                         clip: true
                         layer.enabled: true
