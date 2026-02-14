@@ -1,6 +1,25 @@
 { inputs, pkgs, config, ... }:
 let
   sharedBookmarks = import ./shared-bookmarks.nix { };
+  ffAddons = pkgs.nur.repos.rycee.firefox-addons;
+
+  browserExtensions = with ffAddons; [
+    ublock-origin
+    bitwarden
+    buster-captcha-solver
+    translate-web-pages
+    return-youtube-dislikes
+    sponsorblock
+    catppuccin-web-file-icons
+    firefox-color
+    windscribe
+  ];
+
+  # Policy: allow each extension in private browsing
+  mkExtensionSettings = builtins.listToAttrs (map (pkg: {
+    name = pkg.addonId;
+    value = { private_browsing = "allowed"; };
+  }) browserExtensions);
 in {
 
   imports = [inputs.zen-browser.homeModules.beta];
@@ -20,18 +39,7 @@ in {
         ];
       };
 
-      # Allow extensions in private browsing (per-extension)
-      ExtensionSettings = {
-        "uBlock0@raymondhill.net" = { private_browsing = "allowed"; };
-        "{446900e4-71c2-419f-a6a7-df9c091e268b}" = { private_browsing = "allowed"; }; # Bitwarden
-        "{e58d3966-3d76-4cd9-8552-1582fbc800c1}" = { private_browsing = "allowed"; }; # Buster Captcha Solver
-        "{036a55b4-5e72-4d05-a06c-cba2dfcc134a}" = { private_browsing = "allowed"; }; # Translate Web Pages
-        "{762f9885-5a13-4abd-9c77-433dcd38b8fd}" = { private_browsing = "allowed"; }; # Return YouTube Dislikes
-        "sponsorBlocker@ajay.app" = { private_browsing = "allowed"; };
-        "{bbb880ce-43c9-47ae-b746-c3e0096c5b76}" = { private_browsing = "allowed"; }; # Catppuccin Web File Icons
-        "FirefoxColor@mozilla.com" = { private_browsing = "allowed"; };
-        "@windscribeff" = { private_browsing = "allowed"; };
-      };
+      ExtensionSettings = mkExtensionSettings;
     };
     profiles = {
       default = {
@@ -39,22 +47,15 @@ in {
         isDefault = true;
         extensions = {
           force = true;
-          packages = with pkgs.nur.repos.rycee.firefox-addons; [
-            ublock-origin
-            bitwarden
-            buster-captcha-solver
-            translate-web-pages
-            return-youtube-dislikes
-            sponsorblock
-            catppuccin-web-file-icons  # Keep icons only
-            firefox-color              # For custom theming
-            windscribe
-          ];
+          packages = browserExtensions;
         };
         settings = {
           "browser.startup.homepage" = "https://www.google.com";
           "browser.startup.page" = 1;
           "browser.shell.checkDefaultBrowser" = false;
+
+          # Auto-enable extensions in private browsing on fresh install
+          "extensions.allowPrivateBrowsingByDefault" = true;
 
           # Disable DNS over HTTPS to use system DNS (needed for Tailscale)
           "network.trr.mode" = 5;  # 5 = off, use system DNS only
