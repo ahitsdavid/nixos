@@ -51,11 +51,4 @@ in
     ];
   };
 
-  # Ensure .ssh directory exists with correct permissions
-  home.file.".ssh/.keep" = {
-    text = "";
-    onChange = ''
-      chmod 700 ${config.home.homeDirectory}/.ssh
-    '';
-  };
 }

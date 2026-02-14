@@ -162,6 +162,17 @@ in
     ];
   };
 
+  # Fix ~/.ssh directory ownership after sops deploys keys there as root
+  system.activationScripts.fixSshDirPerms = lib.mkIf hasPersonalSecrets {
+    text = ''
+      if [ -d /home/${username}/.ssh ]; then
+        chown ${username}:users /home/${username}/.ssh
+        chmod 700 /home/${username}/.ssh
+      fi
+    '';
+    deps = [ "setupSecrets" ];
+  };
+
   # Make sops command available for users
   environment.systemPackages = with pkgs; [
     sops
