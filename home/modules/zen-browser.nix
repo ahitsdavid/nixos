@@ -1,4 +1,4 @@
-{ inputs, pkgs, config, ... }:
+{ inputs, pkgs, config, lib, ... }:
 let
   sharedBookmarks = import ./shared-bookmarks.nix { };
   ffAddons = pkgs.nur.repos.rycee.firefox-addons;
@@ -56,6 +56,56 @@ in {
 
           # Auto-enable extensions in private browsing on fresh install
           "extensions.allowPrivateBrowsingByDefault" = true;
+
+          # Pin Bitwarden, uBlock, SponsorBlock, Windscribe to toolbar
+          "browser.uiCustomization.state" = builtins.toJSON {
+            placements = {
+              "widget-overflow-fixed-list" = [];
+              "unified-extensions-area" = [
+                "firefoxcolor_mozilla_com-browser-action"
+                "_bbb880ce-43c9-47ae-b746-c3e0096c5b76_-browser-action"
+                "_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action"
+                "_036a55b4-5e72-4d05-a06c-cba2dfcc134a_-browser-action"
+                "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action"
+              ];
+              "nav-bar" = [
+                "back-button"
+                "forward-button"
+                "stop-reload-button"
+                "customizableui-special-spring1"
+                "vertical-spacer"
+                "urlbar-container"
+                "customizableui-special-spring2"
+                "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action"
+                "ublock0_raymondhill_net-browser-action"
+                "sponsorblocker_ajay_app-browser-action"
+                "_windscribeff-browser-action"
+                "unified-extensions-button"
+              ];
+              "toolbar-menubar" = ["menubar-items"];
+              "TabsToolbar" = ["tabbrowser-tabs"];
+              "vertical-tabs" = [];
+              "PersonalToolbar" = ["import-button" "personal-bookmarks"];
+              "zen-sidebar-top-buttons" = ["zen-toggle-compact-mode"];
+              "zen-sidebar-foot-buttons" = ["downloads-button" "zen-workspaces-button" "zen-create-new-button"];
+            };
+            seen = [
+              "developer-button"
+              "screenshot-button"
+              "firefoxcolor_mozilla_com-browser-action"
+              "_bbb880ce-43c9-47ae-b746-c3e0096c5b76_-browser-action"
+              "_762f9885-5a13-4abd-9c77-433dcd38b8fd_-browser-action"
+              "_036a55b4-5e72-4d05-a06c-cba2dfcc134a_-browser-action"
+              "_e58d3966-3d76-4cd9-8552-1582fbc800c1_-browser-action"
+              "_windscribeff-browser-action"
+              "ublock0_raymondhill_net-browser-action"
+              "_446900e4-71c2-419f-a6a7-df9c091e268b_-browser-action"
+              "sponsorblocker_ajay_app-browser-action"
+            ];
+            dirtyAreaCache = ["nav-bar" "vertical-tabs" "zen-sidebar-foot-buttons" "PersonalToolbar" "toolbar-menubar" "TabsToolbar" "zen-sidebar-top-buttons" "unified-extensions-area"];
+            currentVersion = 23;
+            newElementCount = 2;
+          };
 
           # Disable DNS over HTTPS to use system DNS (needed for Tailscale)
           "network.trr.mode" = 5;  # 5 = off, use system DNS only
@@ -273,4 +323,20 @@ in {
       };
     };
   };
+
+  # Patch extensions.json on each rebuild to enable private browsing
+  # and remove the startup cache so Zen picks up the changes
+  home.activation.zenExtPrivateBrowsing = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    extJson="$HOME/.zen/default/extensions.json"
+    if [ -f "$extJson" ]; then
+      ${pkgs.jq}/bin/jq '
+        .addons |= map(
+          if .type == "extension" then
+            .userDisabled = false | .active = true | .privateBrowsingAllowed = true
+          else . end
+        )
+      ' "$extJson" > "$extJson.tmp" && mv "$extJson.tmp" "$extJson"
+      rm -f "$HOME/.zen/default/addonStartup.json.lz4"
+    fi
+  '';
 }
