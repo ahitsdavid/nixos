@@ -315,9 +315,10 @@ create_btrfs_subvolumes() {
     run_cmd "mount $device /mnt"
     run_cmd "btrfs subvolume create /mnt/@"
     run_cmd "btrfs subvolume create /mnt/@home"
+    run_cmd "btrfs subvolume create /mnt/@swap"
     run_cmd "umount /mnt"
     BTRFS_SUBVOLS=true
-    ok "Created subvolumes: @, @home"
+    ok "Created subvolumes: @, @home, @swap"
   else
     BTRFS_SUBVOLS=false
   fi
@@ -691,10 +692,22 @@ main() {
   # Create swap file (non-LVM)
   if [[ "$create_swapfile" == "true" && -n "$swapfile_size" ]]; then
     info "Creating ${swapfile_size} swap file..."
-    run_cmd "dd if=/dev/zero of=/mnt/swapfile bs=1M count=$((${swapfile_size%G} * 1024)) status=progress"
-    run_cmd "chmod 600 /mnt/swapfile"
-    run_cmd "mkswap /mnt/swapfile"
-    run_cmd "swapon /mnt/swapfile"
+    if [[ "$fstype" == "btrfs" && "${BTRFS_SUBVOLS:-false}" == "true" ]]; then
+      # Btrfs needs a dedicated no-COW, no-compression subvolume for swap
+      run_cmd "mkdir -p /mnt/swap"
+      run_cmd "mount -o subvol=@swap,nodatacow $ROOT_PART /mnt/swap"
+      run_cmd "truncate -s 0 /mnt/swap/swapfile"
+      run_cmd "chattr +C /mnt/swap/swapfile"
+      run_cmd "dd if=/dev/zero of=/mnt/swap/swapfile bs=1M count=$((${swapfile_size%G} * 1024)) status=progress"
+      run_cmd "chmod 600 /mnt/swap/swapfile"
+      run_cmd "mkswap /mnt/swap/swapfile"
+      run_cmd "swapon /mnt/swap/swapfile"
+    else
+      run_cmd "dd if=/dev/zero of=/mnt/swapfile bs=1M count=$((${swapfile_size%G} * 1024)) status=progress"
+      run_cmd "chmod 600 /mnt/swapfile"
+      run_cmd "mkswap /mnt/swapfile"
+      run_cmd "swapon /mnt/swapfile"
+    fi
     ok "Swap file created and enabled"
   fi
   echo ""
