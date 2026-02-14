@@ -9,6 +9,9 @@
     # Include specific modules we need (excluding bootloader which conflicts with ISO)
     (import ./profiles/base/users.nix { inherit inputs username; })
     (import ./profiles/base/nix-config.nix { inherit inputs username; })
+
+    # All tools required by scripts/install.sh
+    ./profiles/installer-tools.nix
   ];
 
   # Allow unfree packages
@@ -36,7 +39,7 @@
   services.displayManager.gdm.enable = true;
   services.displayManager.gdm.wayland = true;
 
-  # Add filesystem tools, utilities, and install wizard
+  # ISO-specific packages (on top of installer-tools.nix)
   environment.systemPackages = with pkgs; [
     # Essential tools
     git
@@ -54,27 +57,12 @@
     # Network tools
     networkmanager
 
-    # Partitioning tools
-    parted
+    # GUI partitioning
     gparted
-    util-linux  # provides cfdisk
-    gptfdisk    # provides gdisk
 
-    # Filesystem tools
-    e2fsprogs     # ext4
-    btrfs-progs   # btrfs
-    xfsprogs      # xfs
-    f2fs-tools    # f2fs
-    ntfs3g        # ntfs
-    exfatprogs    # exfat
-    dosfstools    # fat
-    bcachefs-tools # bcachefs
-
-    # Encryption
-    cryptsetup
-
-    # LVM
-    lvm2
+    # Extra filesystem tools (not in installer-tools.nix)
+    ntfs3g
+    exfatprogs
 
     # GPU utilities
     mesa-demos

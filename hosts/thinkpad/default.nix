@@ -1,6 +1,7 @@
 { config, pkgs, inputs, username, lib, ... }: {
   imports = [
     ./hardware-configuration.nix
+    ../../profiles/installer-tools.nix
   ];
 
   # Kernel
@@ -40,7 +41,6 @@
     tpacpi-bat
     acpilight
     v4l-utils
-    cryptsetup
   ];
 
   networking.hostName = "thinkpad";
