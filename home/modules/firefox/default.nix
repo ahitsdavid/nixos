@@ -63,7 +63,7 @@ in {
         # Custom search engines with keyword aliases
         search = {
           force = true;
-          default = "Google";
+          default = "google";
           engines = {
             "Nix Packages" = {
               urls = [{ template = "https://search.nixos.org/packages?query={searchTerms}"; }];
@@ -83,9 +83,9 @@ in {
               urls = [{ template = "https://github.com/search?q={searchTerms}&type=code"; }];
               definedAliases = [ "@gh" ];
             };
-            "Bing".metaData.hidden = true;
-            "eBay".metaData.hidden = true;
-            "Amazon.com".metaData.hidden = true;
+            "bing".metaData.hidden = true;
+            "ebay".metaData.hidden = true;
+            "amazondotcom-us".metaData.hidden = true;
           };
         };
 
