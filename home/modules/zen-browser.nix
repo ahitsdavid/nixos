@@ -13,6 +13,8 @@ let
     catppuccin-web-file-icons
     firefox-color
     windscribe
+    multi-account-containers
+    clearurls
   ];
 
   # Policy: allow each extension in private browsing
@@ -31,6 +33,14 @@ in {
     policies = {
       DisableAppUpdate = true;
       DisableTelemetry = true;
+      DisableFirefoxStudies = true;
+      DisablePocket = true;
+      EnableTrackingProtection = {
+        Value = true;
+        Locked = true;
+        Cryptomining = true;
+        Fingerprinting = true;
+      };
 
       # Install custom certificates (Vaultwarden self-signed cert)
       Certificates = {
@@ -49,6 +59,45 @@ in {
           force = true;
           packages = browserExtensions;
         };
+
+        # Custom search engines with keyword aliases
+        search = {
+          force = true;
+          default = "google";
+          engines = {
+            "Nix Packages" = {
+              urls = [{ template = "https://search.nixos.org/packages?query={searchTerms}"; }];
+              icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+              definedAliases = [ "@np" ];
+            };
+            "NixOS Options" = {
+              urls = [{ template = "https://search.nixos.org/options?query={searchTerms}"; }];
+              icon = "${pkgs.nixos-icons}/share/icons/hicolor/scalable/apps/nix-snowflake.svg";
+              definedAliases = [ "@no" ];
+            };
+            "Home Manager Options" = {
+              urls = [{ template = "https://home-manager-options.extranix.com/?query={searchTerms}"; }];
+              definedAliases = [ "@hm" ];
+            };
+            "GitHub" = {
+              urls = [{ template = "https://github.com/search?q={searchTerms}&type=code"; }];
+              definedAliases = [ "@gh" ];
+            };
+            "bing".metaData.hidden = true;
+            "ebay".metaData.hidden = true;
+            "amazondotcom-us".metaData.hidden = true;
+          };
+        };
+
+        # Declarative container tabs
+        containersForce = true;
+        containers = {
+          Personal = { id = 1; color = "blue"; icon = "fingerprint"; };
+          Work     = { id = 2; color = "orange"; icon = "briefcase"; };
+          Banking  = { id = 3; color = "green"; icon = "dollar"; };
+          Shopping = { id = 4; color = "pink"; icon = "cart"; };
+        };
+
         settings = {
           "browser.startup.homepage" = "https://www.google.com";
           "browser.startup.page" = 1;
@@ -56,6 +105,21 @@ in {
 
           # Auto-enable extensions in private browsing on fresh install
           "extensions.allowPrivateBrowsingByDefault" = true;
+
+          # Disable sponsored content and bloat on new tab
+          "browser.newtabpage.activity-stream.showSponsored" = false;
+          "browser.newtabpage.activity-stream.showSponsoredTopSites" = false;
+          "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
+          "browser.topsites.contile.enabled" = false;
+          "extensions.pocket.enabled" = false;
+
+          # Performance tuning (safe across all hardware)
+          "nglayout.initialpaint.delay" = 0;
+          "nglayout.initialpaint.delay_in_oopif" = 0;
+          "content.notify.interval" = 100000;
+          "browser.sessionstore.interval" = 60000;
+          "network.http.max-persistent-connections-per-server" = 10;
+          "network.http.max-connections" = 1800;
 
           # Pin Bitwarden, uBlock, SponsorBlock, Windscribe to toolbar
           "browser.uiCustomization.state" = builtins.toJSON {
