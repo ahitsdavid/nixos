@@ -16,6 +16,7 @@ let
     firefox-color
     windscribe
     multi-account-containers
+    clearurls
   ];
 
   # Policy: allow each extension in private browsing
@@ -332,6 +333,18 @@ in {
           #sidebar-header {
             background-color: var(--base01) !important;
             color: var(--base05) !important;
+          }
+
+          /* Auto-hide sidebar - collapses to icons, expands on hover */
+          #sidebar-box {
+            max-width: 40px !important;
+            min-width: 40px !important;
+            overflow: hidden !important;
+            transition: all 0.2s ease !important;
+          }
+          #sidebar-box:hover {
+            max-width: 300px !important;
+            min-width: 300px !important;
           }
         '';
         
