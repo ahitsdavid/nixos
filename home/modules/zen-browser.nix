@@ -13,7 +13,6 @@ in {
     enable = true;
     policies = shared.policies // {
       DisableAppUpdate = true;
-      ExtensionSettings = shared.mkExtensionSettings shared.extensions;
     };
     profiles = {
       default = {

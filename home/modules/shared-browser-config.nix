@@ -3,7 +3,7 @@
 { pkgs, config }:
 let
   ffAddons = pkgs.nur.repos.rycee.firefox-addons;
-in {
+
   extensions = with ffAddons; [
     ublock-origin
     bitwarden
@@ -17,14 +17,15 @@ in {
     multi-account-containers
     clearurls
   ];
-
-  # Policy: allow each extension in private browsing
-  mkExtensionSettings = extensions: builtins.listToAttrs (map (pkg: {
-    name = pkg.addonId;
-    value = { private_browsing = "allowed"; };
-  }) extensions);
+in {
+  inherit extensions;
 
   policies = {
+    # Auto-allow each extension in private browsing
+    ExtensionSettings = builtins.listToAttrs (map (pkg: {
+      name = pkg.addonId;
+      value = { private_browsing = "allowed"; };
+    }) extensions);
     DisableTelemetry = true;
     DisableFirefoxStudies = true;
     DisablePocket = true;

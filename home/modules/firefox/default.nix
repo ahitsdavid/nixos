@@ -9,9 +9,7 @@ in {
     enable = true;
     package = pkgs.firefox;
 
-    policies = shared.policies // {
-      ExtensionSettings = shared.mkExtensionSettings shared.extensions;
-    };
+    policies = shared.policies;
 
     profiles = {
       default = {
