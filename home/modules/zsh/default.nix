@@ -22,7 +22,8 @@ in
       export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#${config.stylix.base16Scheme.base04}"
 
       # Starship prompt (lean config, separate from Fish's powerline config)
-      eval "$(STARSHIP_CONFIG=${config.xdg.configHome}/starship-zsh.toml starship init zsh)"
+      export STARSHIP_CONFIG="${config.xdg.configHome}/starship-zsh.toml"
+      eval "$(starship init zsh)"
     '';
 
     shellAliases = sharedAliases.shellAliases;
