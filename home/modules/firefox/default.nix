@@ -114,6 +114,14 @@ in {
           "browser.topsites.contile.enabled" = false;
           "extensions.pocket.enabled" = false;
 
+          # Performance tuning (safe across all hardware)
+          "nglayout.initialpaint.delay" = 0;
+          "nglayout.initialpaint.delay_in_oopif" = 0;
+          "content.notify.interval" = 100000;
+          "browser.sessionstore.interval" = 60000;
+          "network.http.max-persistent-connections-per-server" = 10;
+          "network.http.max-connections" = 1800;
+
           # Pin Bitwarden, uBlock, SponsorBlock, Windscribe to toolbar
           "browser.uiCustomization.state" = builtins.toJSON {
             placements = {
