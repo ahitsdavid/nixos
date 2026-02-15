@@ -16,6 +16,7 @@ let
     windscribe
     multi-account-containers
     clearurls
+    istilldontcareaboutcookies
   ];
 in {
   inherit extensions;
