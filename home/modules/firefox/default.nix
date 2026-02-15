@@ -110,4 +110,19 @@ in {
     };
   };
 
+  # NOTE: Replaced by force_installed policy in shared-browser-config.nix
+  # Keeping as fallback in case the policy approach doesn't work.
+  # home.activation.firefoxExtPrivateBrowsing = lib.hm.dag.entryAfter ["writeBoundary"] ''
+  #   extJson="$HOME/.mozilla/firefox/default/extensions.json"
+  #   if [ -f "$extJson" ]; then
+  #     ${pkgs.jq}/bin/jq '
+  #       .addons |= map(
+  #         if .type == "extension" then
+  #           .userDisabled = false | .active = true | .privateBrowsingAllowed = true
+  #         else . end
+  #       )
+  #     ' "$extJson" > "$extJson.tmp" && mv "$extJson.tmp" "$extJson"
+  #     rm -f "$HOME/.mozilla/firefox/default/addonStartup.json.lz4"
+  #   fi
+  # '';
 }
