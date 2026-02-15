@@ -21,10 +21,14 @@ in {
   inherit extensions;
 
   policies = {
-    # Auto-allow each extension in private browsing
+    # Force-install and auto-enable each extension (including private browsing)
     ExtensionSettings = builtins.listToAttrs (map (pkg: {
       name = pkg.addonId;
-      value = { private_browsing = "allowed"; };
+      value = {
+        installation_mode = "force_installed";
+        install_url = "file://${pkg}/share/mozilla/extensions/{ec8030f7-c20a-464f-9b0e-13a3a9e97384}/${pkg.addonId}.xpi";
+        private_browsing = "allowed";
+      };
     }) extensions);
     DisableTelemetry = true;
     DisableFirefoxStudies = true;

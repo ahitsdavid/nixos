@@ -132,18 +132,4 @@ in {
     };
   };
 
-  # Patch extensions.json on each rebuild to enable private browsing
-  home.activation.zenExtPrivateBrowsing = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    extJson="$HOME/.zen/default/extensions.json"
-    if [ -f "$extJson" ]; then
-      ${pkgs.jq}/bin/jq '
-        .addons |= map(
-          if .type == "extension" then
-            .userDisabled = false | .active = true | .privateBrowsingAllowed = true
-          else . end
-        )
-      ' "$extJson" > "$extJson.tmp" && mv "$extJson.tmp" "$extJson"
-      rm -f "$HOME/.zen/default/addonStartup.json.lz4"
-    fi
-  '';
 }
