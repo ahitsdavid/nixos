@@ -13,6 +13,7 @@ in
     ./modules/zsh
     ./modules/fish.nix
     ./modules/starship.nix
+    ./modules/starship-zsh.nix
     ./modules/foot.nix
     ./modules/default.nix
     ./modules/hyprland

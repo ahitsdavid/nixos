@@ -14,12 +14,15 @@ in
     enableCompletion = true;
     autosuggestion.enable = true;
     syntaxHighlighting.enable = true;
-    
+
     initContent = ''
       fastfetch
-      
+
       # Fix autosuggestion color - use Stylix base04 (surface2) for better readability
       export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#${config.stylix.base16Scheme.base04}"
+
+      # Starship prompt (lean config, separate from Fish's powerline config)
+      eval "$(STARSHIP_CONFIG=${config.xdg.configHome}/starship-zsh.toml starship init zsh)"
     '';
 
     shellAliases = sharedAliases.shellAliases;
@@ -31,11 +34,11 @@ in
 
     oh-my-zsh = {
       enable = true;
-      plugins = [ 
-        "git" 
-        "docker" 
-        "history" 
-        "sudo" 
+      plugins = [
+        "git"
+        "docker"
+        "history"
+        "sudo"
       ];
     };
 
@@ -45,10 +48,9 @@ in
         { name = "zsh-users/zsh-autosuggestions"; }
         { name = "zsh-users/zsh-completions"; }
         { name = "zsh-users/zsh-syntax-highlighting"; }
-        { name = "romkatv/powerlevel10k"; tags = [ as:theme depth:1 ]; }
       ];
     };
-    
+
     plugins = [
       {
         name = "zsh-nix-shell";
@@ -60,17 +62,6 @@ in
           sha256 = "1lzrn0n4fxfcgg65v0qhnj7wnybybqzs4adz7xsrkgmcsr0ii8b7";
         };
       }
-      {
-        name = "powerlevel10k";
-        src = pkgs.zsh-powerlevel10k;
-        file = "share/zsh-powerlevel10k/powerlevel10k.zsh-theme";
-      }
-      {
-        name = "powerlevel10k-config";
-        src = lib.cleanSource ./p10k-config;
-        file = "p10k.zsh";
-      }
-    
     ];
   };
 }
