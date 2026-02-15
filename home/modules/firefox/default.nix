@@ -16,7 +16,6 @@ let
     firefox-color
     windscribe
     multi-account-containers
-    clearurls
   ];
 
   # Policy: allow each extension in private browsing
@@ -113,17 +112,6 @@ in {
           "browser.newtabpage.activity-stream.feeds.section.topstories" = false;
           "browser.topsites.contile.enabled" = false;
           "extensions.pocket.enabled" = false;
-
-          # Performance tuning
-          "gfx.webrender.all" = true;
-          "media.ffmpeg.vaapi.enabled" = true;              # Hardware video decode
-          "widget.dmabuf.force-enabled" = true;              # DMA-BUF for GPU buffers
-          "nglayout.initialpaint.delay" = 0;                 # Faster first paint
-          "nglayout.initialpaint.delay_in_oopif" = 0;
-          "content.notify.interval" = 100000;
-          "browser.cache.disk.enable" = false;               # RAM-only cache
-          "browser.cache.memory.capacity" = 524288;          # 512MB RAM cache
-          "browser.sessionstore.interval" = 60000;           # Save session less often
 
           # Pin Bitwarden, uBlock, SponsorBlock, Windscribe to toolbar
           "browser.uiCustomization.state" = builtins.toJSON {
@@ -344,18 +332,6 @@ in {
           #sidebar-header {
             background-color: var(--base01) !important;
             color: var(--base05) !important;
-          }
-
-          /* Auto-hide sidebar - collapses to icons, expands on hover */
-          #sidebar-box {
-            max-width: 40px !important;
-            min-width: 40px !important;
-            overflow: hidden !important;
-            transition: all 0.2s ease !important;
-          }
-          #sidebar-box:hover {
-            max-width: 300px !important;
-            min-width: 300px !important;
           }
         '';
         
